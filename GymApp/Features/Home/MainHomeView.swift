@@ -1,81 +1,14 @@
 //
-//  LoadingViewtest.swift
+//  MainTestHomeView.swift
 //  Wellish
 //
 //  Created by Manuel Alejandro Hernandez Marín on 25/07/25.
 //
 
-import Foundation
 import SwiftUI
 
-struct LoadingTestView: View {
-    @State private var isLoading = false
-    
-    var body: some View {
-        NavigationView {
-            VStack(spacing: 30) {
-                
-                VStack(spacing: 20) {
-                    Button("Test Loading (2 seconds)") {
-                        simulateLoading()
-                    }
-                    .buttonStyle(.borderedProminent)
-                    .controlSize(.large)
-                    
-                    Button("Test Custom Animation") {
-                        simulateLoadingWithCustomText()
-                    }
-                    .buttonStyle(.bordered)
-                    .controlSize(.large)
-                    
-                    Button("Test Simple ProgressView") {
-                        simulateLoadingWithSimpleProgress()
-                    }
-                    .buttonStyle(.bordered)
-                    .controlSize(.large)
-                }
-                
-                Spacer()
-            }
-            .padding()
-            .navigationTitle("Loading Demo")
-        }
-        .showLoadingView(isLoading: isLoading)
-    }
-    
-    private func simulateLoading() {
-        isLoading = true
-        DispatchQueue.main.asyncAfter(deadline: .now() + 2) {
-            isLoading = false
-        }
-    }
-    
-    private func simulateLoadingWithCustomText() {
-        isLoading = true
-        DispatchQueue.main.asyncAfter(deadline: .now() + 2) {
-            isLoading = false
-        }
-    }
-    
-    private func simulateLoadingWithSimpleProgress() {
-        isLoading = true
-        DispatchQueue.main.asyncAfter(deadline: .now() + 2) {
-            isLoading = false
-        }
-    }
-}
-
-// MARK: - Preview
-struct LoadingTestView_Previews: PreviewProvider {
-    static var previews: some View {
-        MainHomeViewTest()
-            .preferredColorScheme(.dark)
-    }
-}
-
-
 // MARK: - Main Home View
-struct MainHomeViewTest: View {
+struct MainHomeView: View {
     @EnvironmentObject var navigationRouter: NavigationRouter
     
     var body: some View {
@@ -146,216 +79,215 @@ struct MainHomeViewTest: View {
     }
     
     private var challengeCardView: some View {
-        VStack(spacing: 12) {
-            TabView {
-                // Challenge 1 - Steps Challenge
-                challengeCard(
-                    title: "Step Into Fitness!",
-                    subtitle: "Daily Steps Challenge",
-                    mainNumber: "10,000",
-                    unit: "Steps",
-                    progress: 0.65,
-                    progressText: "6,500 / 10,000",
-                    buttonText: "Continue Walking",
-                    colors: [Color(red: 1.0, green: 0.4, blue: 0.4), Color(red: 1.0, green: 0.2, blue: 0.6)], // Vibrant coral to hot pink
-                    imageUrl: "https://images.unsplash.com/photo-1571019613454-1cb2f99b2d8b?w=200&h=200&fit=crop&crop=faces",
-                    icon: "figure.walk"
-                )
-                
-                // Challenge 2 - Water Challenge
-                challengeCard(
-                    title: "Hydration Hero",
-                    subtitle: "Daily Water Challenge",
-                    mainNumber: "8",
-                    unit: "Glasses",
-                    progress: 0.375,
-                    progressText: "3 / 8 glasses",
-                    buttonText: "Log Water",
-                    colors: [Color(red: 0.2, green: 0.7, blue: 1.0), Color(red: 0.0, green: 0.5, blue: 0.8)], // Bright blue gradient
-                    imageUrl: "https://images.unsplash.com/photo-1559827260-dc66d52bef19?w=200&h=200&fit=crop",
-                    icon: "drop.fill"
-                )
-                
-                // Challenge 3 - Workout Streak
-                challengeCard(
-                    title: "Streak Master",
-                    subtitle: "7-Day Workout Streak",
-                    mainNumber: "5",
-                    unit: "Days",
-                    progress: 0.714,
-                    progressText: "5 / 7 days",
-                    buttonText: "Keep Going",
-                    colors: [Color(red: 0.9, green: 0.5, blue: 0.1), Color(red: 1.0, green: 0.8, blue: 0.0)], // Orange to golden yellow
-                    imageUrl: "https://images.unsplash.com/photo-1534258936925-c58bed479fcb?w=200&h=200&fit=crop",
-                    icon: "flame.fill"
-                )
-            }
-            .tabViewStyle(PageTabViewStyle(indexDisplayMode: .never))
-            .frame(height: 170)
-            
-            // Custom dots indicator
-            HStack(spacing: 8) {
-                ForEach(0..<3) { index in
-                    Circle()
-                        .fill(index == 0 ? Color.white : Color.white.opacity(0.3))
-                        .frame(width: 8, height: 8)
-                        .animation(.easeInOut, value: index)
-                }
-            }
-        }
-    }
-    
-    private func challengeCard(
-        title: String,
-        subtitle: String,
-        mainNumber: String,
-        unit: String,
-        progress: Double,
-        progressText: String,
-        buttonText: String,
-        colors: [Color],
-        imageUrl: String,
-        icon: String
-    ) -> some View {
-        ZStack {
-            // Main gradient background
-            RoundedRectangle(cornerRadius: 24)
-                .fill(
-                    LinearGradient(
-                        gradient: Gradient(colors: colors),
-                        startPoint: .topLeading,
-                        endPoint: .bottomTrailing
-                    )
-                )
-            
-            // Decorative circles
-            VStack {
-                HStack {
-                    Spacer()
-                    Circle()
-                        .fill(Color.white.opacity(0.1))
-                        .frame(width: 60, height: 60)
-                        .offset(x: 20, y: -20)
-                }
-                Spacer()
-                HStack {
-                    Circle()
-                        .fill(Color.white.opacity(0.08))
-                        .frame(width: 40, height: 40)
-                        .offset(x: -10, y: 15)
-                    Spacer()
-                }
-            }
-            
-            HStack(spacing: 16) {
-                // Left content
-                VStack(alignment: .leading, spacing: 12) {
-                    VStack(alignment: .leading, spacing: 4) {
-                        HStack {
-                            Image(systemName: icon)
-                                .foregroundColor(.white)
-                                .font(.system(size: 16, weight: .medium))
-                            Text(subtitle)
-                                .font(.system(size: 12, weight: .medium))
-                                .foregroundColor(.white.opacity(0.9))
-                        }
-                        
-                        Text(title)
-                            .font(.system(size: 18, weight: .bold))
-                            .foregroundColor(.white)
-                    }
-                    
-                    // Main number and progress
-                    VStack(alignment: .leading, spacing: 8) {
-                        HStack(alignment: .bottom, spacing: 6) {
-                            Text(mainNumber)
-                                .font(.system(size: 36, weight: .heavy))
-                                .foregroundColor(.white)
-                            Text(unit)
-                                .font(.system(size: 14, weight: .semibold))
-                                .foregroundColor(.white.opacity(0.9))
-                                .padding(.bottom, 6)
-                        }
-                        
-                        // Progress bar
-                        VStack(alignment: .leading, spacing: 4) {
-                            ZStack(alignment: .leading) {
-                                RoundedRectangle(cornerRadius: 6)
-                                    .fill(Color.white.opacity(0.2))
-                                    .frame(height: 6)
-                                
-                                RoundedRectangle(cornerRadius: 6)
-                                    .fill(Color.white)
-                                    .frame(width: 120 * progress, height: 6)
-                            }
-                            .frame(width: 120)
-                            
-                            Text(progressText)
-                                .font(.system(size: 11, weight: .medium))
-                                .foregroundColor(.white.opacity(0.8))
-                        }
-                    }
-                    
-                    Spacer()
-                    
-                    Button(action: {}) {
-                        HStack(spacing: 6) {
-                            Text(buttonText)
-                                .font(.system(size: 13, weight: .semibold))
-                            Image(systemName: "arrow.right")
-                                .font(.system(size: 11, weight: .semibold))
-                        }
-                        .foregroundColor(.black)
-                        .padding(.horizontal, 18)
-                        .padding(.vertical, 10)
-                        .background(Color.white)
-                        .cornerRadius(20)
-                    }
-                }
-                
-                Spacer()
-                
-                // Right image with overlay
-                ZStack {
-                    AsyncImage(url: URL(string: imageUrl)) { image in
-                        image
-                            .resizable()
-                            .aspectRatio(contentMode: .fill)
-                    } placeholder: {
-                        Rectangle()
-                            .fill(Color.white.opacity(0.2))
-                    }
-                    .frame(width: 90, height: 120)
-                    .clipShape(RoundedRectangle(cornerRadius: 16))
-                    
-                    // Subtle overlay gradient
-                    RoundedRectangle(cornerRadius: 16)
-                        .fill(
-                            LinearGradient(
-                                gradient: Gradient(colors: [Color.clear, Color.black.opacity(0.1)]),
-                                startPoint: .top,
-                                endPoint: .bottom
-                            )
-                        )
-                        .frame(width: 90, height: 120)
-                }
-            }
-            .padding(20)
-        }
-        .frame(height: 170)
-    }
-    
+          VStack(spacing: 12) {
+              TabView {
+                  // Challenge 1 - Steps Challenge
+                  challengeCard(
+                      title: "Step Into Fitness!",
+                      subtitle: "Daily Steps Challenge",
+                      mainNumber: "10,000",
+                      unit: "Steps",
+                      progress: 0.65,
+                      progressText: "6,500 / 10,000",
+                      buttonText: "Continue Walking",
+                      colors: [Color(red: 1.0, green: 0.4, blue: 0.4), Color(red: 1.0, green: 0.2, blue: 0.6)], // Vibrant coral to hot pink
+                      imageUrl: "https://images.unsplash.com/photo-1571019613454-1cb2f99b2d8b?w=200&h=200&fit=crop&crop=faces",
+                      icon: "figure.walk"
+                  )
+                  
+                  // Challenge 2 - Water Challenge
+                  challengeCard(
+                      title: "Hydration Hero",
+                      subtitle: "Daily Water Challenge",
+                      mainNumber: "8",
+                      unit: "Glasses",
+                      progress: 0.375,
+                      progressText: "3 / 8 glasses",
+                      buttonText: "Log Water",
+                      colors: [Color(red: 0.2, green: 0.7, blue: 1.0), Color(red: 0.0, green: 0.5, blue: 0.8)], // Bright blue gradient
+                      imageUrl: "https://images.unsplash.com/photo-1559827260-dc66d52bef19?w=200&h=200&fit=crop",
+                      icon: "drop.fill"
+                  )
+                  
+                  // Challenge 3 - Workout Streak
+                  challengeCard(
+                      title: "Streak Master",
+                      subtitle: "7-Day Workout Streak",
+                      mainNumber: "5",
+                      unit: "Days",
+                      progress: 0.714,
+                      progressText: "5 / 7 days",
+                      buttonText: "Keep Going",
+                      colors: [Color(red: 0.9, green: 0.5, blue: 0.1), Color(red: 1.0, green: 0.8, blue: 0.0)], // Orange to golden yellow
+                      imageUrl: "https://images.unsplash.com/photo-1534258936925-c58bed479fcb?w=200&h=200&fit=crop",
+                      icon: "flame.fill"
+                  )
+              }
+              .tabViewStyle(PageTabViewStyle(indexDisplayMode: .never))
+              .frame(height: 250)
+              
+              // Custom dots indicator
+              HStack(spacing: 8) {
+                  ForEach(0..<3) { index in
+                      Circle()
+                          .fill(index == 0 ? Color.white : Color.white.opacity(0.3))
+                          .frame(width: 8, height: 8)
+                          .animation(.easeInOut, value: index)
+                  }
+              }
+          }
+      }
+      
+      private func challengeCard(
+          title: String,
+          subtitle: String,
+          mainNumber: String,
+          unit: String,
+          progress: Double,
+          progressText: String,
+          buttonText: String,
+          colors: [Color],
+          imageUrl: String,
+          icon: String
+      ) -> some View {
+          ZStack {
+              // Main gradient background
+              RoundedRectangle(cornerRadius: 24)
+                  .fill(
+                      LinearGradient(
+                          gradient: Gradient(colors: colors),
+                          startPoint: .topLeading,
+                          endPoint: .bottomTrailing
+                      )
+                  )
+              
+              // Decorative circles
+              VStack {
+                  HStack {
+                      Spacer()
+                      Circle()
+                          .fill(Color.white.opacity(0.1))
+                          .frame(width: 60, height: 60)
+                          .offset(x: 20, y: -20)
+                  }
+                  Spacer()
+                  HStack {
+                      Circle()
+                          .fill(Color.white.opacity(0.08))
+                          .frame(width: 40, height: 40)
+                          .offset(x: -10, y: 15)
+                      Spacer()
+                  }
+              }
+              
+              HStack(spacing: 16) {
+                  // Left content
+                  VStack(alignment: .leading, spacing: 12) {
+                      VStack(alignment: .leading, spacing: 4) {
+                          HStack {
+                              Image(systemName: icon)
+                                  .foregroundColor(.white)
+                                  .font(.system(size: 16, weight: .medium))
+                              Text(subtitle)
+                                  .font(.system(size: 12, weight: .medium))
+                                  .foregroundColor(.white.opacity(0.9))
+                          }
+                          
+                          Text(title)
+                              .font(.system(size: 18, weight: .bold))
+                              .foregroundColor(.white)
+                      }
+                      
+                      // Main number and progress
+                      VStack(alignment: .leading, spacing: 8) {
+                          HStack(alignment: .bottom, spacing: 6) {
+                              Text(mainNumber)
+                                  .font(.system(size: 36, weight: .heavy))
+                                  .foregroundColor(.white)
+                              Text(unit)
+                                  .font(.system(size: 14, weight: .semibold))
+                                  .foregroundColor(.white.opacity(0.9))
+                                  .padding(.bottom, 6)
+                          }
+                          
+                          // Progress bar
+                          VStack(alignment: .leading, spacing: 4) {
+                              ZStack(alignment: .leading) {
+                                  RoundedRectangle(cornerRadius: 6)
+                                      .fill(Color.white.opacity(0.2))
+                                      .frame(height: 6)
+                                  
+                                  RoundedRectangle(cornerRadius: 6)
+                                      .fill(Color.white)
+                                      .frame(width: 120 * progress, height: 6)
+                              }
+                              .frame(width: 120)
+                              
+                              Text(progressText)
+                                  .font(.system(size: 11, weight: .medium))
+                                  .foregroundColor(.white.opacity(0.8))
+                          }
+                      }
+                      
+                      Spacer()
+                      
+                      Button(action: {}) {
+                          HStack(spacing: 6) {
+                              Text(buttonText)
+                                  .font(.system(size: 13, weight: .semibold))
+                              Image(systemName: "arrow.right")
+                                  .font(.system(size: 11, weight: .semibold))
+                          }
+                          .foregroundColor(.black)
+                          .padding(.horizontal, 18)
+                          .padding(.vertical, 10)
+                          .background(Color.white)
+                          .cornerRadius(20)
+                      }
+                  }
+                  
+                  Spacer()
+                  
+                  // Right image with overlay
+                  ZStack {
+                      AsyncImage(url: URL(string: imageUrl)) { image in
+                          image
+                              .resizable()
+                              .aspectRatio(contentMode: .fill)
+                      } placeholder: {
+                          Rectangle()
+                              .fill(Color.white.opacity(0.2))
+                      }
+                      .frame(width: 90, height: 120)
+                      .clipShape(RoundedRectangle(cornerRadius: 16))
+                      
+                      // Subtle overlay gradient
+                      RoundedRectangle(cornerRadius: 16)
+                          .fill(
+                              LinearGradient(
+                                  gradient: Gradient(colors: [Color.clear, Color.black.opacity(0.1)]),
+                                  startPoint: .top,
+                                  endPoint: .bottom
+                              )
+                          )
+                          .frame(width: 90, height: 120)
+                  }
+              }
+              .padding(20)
+          }
+          .frame(height: 170)
+      }
     // MARK: - Today Workouts
     private var todayWorkoutsView: some View {
         VStack(alignment: .leading, spacing: 16) {
             HStack {
                 Text("Today Workouts")
                     .font(.system(size: 20, weight: .bold))
-                    .foregroundColor(.fitnessTextPrimary)
+                    .foregroundColor(.white)
                 
                 Text("(17)")
                     .font(.system(size: 16, weight: .medium))
-                    .foregroundColor(.fitnessTextSecondary)
+                    .foregroundColor(.gray)
                 
                 Spacer()
             }
@@ -364,14 +296,13 @@ struct MainHomeViewTest: View {
                 RoundedRectangle(cornerRadius: 20)
                     .fill(
                         LinearGradient(
-                            gradient: Gradient(colors: [Color.primaryFitnessBlue, Color.primaryFitnessBlue.opacity(0.8)]),
+                            gradient: Gradient(colors: [Color(red: 0.4, green: 0.5, blue: 0.2), Color(red: 0.2, green: 0.3, blue: 0.1)]),
                             startPoint: .topLeading,
                             endPoint: .bottomTrailing
                         )
                     )
                 
-                HStack(spacing: 0) {
-                    // Left content - 2/3 of the card
+                HStack {
                     VStack(alignment: .leading, spacing: 8) {
                         HStack(spacing: 16) {
                             HStack(spacing: 4) {
@@ -397,14 +328,10 @@ struct MainHomeViewTest: View {
                             .font(.system(size: 24, weight: .bold))
                             .foregroundColor(.white)
                             .multilineTextAlignment(.leading)
-                        
-                        Spacer()
                     }
-                    .padding(.leading, 20)
-                    .padding(.vertical, 20)
-                    .frame(maxWidth: .infinity, maxHeight: .infinity, alignment: .topLeading)
                     
-                    // Right image - 1/3 of the card, full height
+                    Spacer()
+                    
                     AsyncImage(url: URL(string: "https://images.unsplash.com/photo-1571019613454-1cb2f99b2d8b?w=150&h=150&fit=crop&crop=faces")) { image in
                         image
                             .resizable()
@@ -413,16 +340,10 @@ struct MainHomeViewTest: View {
                         Rectangle()
                             .fill(Color.gray.opacity(0.3))
                     }
-                    .frame(width: UIScreen.main.bounds.width * 0.25) // 1/3 of card width
-                    .clipShape(
-                        UnevenRoundedRectangle(
-                            topLeadingRadius: 0,
-                            bottomLeadingRadius: 0,
-                            bottomTrailingRadius: 20,
-                            topTrailingRadius: 20
-                        )
-                    )
+                    .frame(width: 100, height: 130)
+                    .cornerRadius(12)
                 }
+                .padding(20)
             }
             .frame(height: 150)
         }
@@ -434,17 +355,17 @@ struct MainHomeViewTest: View {
             HStack {
                 Text("Try Something New")
                     .font(.system(size: 20, weight: .bold))
-                    .foregroundColor(.fitnessTextPrimary)
+                    .foregroundColor(.white)
                 
                 Spacer()
                 
                 Button(action: {}) {
                     Text("See more")
                         .font(.system(size: 14, weight: .medium))
-                        .foregroundColor(.fitnessSuccess)
+                        .foregroundColor(Color(red: 0.8, green: 0.95, blue: 0.3))
                     Image(systemName: "arrow.right")
                         .font(.system(size: 12, weight: .medium))
-                        .foregroundColor(.fitnessSuccess)
+                        .foregroundColor(Color(red: 0.8, green: 0.95, blue: 0.3))
                 }
             }
             
@@ -454,7 +375,7 @@ struct MainHomeViewTest: View {
                     RoundedRectangle(cornerRadius: 16)
                         .fill(
                             LinearGradient(
-                                gradient: Gradient(colors: [Color.premiumFitnessPurple, Color.premiumFitnessPurple.opacity(0.7)]),
+                                gradient: Gradient(colors: [Color.purple.opacity(0.3), Color.pink.opacity(0.2)]),
                                 startPoint: .topLeading,
                                 endPoint: .bottomTrailing
                             )
@@ -471,7 +392,7 @@ struct MainHomeViewTest: View {
                                     .foregroundColor(.white)
                                     .padding(.horizontal, 8)
                                     .padding(.vertical, 4)
-                                    .background(Color.errorFitnessRed)
+                                    .background(Color.pink)
                                     .cornerRadius(12)
                             }
                             
@@ -483,22 +404,13 @@ struct MainHomeViewTest: View {
                                 .font(.system(size: 14, weight: .medium))
                                 .foregroundColor(.white.opacity(0.8))
                             
-                            HStack(spacing: 8) {
+                            HStack(spacing: 12) {
                                 Text("Large hall")
                                     .font(.system(size: 12, weight: .medium))
-                                    .foregroundColor(.white)
-                                    .padding(.horizontal, 12)
-                                    .padding(.vertical, 6)
-                                    .background(Color.white.opacity(0.2))
-                                    .cornerRadius(16)
-                                
+                                    .foregroundColor(.white.opacity(0.8))
                                 Text("Beginner")
                                     .font(.system(size: 12, weight: .medium))
-                                    .foregroundColor(.white)
-                                    .padding(.horizontal, 12)
-                                    .padding(.vertical, 6)
-                                    .background(Color.white.opacity(0.2))
-                                    .cornerRadius(16)
+                                    .foregroundColor(.white.opacity(0.8))
                             }
                         }
                         
@@ -510,7 +422,7 @@ struct MainHomeViewTest: View {
                                     .foregroundColor(.white)
                                     .font(.system(size: 16, weight: .bold))
                                     .frame(width: 40, height: 40)
-                                    .background(Color.errorFitnessRed)
+                                    .background(Color.pink)
                                     .clipShape(Circle())
                             }
                             Spacer()
@@ -536,7 +448,7 @@ struct MainHomeViewTest: View {
                     RoundedRectangle(cornerRadius: 16)
                         .fill(
                             LinearGradient(
-                                gradient: Gradient(colors: [Color.infoFitnessCyan, Color.infoFitnessCyan.opacity(0.7)]),
+                                gradient: Gradient(colors: [Color.blue.opacity(0.3), Color.cyan.opacity(0.2)]),
                                 startPoint: .topLeading,
                                 endPoint: .bottomTrailing
                             )
@@ -553,7 +465,7 @@ struct MainHomeViewTest: View {
                                     .foregroundColor(.white)
                                     .padding(.horizontal, 8)
                                     .padding(.vertical, 4)
-                                    .background(Color.errorFitnessRed)
+                                    .background(Color.pink)
                                     .cornerRadius(12)
                             }
                             
@@ -565,22 +477,13 @@ struct MainHomeViewTest: View {
                                 .font(.system(size: 14, weight: .medium))
                                 .foregroundColor(.white.opacity(0.8))
                             
-                            HStack(spacing: 8) {
+                            HStack(spacing: 12) {
                                 Text("Central hall")
                                     .font(.system(size: 12, weight: .medium))
-                                    .foregroundColor(.white)
-                                    .padding(.horizontal, 12)
-                                    .padding(.vertical, 6)
-                                    .background(Color.white.opacity(0.2))
-                                    .cornerRadius(16)
-                                
+                                    .foregroundColor(.white.opacity(0.8))
                                 Text("Beginner")
                                     .font(.system(size: 12, weight: .medium))
-                                    .foregroundColor(.white)
-                                    .padding(.horizontal, 12)
-                                    .padding(.vertical, 6)
-                                    .background(Color.white.opacity(0.2))
-                                    .cornerRadius(16)
+                                    .foregroundColor(.white.opacity(0.8))
                             }
                         }
                         
@@ -592,7 +495,7 @@ struct MainHomeViewTest: View {
                                     .foregroundColor(.white)
                                     .font(.system(size: 16, weight: .bold))
                                     .frame(width: 40, height: 40)
-                                    .background(Color.errorFitnessRed)
+                                    .background(Color.pink)
                                     .clipShape(Circle())
                             }
                             Spacer()
@@ -622,17 +525,17 @@ struct MainHomeViewTest: View {
             HStack {
                 Text("Categories")
                     .font(.system(size: 20, weight: .bold))
-                    .foregroundColor(.fitnessTextPrimary)
+                    .foregroundColor(.white)
                 
                 Spacer()
                 
                 Button(action: {}) {
                     Text("See more")
                         .font(.system(size: 14, weight: .medium))
-                        .foregroundColor(.fitnessSuccess)
+                        .foregroundColor(Color(red: 0.8, green: 0.95, blue: 0.3))
                     Image(systemName: "arrow.right")
                         .font(.system(size: 12, weight: .medium))
-                        .foregroundColor(.fitnessSuccess)
+                        .foregroundColor(Color(red: 0.8, green: 0.95, blue: 0.3))
                 }
             }
             
@@ -642,7 +545,7 @@ struct MainHomeViewTest: View {
                     RoundedRectangle(cornerRadius: 16)
                         .fill(
                             LinearGradient(
-                                gradient: Gradient(colors: [Color.energyFitnessOrange, Color.energyFitnessOrange.opacity(0.7)]),
+                                gradient: Gradient(colors: [Color.pink.opacity(0.6), Color.red.opacity(0.4)]),
                                 startPoint: .topLeading,
                                 endPoint: .bottomTrailing
                             )
@@ -665,7 +568,7 @@ struct MainHomeViewTest: View {
                                 .foregroundColor(.black)
                                 .font(.system(size: 10, weight: .bold))
                                 .frame(width: 20, height: 20)
-                                .background(Color.fitnessSuccess)
+                                .background(Color(red: 0.8, green: 0.95, blue: 0.3))
                                 .clipShape(Circle())
                             
                             Text("4.9")
@@ -701,28 +604,28 @@ struct MainHomeViewTest: View {
                 // Hand Exercise
                 ZStack {
                     RoundedRectangle(cornerRadius: 16)
-                        .fill(Color.fitnessBackgroundSecondary)
+                        .fill(Color(red: 0.15, green: 0.15, blue: 0.15))
                     
                     VStack(alignment: .leading, spacing: 8) {
                         Text("Hand\nExercise")
                             .font(.system(size: 20, weight: .bold))
-                            .foregroundColor(.fitnessTextPrimary)
+                            .foregroundColor(.white)
                             .multilineTextAlignment(.leading)
                         
                         Text("12 Exercise")
                             .font(.system(size: 12, weight: .medium))
-                            .foregroundColor(.fitnessTextSecondary)
+                            .foregroundColor(.gray)
                         
                         Spacer()
                         
                         HStack {
                             Image(systemName: "star.fill")
-                                .foregroundColor(.fitnessSuccess)
+                                .foregroundColor(Color(red: 0.8, green: 0.95, blue: 0.3))
                                 .font(.system(size: 10))
                             
                             Text("4.9")
                                 .font(.system(size: 12, weight: .semibold))
-                                .foregroundColor(.fitnessTextPrimary)
+                                .foregroundColor(.white)
                             
                             Spacer()
                         }
@@ -751,20 +654,6 @@ struct MainHomeViewTest: View {
                 .frame(width: 160, height: 140)
             }
         }
-//    } {
-//                                Rectangle()
-//                                    .fill(Color.clear)
-//                            }
-//                            .frame(width: 60, height: 90)
-//                            .cornerRadius(8)
-//                        }
-//                        Spacer()
-//                    }
-//                    .padding(8)
-//                }
-//                .frame(width: 160, height: 140)
-//            }
-//        }
     }
     
     // MARK: - Popular Workouts (Our Collection)
@@ -772,7 +661,7 @@ struct MainHomeViewTest: View {
         VStack(alignment: .leading, spacing: 16) {
             Text("Popular Workouts")
                 .font(.system(size: 20, weight: .bold))
-                .foregroundColor(.fitnessTextPrimary)
+                .foregroundColor(.white)
             
             VStack(spacing: 12) {
                 // Chest & abdominal exercises
@@ -780,7 +669,7 @@ struct MainHomeViewTest: View {
                     RoundedRectangle(cornerRadius: 16)
                         .fill(
                             LinearGradient(
-                                gradient: Gradient(colors: [Color.energyFitnessOrange, Color.energyFitnessOrange.opacity(0.7)]),
+                                gradient: Gradient(colors: [Color.orange.opacity(0.4), Color.yellow.opacity(0.3)]),
                                 startPoint: .topLeading,
                                 endPoint: .bottomTrailing
                             )
@@ -790,16 +679,16 @@ struct MainHomeViewTest: View {
                         VStack(alignment: .leading, spacing: 8) {
                             Text("Chest & abdominal\nexercises")
                                 .font(.system(size: 18, weight: .bold))
-                                .foregroundColor(.white)
+                                .foregroundColor(.black)
                                 .multilineTextAlignment(.leading)
                             
                             HStack(spacing: 4) {
                                 Image(systemName: "dumbbell")
-                                    .foregroundColor(.white.opacity(0.8))
+                                    .foregroundColor(.black.opacity(0.7))
                                     .font(.system(size: 12))
                                 Text("12 Exercise")
                                     .font(.system(size: 12, weight: .medium))
-                                    .foregroundColor(.white.opacity(0.8))
+                                    .foregroundColor(.black.opacity(0.7))
                             }
                         }
                         
@@ -825,7 +714,7 @@ struct MainHomeViewTest: View {
                     RoundedRectangle(cornerRadius: 16)
                         .fill(
                             LinearGradient(
-                                gradient: Gradient(colors: [Color.premiumFitnessPurple, Color.premiumFitnessPurple.opacity(0.7)]),
+                                gradient: Gradient(colors: [Color.purple.opacity(0.4), Color.blue.opacity(0.3)]),
                                 startPoint: .topLeading,
                                 endPoint: .bottomTrailing
                             )
@@ -840,11 +729,11 @@ struct MainHomeViewTest: View {
                             
                             HStack(spacing: 4) {
                                 Image(systemName: "dumbbell")
-                                    .foregroundColor(.white.opacity(0.8))
+                                    .foregroundColor(.white.opacity(0.7))
                                     .font(.system(size: 12))
                                 Text("12 Exercise")
                                     .font(.system(size: 12, weight: .medium))
-                                    .foregroundColor(.white.opacity(0.8))
+                                    .foregroundColor(.white.opacity(0.7))
                             }
                         }
                         
@@ -870,5 +759,5 @@ struct MainHomeViewTest: View {
 }
 
 #Preview {
-    MainHomeViewTest()
+    MainHomeView()
 }

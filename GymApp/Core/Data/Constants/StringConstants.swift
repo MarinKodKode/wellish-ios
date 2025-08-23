@@ -40,4 +40,13 @@ class StringConstants {
     static let byCreatingAnAccountYouAgreeToOurTermsAndConditions = "Al crear una cuenta, estás aceptando nuestros términos, condiciones y la política de privacidad."
     
     
+    //MARK: - Metrics
+    
+    static let metricsTitle =  "Metricas"
+    
+    
+    //MARK: - Home
+    static let todayWorkout = "Hoy toca..."
+    
+    
 }

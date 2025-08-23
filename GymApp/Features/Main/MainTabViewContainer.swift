@@ -12,6 +12,7 @@ struct MainTabViewContainer: View {
     @Binding var navigationPath : NavigationPath
     @State private var selectedTab = 0
     @State private var showWorkoutTimer = false
+    @State private var showWorkoutTimer_true = true
     @EnvironmentObject var navigationRouter: NavigationRouter
     
     var body: some View {
@@ -29,13 +30,13 @@ struct MainTabViewContainer: View {
                     }
                     .tag(1)
                 
-                Text("Profile Picture")
+                PlansView(vm: RoutineViewModel())
                     .tabItem {
                         Label("Plans", systemImage: "clipboard")
                     }
                     .tag(2)
                 
-                Text("Profile Picture")
+                ProfileView(showWorkoutTimer: $showWorkoutTimer_true)
                     .tabItem {
                         Label("Profile", systemImage: "person")
                     }

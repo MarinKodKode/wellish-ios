@@ -54,27 +54,15 @@
 /* End PBXContainerItemProxy section */
 
 /* Begin PBXFileReference section */
+		E822DB642E4A7D470016866E /* Wellish-Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = "Wellish-Info.plist"; sourceTree = "<group>"; };
 		E8E58FE82E2ADB8800B922CD /* Wellish.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = Wellish.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		E8E58FF82E2ADB8900B922CD /* WellishTests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = WellishTests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
 		E8E590022E2ADB8900B922CD /* WellishUITests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = WellishUITests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
 /* End PBXFileReference section */
 
-/* Begin PBXFileSystemSynchronizedBuildFileExceptionSet section */
-		E850FC152E46871A006B54F3 /* Exceptions for "GymApp" folder in "Wellish" target */ = {
-			isa = PBXFileSystemSynchronizedBuildFileExceptionSet;
-			membershipExceptions = (
-				"App/Wellish-Info.plist",
-			);
-			target = E8E58FE72E2ADB8800B922CD /* Wellish */;
-		};
-/* End PBXFileSystemSynchronizedBuildFileExceptionSet section */
-
 /* Begin PBXFileSystemSynchronizedRootGroup section */
 		E8E58FEA2E2ADB8800B922CD /* GymApp */ = {
 			isa = PBXFileSystemSynchronizedRootGroup;
-			exceptions = (
-				E850FC152E46871A006B54F3 /* Exceptions for "GymApp" folder in "Wellish" target */,
-			);
 			path = GymApp;
 			sourceTree = "<group>";
 		};
@@ -149,6 +137,7 @@
 				E8E58FFB2E2ADB8900B922CD /* GymAppTests */,
 				E8E590052E2ADB8900B922CD /* GymAppUITests */,
 				E8E58FE92E2ADB8800B922CD /* Products */,
+				E822DB642E4A7D470016866E /* Wellish-Info.plist */,
 			);
 			sourceTree = "<group>";
 		};

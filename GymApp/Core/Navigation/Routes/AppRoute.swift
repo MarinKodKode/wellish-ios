@@ -15,4 +15,6 @@ enum AppRoute:  Hashable {
     case workoutDetail
     case profileSettings
     case nutritionPlan
+    case createRoutine
+    case workoutTimer
 }

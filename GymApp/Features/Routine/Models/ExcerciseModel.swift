@@ -1,11 +1,10 @@
 //
-//  Models.swift
-//  GymApp
+//  ExcerciseModel.swift
+//  Wellish
 //
-//  Created by Manuel Alejandro Hernandez Marín on 23/07/25.
+//  Created by Manuel Alejandro Hernandez Marín on 11/08/25.
 //
 
-import Foundation
 import SwiftUI
 
 struct ActivityData {

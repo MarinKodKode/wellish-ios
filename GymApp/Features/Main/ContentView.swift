@@ -12,6 +12,7 @@ struct ContentView: View {
     @StateObject private var onboardingService = OnboardingService()
     @StateObject private var authenticationService = AuthenticationService()
     @State private var navigationPath = NavigationPath()
+    @State private var showWorkoutTimer = true
     @EnvironmentObject var navigationRouter: NavigationRouter
     
     var body: some View {
@@ -32,6 +33,12 @@ struct ContentView: View {
                         .environmentObject(navigationRouter)
                 case .signin:
                     SignInView()
+                        .environmentObject(navigationRouter)
+                case .createRoutine :
+                    RoutineCreatorView(viewModel: RoutineViewModel())
+                        .environmentObject(navigationRouter)
+                case .workoutTimer :
+                    WorkoutTimerView(showWorkoutTimer: $showWorkoutTimer)
                         .environmentObject(navigationRouter)
                 default :
                     SignInView()

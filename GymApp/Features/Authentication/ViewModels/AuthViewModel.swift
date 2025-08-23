@@ -146,5 +146,4 @@ final class AuthViewModel: ObservableObject {
         agreeToTerms = false
     }
     
-    
 }

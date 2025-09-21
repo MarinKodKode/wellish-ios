@@ -14,12 +14,12 @@ struct TodayWorkoutView: View {
             SectionBarTitle(title: "La rutina de hoy 🔥", icon: "arrow.right")
             
             ZStack {
-               
+                
                 Image("background_5")
                     .resizable()
                     .aspectRatio(contentMode: .fill)
                     .clipped()
-            
+                
                 Color.black.opacity(0.4)
                 
                 VStack(spacing : 12) {
@@ -59,12 +59,13 @@ struct TodayWorkoutView: View {
                     }
                     .frame(maxWidth: .infinity)
                 }
-                            }
+            }
             .frame(height: 250)
-            
             .cornerRadius(12)
+            .padding(.horizontal, 12)
             
         }
+        
     }
 }
 

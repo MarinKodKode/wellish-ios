@@ -168,7 +168,7 @@ struct ProfileView: View {
 
             if !routines.isEmpty {
                 ForEach(Array(routines.prefix(3).enumerated()), id: \.element.id) { index, routine in
-                    NavigationLink(destination: RoutineDetailView(routine: routine)) {
+                    NavigationLink(destination: PlansRoutineDetailView(routine: routine)) {
                         RoutinePreviewRow(routine: routine)
                     }
                 }

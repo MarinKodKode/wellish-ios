@@ -16,46 +16,32 @@ struct MainTabViewContainer: View {
     @EnvironmentObject var navigationRouter: NavigationRouter
     
     var body: some View {
-//        NavigationStack(path: $navigationRouter.path) {
-            TabView(selection: $selectedTab) {
-                MainHomeView()
-                    .tabItem {
-                        Label("Home", systemImage: "house")
-                    }
-                    .tag(0)
-                
-                MetricsView(showWorkoutTimer: $showWorkoutTimer)
-                    .tabItem {
-                        Label("Activity", systemImage: "figure.walk")
-                    }
-                    .tag(1)
-                
-                PlansView(vm: RoutineViewModel())
-                    .tabItem {
-                        Label("Plans", systemImage: "clipboard")
-                    }
-                    .tag(2)
-                
-                ProfileView(showWorkoutTimer: $showWorkoutTimer_true)
-                    .tabItem {
-                        Label("Profile", systemImage: "person")
-                    }
-                    .tag(3)
-            }
-            .accentColor(.blue)
-            .preferredColorScheme(.dark)
-//        }
-//        .navigationDestination(for: AppRoute.self) { route in
-//            switch route {
-//            case .maintab :
-//                MetricsView(showWorkoutTimer: $showWorkoutTimer)
-//            case .signup :
-//                SignUpView()
-//            case .signin :
-//                SignInView()
-//            default :
-//                MetricsView(showWorkoutTimer: $showWorkoutTimer)
-//            }
-//        }
+        TabView(selection: $selectedTab) {
+            MainHomeView()
+                .tabItem {
+                    Label("Home", systemImage: "house")
+                }
+                .tag(0)
+            
+            MetricsView(showWorkoutTimer: $showWorkoutTimer)
+                .tabItem {
+                    Label("Activity", systemImage: "figure.walk")
+                }
+                .tag(1)
+            
+            PlansView(vm: RoutineViewModel())
+                .tabItem {
+                    Label("Plans", systemImage: "clipboard")
+                }
+                .tag(2)
+            
+            ProfileView(showWorkoutTimer: $showWorkoutTimer_true)
+                .tabItem {
+                    Label("Profile", systemImage: "person")
+                }
+                .tag(3)
+        }
+        .accentColor(.blue)
+        .preferredColorScheme(.dark)
     }
 }

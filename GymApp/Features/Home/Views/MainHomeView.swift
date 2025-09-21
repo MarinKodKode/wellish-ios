@@ -14,7 +14,8 @@ struct MainHomeView: View {
     var body: some View {
         NavigationView {
             ZStack {
-                Color.black.ignoresSafeArea()
+                Color.fitnessBackgroundPrimary 
+                    .ignoresSafeArea()
                 
                 ScrollView {
                     VStack(spacing: 24) {
@@ -22,7 +23,7 @@ struct MainHomeView: View {
                         headerView
                         
                         // Challenge Card
-                        challengeCardView
+                        ChallengeSectionSubview(challenge: challenges)
                         
                         // Today Workouts
                         todayWorkoutsView
@@ -36,7 +37,7 @@ struct MainHomeView: View {
                         // Popular Workouts (Our Collection)
                         popularWorkoutsView
                     }
-                    .padding(.horizontal, 20)
+
                 }
             }
         }
@@ -78,206 +79,6 @@ struct MainHomeView: View {
         .padding(.top, 10)
     }
     
-    private var challengeCardView: some View {
-          VStack(spacing: 12) {
-              TabView {
-                  // Challenge 1 - Steps Challenge
-                  challengeCard(
-                      title: "Step Into Fitness!",
-                      subtitle: "Daily Steps Challenge",
-                      mainNumber: "10,000",
-                      unit: "Steps",
-                      progress: 0.65,
-                      progressText: "6,500 / 10,000",
-                      buttonText: "Continue Walking",
-                      colors: [Color(red: 1.0, green: 0.4, blue: 0.4), Color(red: 1.0, green: 0.2, blue: 0.6)], // Vibrant coral to hot pink
-                      imageUrl: "https://images.unsplash.com/photo-1571019613454-1cb2f99b2d8b?w=200&h=200&fit=crop&crop=faces",
-                      icon: "figure.walk"
-                  )
-                  
-                  // Challenge 2 - Water Challenge
-                  challengeCard(
-                      title: "Hydration Hero",
-                      subtitle: "Daily Water Challenge",
-                      mainNumber: "8",
-                      unit: "Glasses",
-                      progress: 0.375,
-                      progressText: "3 / 8 glasses",
-                      buttonText: "Log Water",
-                      colors: [Color(red: 0.2, green: 0.7, blue: 1.0), Color(red: 0.0, green: 0.5, blue: 0.8)], // Bright blue gradient
-                      imageUrl: "https://images.unsplash.com/photo-1559827260-dc66d52bef19?w=200&h=200&fit=crop",
-                      icon: "drop.fill"
-                  )
-                  
-                  // Challenge 3 - Workout Streak
-                  challengeCard(
-                      title: "Streak Master",
-                      subtitle: "7-Day Workout Streak",
-                      mainNumber: "5",
-                      unit: "Days",
-                      progress: 0.714,
-                      progressText: "5 / 7 days",
-                      buttonText: "Keep Going",
-                      colors: [Color(red: 0.9, green: 0.5, blue: 0.1), Color(red: 1.0, green: 0.8, blue: 0.0)], // Orange to golden yellow
-                      imageUrl: "https://images.unsplash.com/photo-1534258936925-c58bed479fcb?w=200&h=200&fit=crop",
-                      icon: "flame.fill"
-                  )
-              }
-              .tabViewStyle(PageTabViewStyle(indexDisplayMode: .never))
-              .frame(height: 250)
-              
-              // Custom dots indicator
-              HStack(spacing: 8) {
-                  ForEach(0..<3) { index in
-                      Circle()
-                          .fill(index == 0 ? Color.white : Color.white.opacity(0.3))
-                          .frame(width: 8, height: 8)
-                          .animation(.easeInOut, value: index)
-                  }
-              }
-          }
-      }
-      
-      private func challengeCard(
-          title: String,
-          subtitle: String,
-          mainNumber: String,
-          unit: String,
-          progress: Double,
-          progressText: String,
-          buttonText: String,
-          colors: [Color],
-          imageUrl: String,
-          icon: String
-      ) -> some View {
-          ZStack {
-              // Main gradient background
-              RoundedRectangle(cornerRadius: 24)
-                  .fill(
-                      LinearGradient(
-                          gradient: Gradient(colors: colors),
-                          startPoint: .topLeading,
-                          endPoint: .bottomTrailing
-                      )
-                  )
-              
-              // Decorative circles
-              VStack {
-                  HStack {
-                      Spacer()
-                      Circle()
-                          .fill(Color.white.opacity(0.1))
-                          .frame(width: 60, height: 60)
-                          .offset(x: 20, y: -20)
-                  }
-                  Spacer()
-                  HStack {
-                      Circle()
-                          .fill(Color.white.opacity(0.08))
-                          .frame(width: 40, height: 40)
-                          .offset(x: -10, y: 15)
-                      Spacer()
-                  }
-              }
-              
-              HStack(spacing: 16) {
-                  // Left content
-                  VStack(alignment: .leading, spacing: 12) {
-                      VStack(alignment: .leading, spacing: 4) {
-                          HStack {
-                              Image(systemName: icon)
-                                  .foregroundColor(.white)
-                                  .font(.system(size: 16, weight: .medium))
-                              Text(subtitle)
-                                  .font(.system(size: 12, weight: .medium))
-                                  .foregroundColor(.white.opacity(0.9))
-                          }
-                          
-                          Text(title)
-                              .font(.system(size: 18, weight: .bold))
-                              .foregroundColor(.white)
-                      }
-                      
-                      // Main number and progress
-                      VStack(alignment: .leading, spacing: 8) {
-                          HStack(alignment: .bottom, spacing: 6) {
-                              Text(mainNumber)
-                                  .font(.system(size: 36, weight: .heavy))
-                                  .foregroundColor(.white)
-                              Text(unit)
-                                  .font(.system(size: 14, weight: .semibold))
-                                  .foregroundColor(.white.opacity(0.9))
-                                  .padding(.bottom, 6)
-                          }
-                          
-                          // Progress bar
-                          VStack(alignment: .leading, spacing: 4) {
-                              ZStack(alignment: .leading) {
-                                  RoundedRectangle(cornerRadius: 6)
-                                      .fill(Color.white.opacity(0.2))
-                                      .frame(height: 6)
-                                  
-                                  RoundedRectangle(cornerRadius: 6)
-                                      .fill(Color.white)
-                                      .frame(width: 120 * progress, height: 6)
-                              }
-                              .frame(width: 120)
-                              
-                              Text(progressText)
-                                  .font(.system(size: 11, weight: .medium))
-                                  .foregroundColor(.white.opacity(0.8))
-                          }
-                      }
-                      
-                      Spacer()
-                      
-                      Button(action: {}) {
-                          HStack(spacing: 6) {
-                              Text(buttonText)
-                                  .font(.system(size: 13, weight: .semibold))
-                              Image(systemName: "arrow.right")
-                                  .font(.system(size: 11, weight: .semibold))
-                          }
-                          .foregroundColor(.black)
-                          .padding(.horizontal, 18)
-                          .padding(.vertical, 10)
-                          .background(Color.white)
-                          .cornerRadius(20)
-                      }
-                  }
-                  
-                  Spacer()
-                  
-                  // Right image with overlay
-                  ZStack {
-                      AsyncImage(url: URL(string: imageUrl)) { image in
-                          image
-                              .resizable()
-                              .aspectRatio(contentMode: .fill)
-                      } placeholder: {
-                          Rectangle()
-                              .fill(Color.white.opacity(0.2))
-                      }
-                      .frame(width: 90, height: 120)
-                      .clipShape(RoundedRectangle(cornerRadius: 16))
-                      
-                      // Subtle overlay gradient
-                      RoundedRectangle(cornerRadius: 16)
-                          .fill(
-                              LinearGradient(
-                                  gradient: Gradient(colors: [Color.clear, Color.black.opacity(0.1)]),
-                                  startPoint: .top,
-                                  endPoint: .bottom
-                              )
-                          )
-                          .frame(width: 90, height: 120)
-                  }
-              }
-              .padding(20)
-          }
-          .frame(height: 170)
-      }
-    // MARK: - Today Workouts
     private var todayWorkoutsView: some View {
         VStack(alignment: .leading, spacing: 16) {
             HStack {
@@ -349,7 +150,6 @@ struct MainHomeView: View {
         }
     }
     
-    // MARK: - Try Something New
     private var trySomethingNewView: some View {
         VStack(alignment: .leading, spacing: 16) {
             HStack {
@@ -754,6 +554,36 @@ struct MainHomeView: View {
                 }
                 .frame(height: 100)
             }
+        }
+    }
+    
+    @ViewBuilder
+    private var backgroundChallengeView : some View {
+        
+        var imageUrl : String = ""
+        
+        ZStack {
+            AsyncImage(url: URL(string: imageUrl)) { image in
+                image
+                    .resizable()
+                    .aspectRatio(contentMode: .fill)
+            } placeholder: {
+                Rectangle()
+                    .fill(Color.white.opacity(0.2))
+            }
+            .frame(width: 90, height: 120)
+            .clipShape(RoundedRectangle(cornerRadius: 16))
+            
+            // Subtle overlay gradient
+            RoundedRectangle(cornerRadius: 16)
+                .fill(
+                    LinearGradient(
+                        gradient: Gradient(colors: [Color.clear, Color.black.opacity(0.1)]),
+                        startPoint: .top,
+                        endPoint: .bottom
+                    )
+                )
+                .frame(width: 90, height: 120)
         }
     }
 }

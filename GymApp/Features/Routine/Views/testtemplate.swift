@@ -140,3 +140,117 @@ struct TimerCircleView: View {
 #Preview {
     StickyTimerDemo()
 }
+
+
+//
+//  EnhancedSerieRowView.swift
+//  Wellish
+//
+//  Created by Manuel Alejandro Hernandez Marín on 01/09/25.
+//
+
+import SwiftUI
+
+struct EnhancedSerieTestRowView: View {
+    @Binding var serie: Serie
+    var onDelete: () -> Void
+    
+    var body: some View {
+        VStack(spacing: 12) {
+//            HStack {
+//                Text("Set \(serie.repetitions)")
+//                    .font(.caption)
+//                    .fontWeight(.bold)
+//                    .foregroundColor(.primaryFitnessBlue)
+//                    .padding(8)
+//                    .background(Color.primaryFitnessBlue.opacity(0.1))
+//                    .cornerRadius(8)
+//
+//                Spacer()
+//
+//                Button(action: onDelete) {
+//                    Image(systemName: "trash.circle.fill")
+//                        .font(.title2)
+//                        .foregroundColor(.errorFitnessRed)
+//                }
+//            }
+            
+            HStack(spacing: 16) {
+                HStack(spacing: 8) {
+                    HStack(spacing: 8) {
+                        Image(systemName: "repeat")
+                            .foregroundColor(.energyFitnessOrange)
+                            .frame(width: 20)
+                        
+                        Text("Reps")
+                            .font(.caption)
+                            .foregroundColor(.fitnessTextSecondary)
+                    }
+                    
+                    TextField("0", value: $serie.repetitions, formatter: NumberFormatter.integer)
+                        .keyboardType(.numberPad)
+                        .font(.subheadline.weight(.medium))
+                        .foregroundColor(.fitnessTextPrimary)
+                        .padding(8)
+                        .frame(width: 60)
+                        .background(Color.fitnessBackgroundPrimary)
+                        .cornerRadius(6)
+                }
+            }
+//                Spacer()
+            HStack(spacing: 16) {
+                // Weight section
+                HStack(spacing: 8) {
+                    HStack(spacing: 8) {
+                        Image(systemName: "scalemass")
+                            .foregroundColor(.fitnessSuccess)
+                            .frame(width: 20)
+                        
+                        Text("Weight")
+                            .font(.caption)
+                            .foregroundColor(.fitnessTextSecondary)
+                    }
+                    
+                    HStack(spacing: 4) {
+                        TextField("0.0", value: Binding(
+                            get: { serie.idealWeightKg ?? 0.0 },
+                            set: { serie.idealWeightKg = $0 > 0 ? $0 : nil }
+                        ), formatter: NumberFormatter.decimal)
+                            .keyboardType(.decimalPad)
+                            .font(.subheadline.weight(.medium))
+                            .foregroundColor(.fitnessTextPrimary)
+                            .padding(8)
+                            .frame(width: 80)
+                            .background(Color.fitnessBackgroundPrimary)
+                            .cornerRadius(6)
+                        
+                        Text("kg")
+                            .font(.caption)
+                            .foregroundColor(.fitnessTextSecondary)
+                    }
+                }
+            }
+            
+            // Bottom row: Volume display
+            HStack {
+//                Spacer()
+                
+                HStack(spacing: 4) {
+                    Text("Volume")
+                        .font(.caption)
+                        .foregroundColor(.fitnessTextSecondary)
+                    
+                    Text(String(format: "%.0f kg", serie.estimatedVolumeKg))
+                        .font(.subheadline)
+                        .fontWeight(.bold)
+                        .foregroundColor(.fitnessSuccess)
+                }
+                
+//                Spacer()
+            }
+        }
+        .padding(.vertical, 16)
+        .background(Color.fitnessBackgroundPrimary)
+        .cornerRadius(12)
+    }
+}

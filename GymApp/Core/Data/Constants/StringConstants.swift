@@ -85,4 +85,9 @@ public class StringConstants {
     static let plansMyRoutines = "Mis rutinas"
     static let plansAddNewPlan = "Añadir un plan"
     static let plansCustomYourOwnPlan = "Elige planes, crea rutinas, personaliza y comparte"
+    static let challengesOfTheWeek = "Retos de la semana"
+    
+    
+    //MARK: - HOME VIEW
+    static let homeViewWelcomeTitle = "Bienvenido de nuevo"
 }

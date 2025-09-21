@@ -19,24 +19,23 @@ struct MainHomeView: View {
                 
                 ScrollView {
                     VStack(spacing: 24) {
-                        // Header
-                        headerView
                         
-                        // Challenge Card
+                        HomeHeaderView()
+                        
                         ChallengeSectionSubview(challenge: challenges)
                         
-                        // Today Workouts
-                        todayWorkoutsView
+                        TodayWorkoutView()
                         
                         // Try Something New
-                        trySomethingNewView
+//                        trySomethingNewView
                         
                         // Categories (Popular Exercises)
-                        categoriesView
+//                        categoriesView
                         
                         // Popular Workouts (Our Collection)
-                        popularWorkoutsView
+//                        popularWorkoutsView
                     }
+//                    .padding(.horizontal, 16)
 
                 }
             }
@@ -44,111 +43,8 @@ struct MainHomeView: View {
         .navigationBarHidden(true)
     }
     
-    private var headerView: some View {
-        HStack {
-            HStack(spacing: 12) {
-                AsyncImage(url: URL(string: "https://images.unsplash.com/photo-1494790108755-2616b612b786?w=100&h=100&fit=crop&crop=faces")) { image in
-                    image
-                        .resizable()
-                        .aspectRatio(contentMode: .fill)
-                } placeholder: {
-                    Circle()
-                        .fill(Color.gray.opacity(0.3))
-                }
-                .frame(width: 50, height: 50)
-                .clipShape(Circle())
-                
-                VStack(alignment: .leading, spacing: 2) {
-                    Text("Welcome Back")
-                        .font(.system(size: 14, weight: .regular))
-                        .foregroundColor(.gray)
-                    Text("Alina")
-                        .font(.system(size: 20, weight: .bold))
-                        .foregroundColor(.white)
-                }
-            }
-            
-            Spacer()
-            
-            Button(action: {}) {
-                Image(systemName: "bell")
-                    .font(.system(size: 20))
-                    .foregroundColor(.white)
-            }
-        }
-        .padding(.top, 10)
-    }
+
     
-    private var todayWorkoutsView: some View {
-        VStack(alignment: .leading, spacing: 16) {
-            HStack {
-                Text("Today Workouts")
-                    .font(.system(size: 20, weight: .bold))
-                    .foregroundColor(.white)
-                
-                Text("(17)")
-                    .font(.system(size: 16, weight: .medium))
-                    .foregroundColor(.gray)
-                
-                Spacer()
-            }
-            
-            ZStack {
-                RoundedRectangle(cornerRadius: 20)
-                    .fill(
-                        LinearGradient(
-                            gradient: Gradient(colors: [Color(red: 0.4, green: 0.5, blue: 0.2), Color(red: 0.2, green: 0.3, blue: 0.1)]),
-                            startPoint: .topLeading,
-                            endPoint: .bottomTrailing
-                        )
-                    )
-                
-                HStack {
-                    VStack(alignment: .leading, spacing: 8) {
-                        HStack(spacing: 16) {
-                            HStack(spacing: 4) {
-                                Image(systemName: "clock")
-                                    .foregroundColor(.white)
-                                    .font(.system(size: 12))
-                                Text("90min")
-                                    .font(.system(size: 14, weight: .medium))
-                                    .foregroundColor(.white)
-                            }
-                            
-                            HStack(spacing: 4) {
-                                Image(systemName: "flame")
-                                    .foregroundColor(.white)
-                                    .font(.system(size: 12))
-                                Text("1,200kcal")
-                                    .font(.system(size: 14, weight: .medium))
-                                    .foregroundColor(.white)
-                            }
-                        }
-                        
-                        Text("Upper Body\nWorkout")
-                            .font(.system(size: 24, weight: .bold))
-                            .foregroundColor(.white)
-                            .multilineTextAlignment(.leading)
-                    }
-                    
-                    Spacer()
-                    
-                    AsyncImage(url: URL(string: "https://images.unsplash.com/photo-1571019613454-1cb2f99b2d8b?w=150&h=150&fit=crop&crop=faces")) { image in
-                        image
-                            .resizable()
-                            .aspectRatio(contentMode: .fill)
-                    } placeholder: {
-                        Rectangle()
-                            .fill(Color.gray.opacity(0.3))
-                    }
-                    .frame(width: 100, height: 130)
-                    .cornerRadius(12)
-                }
-                .padding(20)
-            }
-            .frame(height: 150)
-        }
-    }
     
     private var trySomethingNewView: some View {
         VStack(alignment: .leading, spacing: 16) {

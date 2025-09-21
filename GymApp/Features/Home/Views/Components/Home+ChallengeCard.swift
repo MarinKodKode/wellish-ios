@@ -16,10 +16,8 @@ struct Home_ChallengeCard : View {
     var body: some View {
         ZStack {
             
-            // Combined background with fusion effect
             fusedBackgroundView
             
-            // Decorative circles
             VStack {
                 HStack {
                     Spacer()
@@ -102,8 +100,8 @@ struct Home_ChallengeCard : View {
             }
             .padding(20)
         }
-        .frame(width: UIScreen.main.bounds.width * 0.90, height: 180)
-        .clipShape(RoundedRectangle(cornerRadius: 24))
+        .frame(width: UIScreen.main.bounds.width * 0.95, height: 180)
+        .clipShape(RoundedRectangle(cornerRadius: 20))
     }
     
     @ViewBuilder
@@ -111,7 +109,7 @@ struct Home_ChallengeCard : View {
         GeometryReader { geometry in
             ZStack {
                 // Base gradient background
-                RoundedRectangle(cornerRadius: 24)
+                RoundedRectangle(cornerRadius: 20)
                     .fill(
                         LinearGradient(
                             gradient: Gradient(colors: challenge.colors),

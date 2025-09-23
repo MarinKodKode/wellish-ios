@@ -12,123 +12,61 @@ public struct  CategoriesSectionView :  View {
     public var body : some View {
         VStack(alignment: .leading, spacing: 16) {
           
-            SectionBarTitle(title: "Categorias", icon: "arrow-right")
+            SectionBarTitle(title: "Categorias", icon :"arrow.right")
             
-            HStack(spacing: 12) {
-                ZStack {
-                    RoundedRectangle(cornerRadius: 16)
-                        .fill(
-                            LinearGradient(
-                                gradient: Gradient(colors: [Color.pink.opacity(0.6), Color.red.opacity(0.4)]),
-                                startPoint: .topLeading,
-                                endPoint: .bottomTrailing
-                            )
-                        )
-//
-//                    VStack(alignment: .leading, spacing: 8) {
-//                        Text("Home\nWorkout")
-//                            .font(.system(size: 20, weight: .bold))
-//                            .foregroundColor(.white)
-//                            .multilineTextAlignment(.leading)
-//                        
-//                        Text("12 Exercise")
-//                            .font(.system(size: 12, weight: .medium))
-//                            .foregroundColor(.white.opacity(0.8))
-//                        
-//                        Spacer()
-//                        
-//                        HStack {
-//                            Image(systemName: "plus")
-//                                .foregroundColor(.black)
-//                                .font(.system(size: 10, weight: .bold))
-//                                .frame(width: 20, height: 20)
-//                                .background(Color(red: 0.8, green: 0.95, blue: 0.3))
-//                                .clipShape(Circle())
-//                            
-//                            Text("4.9")
-//                                .font(.system(size: 12, weight: .semibold))
-//                                .foregroundColor(.white)
-//                            
-//                            Spacer()
-//                        }
-//                    }
-//                    .padding(16)
-//                    
-//                    // Add woman silhouette
-//                    VStack {
-//                        HStack {
-//                            Spacer()
-//                            AsyncImage(url: URL(string: "https://images.unsplash.com/photo-1544367567-0f2fcb009e0b?w=80&h=120&fit=crop&crop=faces")) { image in
-//                                image
-//                                    .resizable()
-//                                    .aspectRatio(contentMode: .fill)
-//                            } placeholder: {
-//                                Rectangle()
-//                                    .fill(Color.clear)
-//                            }
-//                            .frame(width: 60, height: 90)
-//                            .cornerRadius(8)
-//                        }
-//                        Spacer()
-//                    }
-//                    .padding(8)
+            ScrollView(.horizontal, showsIndicators: false){
+                HStack(spacing : 12){
+                    CategorieCard()
+                    CategorieCard()
+                    CategorieCard()
+                    CategorieCard()
+                    CategorieCard()
                 }
-                .frame(width: 160, height: 140)
-//                
-//                // Hand Exercise
-//                ZStack {
-//                    RoundedRectangle(cornerRadius: 16)
-//                        .fill(Color(red: 0.15, green: 0.15, blue: 0.15))
-//                    
-//                    VStack(alignment: .leading, spacing: 8) {
-//                        Text("Hand\nExercise")
-//                            .font(.system(size: 20, weight: .bold))
-//                            .foregroundColor(.white)
-//                            .multilineTextAlignment(.leading)
-//                        
-//                        Text("12 Exercise")
-//                            .font(.system(size: 12, weight: .medium))
-//                            .foregroundColor(.gray)
-//                        
-//                        Spacer()
-//                        
-//                        HStack {
-//                            Image(systemName: "star.fill")
-//                                .foregroundColor(Color(red: 0.8, green: 0.95, blue: 0.3))
-//                                .font(.system(size: 10))
-//                            
-//                            Text("4.9")
-//                                .font(.system(size: 12, weight: .semibold))
-//                                .foregroundColor(.white)
-//                            
-//                            Spacer()
-//                        }
-//                    }
-//                    .padding(16)
-//                    
-//                    // Add person silhouette
-//                    VStack {
-//                        HStack {
-//                            Spacer()
-//                            AsyncImage(url: URL(string: "https://images.unsplash.com/photo-1571019613454-1cb2f99b2d8b?w=80&h=120&fit=crop&crop=faces")) { image in
-//                                image
-//                                    .resizable()
-//                                    .aspectRatio(contentMode: .fill)
-//                            } placeholder: {
-//                                Rectangle()
-//                                    .fill(Color.clear)
-//                            }
-//                            .frame(width: 60, height: 90)
-//                            .cornerRadius(8)
-//                        }
-//                        Spacer()
-//                    }
-//                    .padding(8)
-//                }
-//                .frame(width: 160, height: 140)
+                .padding(.horizontal, 16)
             }
+            .padding(.top, 16)
         }
 
+    }
+}
+
+public struct CategorieCard : View {
+        
+    public var body  : some View {
+        ZStack {
+            
+            VStack(spacing: 8){
+                HStack(alignment: .center){
+                    Text("Home\nWorkout") // title
+                        .font(.system(size: 28))
+                        .fontWeight(.heavy)
+                        .frame(maxWidth: .infinity, alignment: .leading)
+                }
+                .padding(.leading, 16)
+                
+                HStack(alignment: .center, spacing: 20){
+                    VStack(alignment: .leading) {
+                        HStack{
+                            Text("4.9") // rating metric
+                                .font(.system(size: 14))
+                            Image(systemName: "heart.fill")
+                                .resizable()
+                                .frame(width: 14, height: 14)
+                        }
+                        Text("12 routines") // routines / exercises
+                            .font(.system(size: 12))
+                    }
+                    Image(systemName: "house.fill") // icon
+                        .resizable()
+                        .frame(width: 52, height: 52)
+                }
+                .padding(.leading, 16)
+                .frame(width: 160, alignment: .leading)
+            }
+        }
+        .frame(width: 160, height: 160)
+        .background(LinearGradient.outdoorRunning) // gradient
+        .cornerRadius(16)
     }
 }
 

@@ -29,35 +29,7 @@ struct TodayWorkoutView: View {
                         .foregroundColor(.fitnessTextPrimary)
                         .multilineTextAlignment(.center)
                     
-                    HStack(spacing : 24) {
-                        HStack(spacing: 4) {
-                            Image(systemName: "clock")
-                                .foregroundColor(.white)
-                                .font(.system(size: 14))
-                            Text("90min")
-                                .font(.system(size: 14, weight: .medium))
-                                .foregroundColor(.white)
-                        }
-                        
-                        HStack(spacing: 4) {
-                            Image(systemName: "flame")
-                                .foregroundColor(.white)
-                                .font(.system(size: 14))
-                            Text("1,200kcal")
-                                .font(.system(size: 14, weight: .medium))
-                                .foregroundColor(.white)
-                        }
-                        
-                        HStack(spacing: 4) {
-                            Image(systemName: "dumbbell")
-                                .foregroundColor(.white)
-                                .font(.system(size: 14))
-                            Text("90min")
-                                .font(.system(size: 14, weight: .medium))
-                                .foregroundColor(.white)
-                        }
-                    }
-                    .frame(maxWidth: .infinity)
+                    RoutineStatisticsRowView(size: 14, gap : 24)
                 }
             }
             .frame(height: 250)

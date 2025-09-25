@@ -22,7 +22,9 @@ struct ContentView: View {
                     OnboardingView()
                         .environmentObject(onboardingService)
                 } else {
-                    authenticationFlow
+//                    authenticationFlow
+                    MainTabViewContainer(navigationPath: $navigationPath)
+                        .environmentObject(authenticationService)
                 }
             }
             .animation(.easeInOut(duration: 0.3), value: onboardingService.shouldShowOnboarding)

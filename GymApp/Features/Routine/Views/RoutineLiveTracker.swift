@@ -1,20 +1,13 @@
-//
-//  RoutineCreatorSheet.swift
-//  Wellish
-//
-//  Created by Manuel Alejandro Hernandez Marín on 11/08/25.
-//  Corrected version (model/view binding fixes, exercise picker, dark styling).
-//
 
 import SwiftUI
 
 public struct RoutineCreatorSheet: View {
+   
     @Binding var isPresented: Bool
     @StateObject private var vm = RoutineViewModel()
 
-    // Exercise picker state
     @State private var showingExercisePicker: Bool = false
-    @State private var exercisePickerTargetSetIndex: Int? = nil // nil -> add new set
+    @State private var exercisePickerTargetSetIndex: Int? = nil
 
     public init(isPresented: Binding<Bool>) {
         self._isPresented = isPresented
@@ -53,14 +46,11 @@ public struct RoutineCreatorSheet: View {
             .sheet(isPresented: $showingExercisePicker) {
                 ExercisePickerView { exercise in
                     if let index = exercisePickerTargetSetIndex {
-                        // change existing set's exercise
                         guard vm.routine.sets.indices.contains(index) else { return }
                         vm.routine.sets[index].exercise = exercise
                     } else {
-                        // add new set with chosen exercise
                         vm.addSet(with: exercise)
                     }
-                    // reset
                     exercisePickerTargetSetIndex = nil
                     showingExercisePicker = false
                 }
@@ -291,102 +281,3 @@ public struct RoutineCreatorSheet: View {
         .cornerRadius(12)
     }
 }
-
-// MARK: - SerieRowView (reused)
-fileprivate struct SerieRowView: View {
-    @Binding var serie: Serie
-    var onDelete: () -> Void
-
-    var body: some View {
-        HStack(spacing: 12) {
-            VStack(alignment: .leading, spacing: 6) {
-                HStack {
-                    Text("Reps:")
-                        .foregroundColor(.white)
-                    TextField("Reps", value: $serie.repetitions, formatter: NumberFormatter.integer)
-                        .keyboardType(.numberPad)
-                        .frame(width: 60)
-                }
-                HStack {
-                    Text("Weight (kg):")
-                        .foregroundColor(.white)
-                    TextField("kg", value: Binding(get: { serie.idealWeightKg ?? 0.0 },
-                                                  set: { new in serie.idealWeightKg = new > 0 ? new : nil }),
-                              formatter: NumberFormatter())
-                        .keyboardType(.decimalPad)
-                        .frame(width: 80)
-                }
-            }
-            Spacer()
-            Text(String(format: "%.0f kg", serie.estimatedVolumeKg))
-                .font(.caption)
-                .foregroundColor(.gray)
-
-            Button(action: onDelete) {
-                Image(systemName: "trash")
-                    .foregroundColor(.red)
-            }
-        }
-        .padding(8)
-        .background(RoundedRectangle(cornerRadius: 8).fill(Color(UIColor.secondarySystemBackground)))
-    }
-}
-
-// MARK: - Exercise Picker (mock)
-fileprivate struct ExercisePickerView: View {
-    var onSelect: (Exercise) -> Void
-
-    // Basic mock library. Replace with real DB or Firestore lookup later.
-    private let library: [Exercise] = [
-        Exercise(name: "Bench Press", category: "Chest", equipment: "Barbell", muscles: ["Chest","Triceps"]),
-        Exercise(name: "Squat", category: "Legs", equipment: "Barbell", muscles: ["Quadriceps","Glutes"]),
-        Exercise(name: "Deadlift", category: "Back", equipment: "Barbell", muscles: ["Back","Hamstrings"]),
-        Exercise(name: "Overhead Press", category: "Shoulders", equipment: "Barbell", muscles: ["Deltoids"])
-    ]
-
-    @Environment(\.presentationMode) private var presentationMode
-
-    var body: some View {
-        NavigationView {
-            List(library) { ex in
-                Button(action: {
-                    onSelect(ex)
-                    presentationMode.wrappedValue.dismiss()
-                }) {
-                    HStack {
-                        VStack(alignment: .leading) {
-                            Text(ex.name).font(.headline)
-                            Text(ex.category ?? "").font(.caption).foregroundColor(.secondary)
-                        }
-                        Spacer()
-                    }
-                }
-            }
-            .navigationTitle("Pick exercise")
-            .toolbar {
-                ToolbarItem(placement: .cancellationAction) {
-                    Button("Cancel") { presentationMode.wrappedValue.dismiss() }
-                }
-            }
-        }
-    }
-}
-
-// MARK: - NumberFormatters
-fileprivate extension NumberFormatter {
-    static var integer: NumberFormatter {
-        let f = NumberFormatter()
-        f.numberStyle = .none
-        f.minimum = 0
-        f.maximumFractionDigits = 0
-        return f
-    }
-
-    static var q: NumberFormatter {
-        let f = NumberFormatter()
-        f.numberStyle = .decimal
-        f.maximumFractionDigits = 2
-        return f
-    }
-}
-

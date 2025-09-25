@@ -312,3 +312,118 @@ let activityHistory = [
         sets: 14
     )
 ]
+
+// MARK: - Routines and plans view
+
+// Pre-made templates
+let templates: [RoutineTemplate] = [
+    RoutineTemplate(
+        name: "Full Body Gym",
+        category: "Strength",
+        description: "3-day split for full-body strength",
+        imageName: "dumbbell.fill",
+        estimatedDuration: 60,
+        difficulty: .intermediate,
+        imageURL: "https://images.unsplash.com/photo-1583454110551-21f2fa2afe61?q=80&w=2940&auto=format&fit=crop&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D"
+    ),
+    RoutineTemplate(
+        name: "Running for Beginners",
+        category: "Cardio",
+        description: "Couch to 5K starter plan",
+        imageName: "figure.run",
+        estimatedDuration: 30,
+        difficulty: .beginner,
+        imageURL: "https://images.unsplash.com/photo-1513593771513-7b58b6c4af38?q=80&w=3732&auto=format&fit=crop&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D"
+    ),
+    RoutineTemplate(
+        name: "Isometric Flow",
+        category: "Mobility",
+        description: "Static holds for strength & control",
+        imageName: "figure.yoga",
+        estimatedDuration: 20,
+        difficulty: .beginner,
+        imageURL: "https://images.unsplash.com/photo-1545205597-3d9d02c29597?q=80&w=2940&auto=format&fit=crop&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D"
+    ),
+    RoutineTemplate(
+        name: "Cycling HIIT",
+        category: "Cardio",
+        description: "High-intensity interval training",
+        imageName: "bicycle",
+        estimatedDuration: 45,
+        difficulty: .advanced,
+        imageURL: "https://plus.unsplash.com/premium_photo-1753282083852-af82471d5da7?q=80&w=2942&auto=format&fit=crop&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D"
+    ),
+    RoutineTemplate(
+        name: "Upper Body Blast",
+        category: "Strength",
+        description: "Chest, back & arms focus",
+        imageName: "figure.mixed-cardio",
+        estimatedDuration: 50,
+        difficulty: .intermediate,
+        imageURL: "https://images.unsplash.com/photo-1581009146145-b5ef050c2e1e?q=80&w=2940&auto=format&fit=crop&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D"
+    )
+]
+
+
+let challenges = [
+    ChallengeCardModel(
+        title: "Step Into Fitness!",
+        subtitle: "Daily Steps Challenge",
+        mainNumber: "10,000",
+        unit: "Steps",
+        progress: 0.65,
+        progressText: "6,500 / 10,000",
+        buttonText: "Continue Walking",
+        colors: [Color(red: 0.1, green: 0.2, blue: 0.4), Color(red: 0.2, green: 0.3, blue: 0.6)], // Navy blue gradient
+        imageUrl: "https://images.unsplash.com/photo-1571019613454-1cb2f99b2d8b?w=200&h=200&fit=crop&crop=faces",
+        icon: "figure.walk"
+    ),
+    ChallengeCardModel(
+        title: "Hydration Hero",
+        subtitle: "Daily Water Challenge",
+        mainNumber: "8",
+        unit: "Glasses",
+        progress: 0.375,
+        progressText: "3 / 8 glasses",
+        buttonText: "Log Water",
+        colors: [Color(red: 0.1, green: 0.3, blue: 0.4), Color(red: 0.2, green: 0.4, blue: 0.5)], // Deep teal gradient
+        imageUrl: "https://images.unsplash.com/photo-1559827260-dc66d52bef19?w=200&h=200&fit=crop",
+        icon: "drop.fill"
+    ),
+    ChallengeCardModel(
+        title: "Streak Master",
+        subtitle: "7-Day Workout Streak",
+        mainNumber: "5",
+        unit: "Days",
+        progress: 0.714,
+        progressText: "5 / 7 days",
+        buttonText: "Keep Going",
+        colors: [Color(red: 0.3, green: 0.1, blue: 0.4), Color(red: 0.5, green: 0.2, blue: 0.6)], // Deep purple gradient
+        imageUrl: "https://images.unsplash.com/photo-1534258936925-c58bed479fcb?w=200&h=200&fit=crop",
+        icon: "flame.fill"
+    ),
+    ChallengeCardModel(
+        title: "Sleep Champion",
+        subtitle: "Quality Sleep Challenge",
+        mainNumber: "7.5",
+        unit: "Hours",
+        progress: 0.85,
+        progressText: "7.5 / 8 hours",
+        buttonText: "View Sleep",
+        colors: [Color(red: 0.2, green: 0.1, blue: 0.3), Color(red: 0.3, green: 0.2, blue: 0.5)], // Dark indigo gradient
+        imageUrl: "https://images.unsplash.com/photo-1520206183501-b80df61043c2?w=200&h=200&fit=crop",
+        icon: "moon.fill"
+    ),
+    ChallengeCardModel(
+        title: "Mindful Moments",
+        subtitle: "Daily Meditation Challenge",
+        mainNumber: "15",
+        unit: "Minutes",
+        progress: 0.5,
+        progressText: "15 / 30 minutes",
+        buttonText: "Start Session",
+        colors: [Color(red: 0.1, green: 0.3, blue: 0.2), Color(red: 0.2, green: 0.4, blue: 0.3)], // Dark forest green gradient
+        imageUrl: "https://images.unsplash.com/photo-1506905925346-21bda4d32df4?w=200&h=200&fit=crop",
+        icon: "leaf.fill"
+    )
+]

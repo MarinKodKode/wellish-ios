@@ -42,6 +42,9 @@ struct ContentView: View {
                 case .workoutTimer :
                     WorkoutTimerView(showWorkoutTimer: $showWorkoutTimer)
                         .environmentObject(navigationRouter)
+                case .todayWorkout :
+                    WorkoutRoutineViewLocal()
+                        .environmentObject(navigationRouter)
                 default :
                     SignInView()
                 }

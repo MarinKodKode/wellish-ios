@@ -485,10 +485,11 @@
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
+				CODE_SIGN_IDENTITY = "Apple Development";
 				CODE_SIGN_STYLE = Automatic;
 				CURRENT_PROJECT_VERSION = 1;
 				DEVELOPMENT_ASSET_PATHS = "\"GymApp/Resources/Preview Content\"";
-				DEVELOPMENT_TEAM = L7RQ7B5F43;
+				DEVELOPMENT_TEAM = 2JHAKM28VY;
 				ENABLE_PREVIEWS = YES;
 				GENERATE_INFOPLIST_FILE = YES;
 				INFOPLIST_FILE = "Wellish-Info.plist";
@@ -505,8 +506,9 @@
 				);
 				MARKETING_VERSION = 1.0;
 				OTHER_LDFLAGS = "-ObjC";
-				PRODUCT_BUNDLE_IDENTIFIER = com.manu.gymapp.GymApp;
+				PRODUCT_BUNDLE_IDENTIFIER = com.app.app.dev;
 				PRODUCT_NAME = "$(TARGET_NAME)";
+				PROVISIONING_PROFILE_SPECIFIER = "";
 				SWIFT_EMIT_LOC_STRINGS = YES;
 				SWIFT_VERSION = 5.0;
 				TARGETED_DEVICE_FAMILY = "1,2";
@@ -518,10 +520,11 @@
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
+				CODE_SIGN_IDENTITY = "Apple Development";
 				CODE_SIGN_STYLE = Automatic;
 				CURRENT_PROJECT_VERSION = 1;
 				DEVELOPMENT_ASSET_PATHS = "\"GymApp/Resources/Preview Content\"";
-				DEVELOPMENT_TEAM = L7RQ7B5F43;
+				DEVELOPMENT_TEAM = 2JHAKM28VY;
 				ENABLE_PREVIEWS = YES;
 				GENERATE_INFOPLIST_FILE = YES;
 				INFOPLIST_FILE = "Wellish-Info.plist";
@@ -538,8 +541,9 @@
 				);
 				MARKETING_VERSION = 1.0;
 				OTHER_LDFLAGS = "-ObjC";
-				PRODUCT_BUNDLE_IDENTIFIER = com.manu.gymapp.GymApp;
+				PRODUCT_BUNDLE_IDENTIFIER = com.app.app.dev;
 				PRODUCT_NAME = "$(TARGET_NAME)";
+				PROVISIONING_PROFILE_SPECIFIER = "";
 				SWIFT_EMIT_LOC_STRINGS = YES;
 				SWIFT_VERSION = 5.0;
 				TARGETED_DEVICE_FAMILY = "1,2";
@@ -628,7 +632,7 @@
 				E8E5900B2E2ADB8900B922CD /* Release */,
 			);
 			defaultConfigurationIsVisible = 0;
-			defaultConfigurationName = Release;
+			defaultConfigurationName = Debug;
 		};
 		E8E5900C2E2ADB8900B922CD /* Build configuration list for PBXNativeTarget "Wellish" */ = {
 			isa = XCConfigurationList;
@@ -637,7 +641,7 @@
 				E8E5900E2E2ADB8900B922CD /* Release */,
 			);
 			defaultConfigurationIsVisible = 0;
-			defaultConfigurationName = Release;
+			defaultConfigurationName = Debug;
 		};
 		E8E5900F2E2ADB8900B922CD /* Build configuration list for PBXNativeTarget "WellishTests" */ = {
 			isa = XCConfigurationList;
@@ -646,7 +650,7 @@
 				E8E590112E2ADB8900B922CD /* Release */,
 			);
 			defaultConfigurationIsVisible = 0;
-			defaultConfigurationName = Release;
+			defaultConfigurationName = Debug;
 		};
 		E8E590122E2ADB8900B922CD /* Build configuration list for PBXNativeTarget "WellishUITests" */ = {
 			isa = XCConfigurationList;
@@ -655,7 +659,7 @@
 				E8E590142E2ADB8900B922CD /* Release */,
 			);
 			defaultConfigurationIsVisible = 0;
-			defaultConfigurationName = Release;
+			defaultConfigurationName = Debug;
 		};
 /* End XCConfigurationList section */
 

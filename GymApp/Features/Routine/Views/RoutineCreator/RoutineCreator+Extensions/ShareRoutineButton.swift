@@ -11,7 +11,7 @@ extension RoutineCreatorView {
     
     var shareButton: some View {
         Button(action: {
-            // Share functionality will be implemented later
+            print("\(vm.routine)")
         }) {
             HStack(spacing: 12) {
                 Image(systemName: "square.and.arrow.up")

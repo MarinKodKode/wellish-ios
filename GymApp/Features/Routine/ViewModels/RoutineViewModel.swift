@@ -23,8 +23,12 @@ public final class RoutineViewModel: ObservableObject {
 
     private let repository: RoutineRepositoryProtocol
 
-    public init(routine: Routine = Routine(name: StringConstants.routineNewRoutine),
-                repository: RoutineRepositoryProtocol = MockRoutineRepository()) {
+    public init(
+        routine: Routine = Routine(
+            name: StringConstants.routineNewRoutine
+        ),
+                repository: RoutineRepositoryProtocol = MockRoutineRepository()
+) {
         self.routine = routine
         self.repository = repository
     }

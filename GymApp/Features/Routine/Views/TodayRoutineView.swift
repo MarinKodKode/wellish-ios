@@ -1,7 +1,6 @@
 import SwiftUI
 import Lottie
 
-// MARK: - Models
 struct ExerciseLocal: Identifiable {
     let id = UUID()
     let name: String
@@ -11,7 +10,6 @@ struct ExerciseLocal: Identifiable {
     let restTime: Int
 }
 
-// MARK: - Main View
 struct WorkoutRoutineViewLocal: View {
     @StateObject private var viewModel = WorkoutViewModel()
     
@@ -88,8 +86,6 @@ struct WorkoutRoutineViewLocal: View {
     }
 }
 
-
-// MARK: - Subviews
 struct HeaderView: View {
     let elapsedTime: Int
     
@@ -554,7 +550,6 @@ struct CompletionStat: View {
     }
 }
 
-// MARK: - Preview
 struct WorkoutRoutineView_Previews: PreviewProvider {
     static var previews: some View {
         WorkoutRoutineViewLocal()

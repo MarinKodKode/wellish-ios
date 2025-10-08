@@ -1,114 +1,308 @@
-//
-//  RoutineViewModel.swift
-//  Wellish
-//
-//  Created by Manuel Alejandro Hernandez Marín on 12/08/25.
-//
-
 import Foundation
 import Combine
 import SwiftUI
 
 @MainActor
-public final class RoutineViewModel: ObservableObject {
-    // Input model being edited
-    @Published public var routine: Routine
 
-    // UI state
-    @Published public var isSaving: Bool = false
-    @Published public var errorMessage: String?
-    @Published var error: ErrorWrapper?
-    @Published var savedRoutines: [Routine] = routines
-    @Published var tagsInput: String = ""
-
-    private let repository: RoutineRepositoryProtocol
-
+public final class RoutineViewModel : ObservableObject {
+    
+    @Published public var routine : Routine
+    
+    //UI State
+    
+    @Published public var isSaving : Bool = false
+    @Published public var errorMessage : String?
+    @Published var error : ErrorWrapper?
+    @Published var savedRoutines : [Routine] = []
+    @Published var tagsInput : String = ""
+    
+    private let repository : RoutineRepositoryProtocol
+    private let firestoreService = RoutineFirestoreService()
+    
     public init(
-        routine: Routine = Routine(
-            name: StringConstants.routineNewRoutine
+        routine : Routine = Routine(
+            name : StringConstants.routineNewRoutine
         ),
-                repository: RoutineRepositoryProtocol = MockRoutineRepository()
-) {
+        repository : RoutineRepositoryProtocol = MockRoutineRepository()
+    ){
         self.routine = routine
         self.repository = repository
     }
-
-    // MARK: - Convenience computed values
-    public var isValidName: Bool {
+    
+    public var isValidName : Bool {
         !routine.name.trimmingCharacters(in: .whitespacesAndNewlines).isEmpty
     }
-
-    public var canSave: Bool {
+    
+    public var canSave : Bool {
         isValidName && !routine.sets.isEmpty && !isSaving
     }
-
-    // MARK: - CRUD helpers
-    public func addSet(with exercise: Exercise) {
+    
+    // MARK: - Validation
+    
+    /// Validates routine and returns error if they are
+    
+    public func validateRoutine() -> (isValid : Bool, errors : [String]){
+        
+        var errors : [String] = []
+        
+        //Validates if Name is empty
+        if routine.name.trimmingCharacters(in: .whitespacesAndNewlines).isEmpty {
+            errors.append("Name cannot be empty")
+        }
+        
+        //Validates at least one exercise
+        if routine.sets.isEmpty {
+            errors.append("Need at least one exercise")
+        }
+        
+        //Validates at least one serie in each exercise
+        for (index, set) in routine.sets.enumerated(){
+            if set.series.isEmpty{
+                errors.append("\(set.exercise.name) must have at least one serie")
+            }
+        }
+        return (errors.isEmpty, errors)
+    }
+    
+    
+    //MARK: -  CRUD Helpers
+    
+    public func addSet(with exercise : Exercise){
         let newSet = RoutineSet(exercise: exercise)
         routine.sets.append(newSet)
+        routine.updatedAt = Date()
     }
-
-    public func removeSet(at index: Int) {
+    
+    public func removeSet(at index : Int){
         guard routine.sets.indices.contains(index) else { return }
         routine.sets.remove(at: index)
+        routine.updatedAt = Date()
     }
-
-    public func addSerie(toSetAt setIndex: Int) {
+    
+    public func addSerie(toSetAt setIndex : Int) {
         guard routine.sets.indices.contains(setIndex) else { return }
         routine.sets[setIndex].series.append(Serie())
+        routine.updatedAt = Date()
     }
-
-    public func removeSerie(at serieIndex: Int, inSet setIndex: Int) {
+    
+    public func removeSerie(at serieIndex : Int, inSet setIndex : Int){
         guard routine.sets.indices.contains(setIndex),
               routine.sets[setIndex].series.indices.contains(serieIndex) else { return }
         routine.sets[setIndex].series.remove(at: serieIndex)
+        routine.updatedAt = Date()
     }
-
-    public func updateSerie(_ serie: Serie, at serieIndex: Int, inSet setIndex: Int) {
+    
+    public func updateSerie(_ serie : Serie, at serieIndex : Int, inSet setIndex : Int){
         guard routine.sets.indices.contains(setIndex),
               routine.sets[setIndex].series.indices.contains(serieIndex) else { return }
         routine.sets[setIndex].series[serieIndex] = serie
+        routine.updatedAt = Date()
     }
-
-    // MARK: - Metrics
-    public var estimatedVolumeKg: Double {
+    
+    //MARK: - Metrics
+    
+    public var estimatedVolumeKg : Double {
         routine.estimatedVolumeKg
     }
-
-    public var totalReps: Int {
+    
+    public var totalReps : Int {
         routine.totalReps
     }
-
+    
     // MARK: - Templates & tags helpers
-    public func addTag(_ tag: String) {
+    
+    public func addTag(_ tag : String){
         let t = tag.trimmingCharacters(in: .whitespacesAndNewlines)
         guard !t.isEmpty, !routine.tags.contains(t) else { return }
         routine.tags.append(t)
+        routine.updatedAt = Date()
     }
-
-    public func removeTag(_ tag: String) {
-        routine.tags.removeAll { $0 == tag }
+    
+    public func removeTag(_ tag : String ){
+        routine.tags.removeAll{ $0 == tag }
+        routine.updatedAt = Date()
     }
-
-    // MARK: - Save
-    public func save() async -> Bool {
+    
+    // MARK: - Auto-complete fields
+    
+    /// Fills some important gaps before saving routine
+    
+    private func prepareRoutineForSave(){
+        //Update timestamp
+        routine.updatedAt = Date()
+        
+        //Auto-fill worked muscles
+        if routine.musclesWorked?.isEmpty ?? true {
+            let allMuscles = Set(routine.sets.flatMap{ $0.exercise.muscles })
+            routine.musclesWorked = Array(allMuscles).sorted()
+        }
+        
+        //Calculate stimated duration if empty
+        if routine.estimatedDurationMinutes == nil {
+            routine.estimatedDurationMinutes = calculateEstimatedDuration()
+        }
+        
+        // Asignar creator si está disponible (descomentar cuando tengas Firebase Auth)
+        // if routine.creator == nil {
+        //     routine.creator = Auth.auth().currentUser?.uid
+        // }
+        
+        // Si no hay categoría, tomar del primer ejercicio
+        if routine.category == nil || routine.category?.isEmpty ?? true {
+            routine.category = routine.sets.first?.exercise.category
+        }
+        
+        // Grupo muscular afectado (tomar el más común)
+        if routine.muscularGroupAffected == nil {
+            routine.muscularGroupAffected = determinePrimaryMuscularGroup()
+        }
+    }
+    
+    //Calculate estimated duration of each routine
+    private func calculateEstimatedDuration() -> Int {
+        let totalSeries = routine.sets.reduce(0) { $0 + $1.series.count}
+        let avgTimePerSerie = 45
+        
+        let totalRestTime = routine.sets.reduce(0) { total, set in
+            let restTime = set.restBetweenSeriesSeconds ?? 90
+            let seriesCount = max(0, set.series.count - 1)
+            return total + (restTime * seriesCount)
+        }
+        
+        let totalSeconds = (totalSeries * avgTimePerSerie) + totalRestTime
+        return max(1, (totalSeconds + 59) / 60)
+    }
+    
+    // Determine main muscular group
+    
+    private func determinePrimaryMuscularGroup() -> String {
+        let muscles = routine.sets.flatMap{ $0.exercise.muscles}
+        guard !muscles.isEmpty else { return "General" }
+        
+        var muscleCount : [String : Int] = [:]
+        muscles.forEach { muscle in
+            muscleCount[muscle, default: 0] += 1
+        }
+        
+        return muscleCount.max(by: { $0.value < $1.value})?.key ?? muscles.first ?? "General"
+    }
+    
+    // MARK: - Save to Firebase
+    // Guarda la rutina directamente en Firebase Firestore
+    
+    public func saveToFirebase() async -> Bool {
         guard canSave else {
-            errorMessage = "Please provide a name and at least one set."
+            errorMessage = "Plase provide a name and at least one exercise."
             return false
         }
+        
+        //Validate
+        let validation = validateRoutine()
+        if !validation.isValid {
+            errorMessage = validation.errors.joined(separator: "\n")
+            return false
+        }
+        
         isSaving = true
         errorMessage = nil
+        
+        prepareRoutineForSave()
+        
+        print("Routine details : \(routine)")
+        
         do {
-            let saved = try await repository.saveRoutine(routine)
-            self.routine = saved
+            let documentID = try await firestoreService.uploadRoutine(routine)
+            print("Routine saved succesfully.")
             isSaving = false
             return true
-        } catch {
-            self.errorMessage = error.localizedDescription
+        }catch {
+            errorMessage = "Error at saving routine:  \(error.localizedDescription)"
+            print("Error : \(String(describing: errorMessage))")
             isSaving = false
             return false
         }
     }
     
+    public func loadRoutinesFromFirebase() async {
+        isSaving = true
+        errorMessage = nil
+        
+        do {
+            let routines = try await firestoreService.fetchRoutines()
+            self.savedRoutines = routines
+            isSaving = false
+        }catch {
+            errorMessage = "Error when loading routines - \(error.localizedDescription)"
+            print("Error Saving routines - \(String(describing: errorMessage))")
+            isSaving = false
+        }
+    }
+    
+    //Load specific routines by ID
+    public func loadRoutine(id : String ) async -> Bool {
+        isSaving = true
+        errorMessage = nil
+        
+        do {
+            let loadedRoutine = try await firestoreService.fetchRoutine(id: id)
+            self.routine = loadedRoutine
+            isSaving = false
+            return true
+        }catch {
+            errorMessage = "Error loading routine \(error.localizedDescription)"
+            isSaving = false
+            return false
+        }
+    }
+    
+    // MARK: - Update in Firebase
 
+    //Updates an existant routine in Firebase
+    
+    public func updateInFirebase() async -> Bool {
+        guard canSave else {
+            errorMessage = "Please provide a name and an exercise"
+            return false
+        }
+        
+        let validation = validateRoutine()
+        
+        if !validation.isValid {
+            errorMessage = validation.errors.joined(separator: "\n")
+            return false
+        }
+        
+        isSaving = true
+        errorMessage = nil
+        
+        prepareRoutineForSave()
+        
+        do {
+            try await firestoreService.updateRoutine(routine)
+            isSaving = false
+            print("Routine updated successfully.")
+            return true
+        }catch{
+            errorMessage = "Error updating routine: \(error.localizedDescription)"
+            isSaving = false
+            return false
+        }
+    }
+    
+    // MARK: - Delete from Firebase
+    
+    public func deleteFromFirebase() async -> Bool {
+        isSaving = true
+        errorMessage = nil
+        
+        do {
+            try await firestoreService.deleteRoutine(id: routine.id)
+            isSaving = false
+            return true
+        }catch {
+            errorMessage = "Error deleting routine - \(error.localizedDescription)"
+            print("Erro : \(String(describing: errorMessage))")
+            return false
+        }
+    }
 }

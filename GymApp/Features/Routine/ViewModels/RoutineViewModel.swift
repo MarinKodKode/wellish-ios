@@ -11,10 +11,15 @@ public final class RoutineViewModel : ObservableObject {
     //UI State
     
     @Published public var isSaving : Bool = false
+    @Published public var isLoading : Bool = false
     @Published public var errorMessage : String?
     @Published var error : ErrorWrapper?
     @Published var savedRoutines : [Routine] = []
     @Published var tagsInput : String = ""
+    
+    //Connection Status
+    @Published public var isOnline : Bool = true
+    @Published public var lastSyncDate : Date?
     
     private let repository : RoutineRepositoryProtocol
     private let firestoreService = RoutineFirestoreService()
@@ -205,8 +210,8 @@ public final class RoutineViewModel : ObservableObject {
         
         isSaving = true
         errorMessage = nil
-        
         prepareRoutineForSave()
+        
         
         print("Routine details : \(routine)")
         

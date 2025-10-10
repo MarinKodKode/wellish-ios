@@ -21,8 +21,9 @@ public final class RoutineViewModel : ObservableObject {
     @Published public var isOnline : Bool = true
     @Published public var lastSyncDate : Date?
     
-    private let repository : RoutineRepositoryProtocol
-    private let firestoreService = RoutineFirestoreService()
+    let repository : RoutineRepositoryProtocol
+    let firestoreService = RoutineFirestoreService()
+    let localStorageService = RoutineLocalStorageService()
     
     public init(
         routine : Routine = Routine(
@@ -132,7 +133,7 @@ public final class RoutineViewModel : ObservableObject {
     
     /// Fills some important gaps before saving routine
     
-    private func prepareRoutineForSave(){
+    public func prepareRoutineForSave(){
         //Update timestamp
         routine.updatedAt = Date()
         
@@ -195,70 +196,7 @@ public final class RoutineViewModel : ObservableObject {
     // MARK: - Save to Firebase
     // Guarda la rutina directamente en Firebase Firestore
     
-    public func saveToFirebase() async -> Bool {
-        guard canSave else {
-            errorMessage = "Plase provide a name and at least one exercise."
-            return false
-        }
-        
-        //Validate
-        let validation = validateRoutine()
-        if !validation.isValid {
-            errorMessage = validation.errors.joined(separator: "\n")
-            return false
-        }
-        
-        isSaving = true
-        errorMessage = nil
-        prepareRoutineForSave()
-        
-        
-        print("Routine details : \(routine)")
-        
-        do {
-            let documentID = try await firestoreService.uploadRoutine(routine)
-            print("Routine saved succesfully.")
-            isSaving = false
-            return true
-        }catch {
-            errorMessage = "Error at saving routine:  \(error.localizedDescription)"
-            print("Error : \(String(describing: errorMessage))")
-            isSaving = false
-            return false
-        }
-    }
     
-    public func loadRoutinesFromFirebase() async {
-        isSaving = true
-        errorMessage = nil
-        
-        do {
-            let routines = try await firestoreService.fetchRoutines()
-            self.savedRoutines = routines
-            isSaving = false
-        }catch {
-            errorMessage = "Error when loading routines - \(error.localizedDescription)"
-            print("Error Saving routines - \(String(describing: errorMessage))")
-            isSaving = false
-        }
-    }
-    
-    //Load specific routines by ID
-    public func loadRoutine(id : String ) async -> Bool {
-        isSaving = true
-        errorMessage = nil
-        
-        do {
-            let loadedRoutine = try await firestoreService.fetchRoutine(id: id)
-            self.routine = loadedRoutine
-            isSaving = false
-            return true
-        }catch {
-            errorMessage = "Error loading routine \(error.localizedDescription)"
-            isSaving = false
-            return false
-        }
-    }
     
     // MARK: - Update in Firebase
 

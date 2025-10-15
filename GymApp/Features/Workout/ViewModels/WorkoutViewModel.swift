@@ -6,8 +6,12 @@
 //
 
 import Foundation
+import ActivityKit
+import UserNotifications
+import UIKit
 
 class WorkoutViewModel: ObservableObject {
+    
     @Published var currentExerciseIndex = 0
     @Published var currentSet = 1
     @Published var isTimerRunning = false
@@ -21,16 +25,12 @@ class WorkoutViewModel: ObservableObject {
     let exercises = [
         ExerciseLocal(name: "Bench Press", sets: 4, reps: 10, weight: 60, restTime: 90),
         ExerciseLocal(name: "Dumbbell Rows", sets: 4, reps: 12, weight: 25, restTime: 60),
-        ExerciseLocal(name: "Shoulder Press", sets: 3, reps: 10, weight: 20, restTime: 60),
-        ExerciseLocal(name: "Lateral Raises", sets: 3, reps: 15, weight: 10, restTime: 45),
-        ExerciseLocal(name: "Bicep Curls", sets: 3, reps: 12, weight: 15, restTime: 45),
-        ExerciseLocal(name: "Tricep Extensions", sets: 3, reps: 12, weight: 15, restTime: 45),
-        ExerciseLocal(name: "Face Pulls", sets: 3, reps: 15, weight: 20, restTime: 45),
-        ExerciseLocal(name: "Push-ups", sets: 3, reps: 20, weight: 0, restTime: 60)
+        
     ]
     
     private var timer: Timer?
     private var restTimerInstance: Timer?
+    public  var currentActivity : Activity<WorkoutActivityAttributes>?
     
     var currentExercise: ExerciseLocal {
         exercises[currentExerciseIndex]
@@ -52,20 +52,38 @@ class WorkoutViewModel: ObservableObject {
         elapsedTime / 60 * 8
     }
     
+    init (){
+        requestNotificationPermissions()
+        setupNotificationCategories()
+    }
+    
+    
     func startWorkout() {
         isTimerRunning = true
+        startLiveActivity()
         timer = Timer.scheduledTimer(withTimeInterval: 1.0, repeats: true) { [weak self] _ in
             guard let self = self, !self.isResting else { return }
             self.elapsedTime += 1
+            updateLiveActivity()
         }
     }
     
     func pauseWorkout() {
         isTimerRunning = false
         timer?.invalidate()
+        
+        if isResting {
+            endLiveActivity()
+            UNUserNotificationCenter
+                .current()
+                .removePendingNotificationRequests(withIdentifiers: ["restComplete"])
+        }
     }
     
+    
+    
     func completeSet() {
+        
         
         var sets = completedSets[currentExerciseIndex] ?? []
         sets.append(currentSet)
@@ -88,6 +106,7 @@ class WorkoutViewModel: ObservableObject {
             } else {
                 isTimerRunning = false
                 timer?.invalidate()
+                endLiveActivity()
                 showWorkoutComplete = true
             }
         }
@@ -100,6 +119,10 @@ class WorkoutViewModel: ObservableObject {
             isResting = false
             restTimer = 0
             restTimerInstance?.invalidate()
+            endLiveActivity()
+            UNUserNotificationCenter
+                .current()
+                .removeDeliveredNotifications(withIdentifiers: ["restComplete"])
         }
     }
     
@@ -110,9 +133,73 @@ class WorkoutViewModel: ObservableObject {
             guard let self = self else { return }
             if self.restTimer > 0 {
                 self.restTimer -= 1
+                updateLiveActivity()
             } else {
                 self.isResting = false
                 self.restTimerInstance?.invalidate()
+                updateLiveActivity()
+            }
+        }
+    }
+    
+    func requestNotificationPermissions(){
+        UNUserNotificationCenter
+            .current()
+            .requestAuthorization(
+                options: [.alert, .sound, .badge]){ granted, error in
+            if granted {
+                print("Notifications Allowed")
+            }
+        }
+    }
+    
+    func setupNotificationCategories(){
+        let restCompleteCategory = UNNotificationCategory(
+            identifier: "WORKOUT_REST_COMPLETE",
+            actions: [],
+            intentIdentifiers: [],
+            options: [.customDismissAction]
+        )
+        
+        UNUserNotificationCenter
+            .current()
+            .setNotificationCategories([restCompleteCategory])
+    }
+    
+    func scheduleRestCompleteNotification(duration : Int ){
+        UNUserNotificationCenter
+            .current()
+            .removePendingNotificationRequests(withIdentifiers: ["restComplete"])
+        let content = UNMutableNotificationContent()
+        content.title = "Descanso terminado, a darle!"
+        content.body = "Vamos vamos que esas metas no llegan solas."
+        content.sound = .default
+        content.badge = NSNumber(
+            value: UIApplication.shared.applicationIconBadgeNumber + 1
+        )
+        
+        content.categoryIdentifier = "WORKOUT_REST_COMPLETE"
+        
+        content.userInfo = [
+            "exercise" : currentExercise.name,
+            "set" : currentSet,
+            "restComplete" : true
+        ]
+        
+        let trigger = UNTimeIntervalNotificationTrigger(
+            timeInterval: TimeInterval(duration),
+            repeats: false
+        )
+        let request = UNNotificationRequest(
+            identifier: "restComplete",
+            content: content,
+            trigger: trigger
+        )
+        UNUserNotificationCenter.current().add(request){ error in
+            if let error = error {
+                print("Error al programar notificación \(error)")
+            }else{
+                print("Notificación programada para \(duration)s")
             }
         }
     }

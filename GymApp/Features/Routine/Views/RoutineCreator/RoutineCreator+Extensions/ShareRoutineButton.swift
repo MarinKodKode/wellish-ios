@@ -13,10 +13,10 @@ extension RoutineCreatorView {
         Button(action: {
             print("\(vm.routine)")
             Task {
-                let success = await vm.saveToFirebase()
-                if success {
-                    print("🎉 Rutina guardada!")
-                }
+//                let success = await vm.saveToFirebase()
+//                if success {
+//                    print("🎉 Rutina guardada!")
+//                }
             }
         }) {
             HStack(spacing: 12) {

@@ -15,7 +15,6 @@ extension RoutineViewModel {
         
         print("Loading routines")
         
-        //First uses Firebase, if fails, uses local
         do {
             let firebaseRoutines = try await firestoreService.fetchRoutines()
             self.savedRoutines = firebaseRoutines
@@ -82,7 +81,8 @@ extension RoutineViewModel {
             isLoading = false
             return true
         }catch {
-            errorM
+            print("Error - \(error.localizedDescription)")
+            return false
         }
     }
 }

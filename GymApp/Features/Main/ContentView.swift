@@ -7,6 +7,7 @@
 
 import SwiftUI
 import FirebaseAuth
+import ActivityKit
 
 struct ContentView: View {
     @StateObject private var onboardingService = OnboardingService()
@@ -16,40 +17,64 @@ struct ContentView: View {
     @EnvironmentObject var navigationRouter: NavigationRouter
     
     var body: some View {
-        NavigationStack(path: $navigationRouter.path) {
-            Group {
-                if onboardingService.shouldShowOnboarding {
-                    OnboardingView()
-                        .environmentObject(onboardingService)
-                } else {
-//                    authenticationFlow
-                    MainTabViewContainer(navigationPath: $navigationPath)
-                        .environmentObject(authenticationService)
+        
+        Button("Test Live Activity") {
+                    Task {
+                        let attributes = WorkoutActivityAttributes(workoutName: "Test Workout")
+                        let state = WorkoutActivityAttributes.ContentState(
+                            restTimeRemaining: 10,
+                            currentExercise: "Bench Press",
+                            currentSet: 1,
+                            totalSets: 3,
+                            nextExercise: "Squats"
+                        )
+                        do {
+                            let activity = try Activity<WorkoutActivityAttributes>.request(
+                                attributes: attributes,
+                                contentState: state,
+                                pushType: nil
+                            )
+                            print("Live Activity test iniciada")
+                        } catch {
+                            print("Error Live Activity: \(error)")
+                        }
+                    }
                 }
-            }
-            .animation(.easeInOut(duration: 0.3), value: onboardingService.shouldShowOnboarding)
-            .navigationDestination(for: AppRoute.self) { route in
-                switch route {
-                case .signup:
-                    SignUpView()
-                        .environmentObject(navigationRouter)
-                case .signin:
-                    SignInView()
-                        .environmentObject(navigationRouter)
-                case .createRoutine :
-                    RoutineCreatorView(viewModel: RoutineViewModel())
-                        .environmentObject(navigationRouter)
-                case .workoutTimer :
-                    WorkoutTimerView(showWorkoutTimer: $showWorkoutTimer)
-                        .environmentObject(navigationRouter)
-                case .todayWorkout :
-                    WorkoutRoutineViewLocal()
-                        .environmentObject(navigationRouter)
-                default :
-                    SignInView()
-                }
-            }
-        }
+//        
+//        NavigationStack(path: $navigationRouter.path) {
+//            Group {
+//                if onboardingService.shouldShowOnboarding {
+//                    OnboardingView()
+//                        .environmentObject(onboardingService)
+//                } else {
+////                    authenticationFlow
+//                    MainTabViewContainer(navigationPath: $navigationPath)
+//                        .environmentObject(authenticationService)
+//                }
+//            }
+//            .animation(.easeInOut(duration: 0.3), value: onboardingService.shouldShowOnboarding)
+//            .navigationDestination(for: AppRoute.self) { route in
+//                switch route {
+//                case .signup:
+//                    SignUpView()
+//                        .environmentObject(navigationRouter)
+//                case .signin:
+//                    SignInView()
+//                        .environmentObject(navigationRouter)
+//                case .createRoutine :
+//                    RoutineCreatorView(viewModel: RoutineViewModel())
+//                        .environmentObject(navigationRouter)
+//                case .workoutTimer :
+//                    WorkoutTimerView(showWorkoutTimer: $showWorkoutTimer)
+//                        .environmentObject(navigationRouter)
+//                case .todayWorkout :
+//                    WorkoutRoutineViewLocal()
+//                        .environmentObject(navigationRouter)
+//                default :
+//                    SignInView()
+//                }
+//            }
+//        }
     }
     
     @ViewBuilder

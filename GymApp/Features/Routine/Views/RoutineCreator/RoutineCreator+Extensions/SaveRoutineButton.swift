@@ -12,10 +12,11 @@ extension RoutineCreatorView{
     var saveButton: some View {
         Button(action: {
             Task {
-//                let ok = await vm.save()
-//                if ok {
-//                    // Success feedback can be added later
-//                }
+                print("Saving routine...")
+                let ok = await vm.saveRoutine()
+                if ok {
+                    // Success feedback can be added later
+                }
             }
         }) {
             HStack(spacing: 12) {

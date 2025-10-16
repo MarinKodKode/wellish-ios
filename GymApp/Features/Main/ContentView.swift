@@ -18,63 +18,40 @@ struct ContentView: View {
     
     var body: some View {
         
-        Button("Test Live Activity") {
-                    Task {
-                        let attributes = WorkoutActivityAttributes(workoutName: "Test Workout")
-                        let state = WorkoutActivityAttributes.ContentState(
-                            restTimeRemaining: 10,
-                            currentExercise: "Bench Press",
-                            currentSet: 1,
-                            totalSets: 3,
-                            nextExercise: "Squats"
-                        )
-                        do {
-                            let activity = try Activity<WorkoutActivityAttributes>.request(
-                                attributes: attributes,
-                                contentState: state,
-                                pushType: nil
-                            )
-                            print("Live Activity test iniciada")
-                        } catch {
-                            print("Error Live Activity: \(error)")
-                        }
-                    }
+        NavigationStack(path: $navigationRouter.path) {
+            Group {
+                if onboardingService.shouldShowOnboarding {
+                    OnboardingView()
+                        .environmentObject(onboardingService)
+                } else {
+//                    authenticationFlow
+                    MainTabViewContainer(navigationPath: $navigationPath)
+                        .environmentObject(authenticationService)
                 }
-//        
-//        NavigationStack(path: $navigationRouter.path) {
-//            Group {
-//                if onboardingService.shouldShowOnboarding {
-//                    OnboardingView()
-//                        .environmentObject(onboardingService)
-//                } else {
-////                    authenticationFlow
-//                    MainTabViewContainer(navigationPath: $navigationPath)
-//                        .environmentObject(authenticationService)
-//                }
-//            }
-//            .animation(.easeInOut(duration: 0.3), value: onboardingService.shouldShowOnboarding)
-//            .navigationDestination(for: AppRoute.self) { route in
-//                switch route {
-//                case .signup:
-//                    SignUpView()
-//                        .environmentObject(navigationRouter)
-//                case .signin:
-//                    SignInView()
-//                        .environmentObject(navigationRouter)
-//                case .createRoutine :
-//                    RoutineCreatorView(viewModel: RoutineViewModel())
-//                        .environmentObject(navigationRouter)
-//                case .workoutTimer :
-//                    WorkoutTimerView(showWorkoutTimer: $showWorkoutTimer)
-//                        .environmentObject(navigationRouter)
-//                case .todayWorkout :
-//                    WorkoutRoutineViewLocal()
-//                        .environmentObject(navigationRouter)
-//                default :
-//                    SignInView()
-//                }
-//            }
-//        }
+            }
+            .animation(.easeInOut(duration: 0.3), value: onboardingService.shouldShowOnboarding)
+            .navigationDestination(for: AppRoute.self) { route in
+                switch route {
+                case .signup:
+                    SignUpView()
+                        .environmentObject(navigationRouter)
+                case .signin:
+                    SignInView()
+                        .environmentObject(navigationRouter)
+                case .createRoutine :
+                    RoutineCreatorView(viewModel: RoutineViewModel())
+                        .environmentObject(navigationRouter)
+                case .workoutTimer :
+                    WorkoutTimerView(showWorkoutTimer: $showWorkoutTimer)
+                        .environmentObject(navigationRouter)
+                case .todayWorkout :
+                    WorkoutRoutineViewLocal()
+                        .environmentObject(navigationRouter)
+                default :
+                    SignInView()
+                }
+            }
+        }
     }
     
     @ViewBuilder

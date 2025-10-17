@@ -47,6 +47,9 @@ struct ContentView: View {
                 case .todayWorkout :
                     WorkoutRoutineViewLocal()
                         .environmentObject(navigationRouter)
+                case .createPlan :
+                    CreatePlanView()
+                        .environmentObject(navigationRouter)
                 default :
                     SignInView()
                 }

@@ -28,18 +28,11 @@ struct MainTabViewContainer: View {
                     Label("Activity", systemImage: "figure.walk")
                 }
                 .tag(1)
-//            PlansView(vm: RoutineViewModel(), plansVM: PlansViewViewModel())
-            CreatePlanView()
-//            WorkoutCompleteView(totalTime: 234, caloriesBurned: 1789)
+            PlansView(vm: RoutineViewModel(), plansVM: PlansViewViewModel())
                 .tabItem {
                     Label("Plans", systemImage: "clipboard")
                 }
                 .tag(2)
-//            WorkoutRoutineViewLocal()
-//                .tabItem {
-//                    Label("Plans", systemImage: "clipboard")
-//                }
-//                .tag(2)
             ProfileView(showWorkoutTimer: $showWorkoutTimer_true)
                 .tabItem {
                     Label("Profile", systemImage: "person")

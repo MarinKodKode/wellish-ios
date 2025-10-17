@@ -28,13 +28,11 @@ extension CreatePlanView {
                 PlanCreator_EmptyActivitiesState
                 
             } else {
-                activitiesList
+                PlanCreator_ActivitiesList
             }
             
-            // Calendar Grid
             PlanCreator_CalendarGrid
             
-            // Add Activity Button
             Button {
                 // Show instruction to select a day
             } label: {

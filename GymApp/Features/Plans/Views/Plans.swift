@@ -54,22 +54,22 @@ struct PlansView: View {
                                     .foregroundColor(.fitnessTextPrimary)
                                 Spacer()
                                 Button(action: {
-                                    navigationRouter.goTo(.createRoutine)
+                                    navigationRouter.goTo(.createPlan)
                                 }){
                                     Text(StringConstants.plansAddNewPlan)
                                 }
                             }
                             .padding(.horizontal)
 
-                            if $plansVM.routines.isEmpty {
+                            if $plansVM.plans.isEmpty {
                                 Text("No plans saved yet.")
                                     .foregroundColor(.fitnessTextSecondary)
                                     .italic()
                                     .frame(maxWidth: .infinity)
                                     .padding()
                             } else {
-                                ForEach(plansVM.routines) { routine in
-                                    PlansRoutineRowView(routine: routine)
+                                ForEach(plansVM.plans) { plan in
+//                                    PlansRoutineRowView(routine: routine)
                                 }
                                 .buttonStyle(PlainButtonStyle())
                             }
@@ -90,14 +90,14 @@ struct PlansView: View {
                             }
                             .padding(.horizontal)
 
-                            if $vm.savedRoutines.isEmpty {
+                            if $plansVM.routines.isEmpty {
                                 Text("No routines saved yet.")
                                     .foregroundColor(.fitnessTextSecondary)
                                     .italic()
                                     .frame(maxWidth: .infinity)
                                     .padding()
                             } else {
-                                ForEach(vm.savedRoutines) { routine in
+                                ForEach(plansVM.routines) { routine in
                                     PlansRoutineRowView(routine: routine)
                                 }
                                 .buttonStyle(PlainButtonStyle())

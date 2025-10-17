@@ -2,13 +2,14 @@ import SwiftUI
 
 // MARK: - Create Plan View
 struct CreatePlanView: View {
-    @StateObject private var viewModel = PlanViewModel()
-    @Environment(\.dismiss) private var dismiss
     
-    @State private var showGoalPicker = false
-    @State private var showActivityPicker = false
-    @State private var selectedDay: Int?
-    @State private var showActivityTypeSheet = false
+    @StateObject var viewModel = PlanViewModel()
+    @Environment(\.dismiss) var dismiss
+    
+    @State var showGoalPicker = false
+    @State var showActivityPicker = false
+    @State var selectedDay: Int?
+    @State var showActivityTypeSheet = false
     
     var body: some View {
         NavigationView {
@@ -23,48 +24,27 @@ struct CreatePlanView: View {
                 
                 ScrollView {
                     VStack(spacing: 24) {
-                        // Subtitle
-                        HStack {
-                            Text("¡Construye el plan perfecto para ti!")
-                                .font(.title3)
-                                .foregroundColor(.secondary)
-                            Spacer()
-                            Button {
-                                // Show help
-                            } label: {
-                                Image(systemName: "questionmark.circle.fill")
-                                    .font(.title2)
-                                    .foregroundColor(.blue)
-                            }
-                        }
-                        .padding(.horizontal)
                         
-                        // Detalles del plan
-                        planDetailsSection
+                        PlanCreator_Header
                         
-                        // Objetivo
-                        goalSection
+                        PlanCreator_DetailsSection
                         
-                        // Configuración
-                        configurationSection
+                        PlanCreator_GoalSection
                         
-                        // Actividades del plan
-                        activitiesSection
+                        PlanCreator_ConfigurationSection
                         
-                        // Tags y categorías
-                        tagsSection
+                        PlanCreator_ActivitiesSection
                         
-                        // Spacer para botones flotantes
-                        Color.clear.frame(height: 180)
+                        PlanCreator_TagsSection
+                        
+                        PlanCreatorButtonsSection
+                        
                     }
                     .padding(.vertical)
                 }
             }
             .navigationTitle("Crear plan")
             .navigationBarTitleDisplayMode(.large)
-            .overlay(alignment: .bottom) {
-                bottomActions
-            }
             .sheet(isPresented: $showGoalPicker) {
                 GoalPickerSheet(selectedGoal: $viewModel.plan.goal)
             }
@@ -76,284 +56,12 @@ struct CreatePlanView: View {
         }
     }
     
-    // MARK: - Plan Details Section
-    private var planDetailsSection: some View {
-        VStack(alignment: .leading, spacing: 16) {
-            // Section Header
-            HStack(spacing: 12) {
-                Image(systemName: "dumbbell.fill")
-                    .font(.title2)
-                    .foregroundColor(.blue)
-                
-                Text("Detalles del plan")
-                    .font(.title2)
-                    .fontWeight(.semibold)
-            }
-            .padding(.horizontal)
-            
-            // Card
-            VStack(spacing: 12) {
-                TextField("Nuevo plan", text: $viewModel.plan.name)
-                    .textFieldStyle(CustomTextFieldStyle())
-                
-                TextField("Añade una descripción (opcional)", text: Binding(
-                    get: { viewModel.plan.description ?? "" },
-                    set: { viewModel.plan.description = $0.isEmpty ? nil : $0 }
-                ), axis: .vertical)
-                    .textFieldStyle(CustomTextFieldStyle())
-                    .lineLimit(3...5)
-            }
-            .padding()
-            .background(Color(hex: "1E293B"))
-            .cornerRadius(20)
-            .padding(.horizontal)
-        }
-    }
     
-    // MARK: - Goal Section
-    private var goalSection: some View {
-        VStack(alignment: .leading, spacing: 16) {
-            HStack(spacing: 12) {
-                Image(systemName: "target")
-                    .font(.title2)
-                    .foregroundColor(.purple)
-                
-                Text("Objetivo")
-                    .font(.title2)
-                    .fontWeight(.semibold)
-            }
-            .padding(.horizontal)
-            
-            Button {
-                showGoalPicker = true
-            } label: {
-                HStack(spacing: 16) {
-                    Image(systemName: viewModel.plan.goal.icon)
-                        .font(.title2)
-                        .foregroundColor(.white)
-                        .frame(width: 44, height: 44)
-                        .background(Color(viewModel.plan.goal.color))
-                        .cornerRadius(12)
-                    
-                    VStack(alignment: .leading, spacing: 4) {
-                        Text(viewModel.plan.goal.displayName)
-                            .font(.headline)
-                            .foregroundColor(.primary)
-                        
-                        Text(viewModel.plan.goal.description)
-                            .font(.caption)
-                            .foregroundColor(.secondary)
-                    }
-                    
-                    Spacer()
-                    
-                    Image(systemName: "chevron.right")
-                        .foregroundColor(.secondary)
-                }
-                .padding()
-                .background(
-                    RoundedRectangle(cornerRadius: 20)
-                        .fill(Color(hex: "1E293B").opacity(0.5))
-                        .overlay(
-                            RoundedRectangle(cornerRadius: 20)
-                                .stroke(Color.white.opacity(0.1), lineWidth: 1)
-                        )
-                )
-            }
-            .padding(.horizontal)
-        }
-    }
     
-    // MARK: - Configuration Section
-    private var configurationSection: some View {
-        VStack(alignment: .leading, spacing: 16) {
-            HStack(spacing: 12) {
-                Image(systemName: "clock.fill")
-                    .font(.title2)
-                    .foregroundColor(.green)
-                
-                Text("Configuración")
-                    .font(.title2)
-                    .fontWeight(.semibold)
-            }
-            .padding(.horizontal)
-            
-            VStack(spacing: 16) {
-                // Duration
-                VStack(alignment: .leading, spacing: 8) {
-                    Text("Duración (semanas)")
-                        .font(.subheadline)
-                        .foregroundColor(.secondary)
-                    
-                    HStack {
-                        Button {
-                            if viewModel.plan.durationWeeks > 1 {
-                                viewModel.plan.durationWeeks -= 1
-                            }
-                        } label: {
-                            Image(systemName: "minus.circle.fill")
-                                .font(.title2)
-                                .foregroundColor(.green)
-                        }
-                        
-                        Text("\(viewModel.plan.durationWeeks)")
-                            .font(.title)
-                            .fontWeight(.bold)
-                            .frame(maxWidth: .infinity)
-                        
-                        Button {
-                            viewModel.plan.durationWeeks += 1
-                        } label: {
-                            Image(systemName: "plus.circle.fill")
-                                .font(.title2)
-                                .foregroundColor(.green)
-                        }
-                    }
-                }
-                
-                Divider()
-                    .background(Color.white.opacity(0.1))
-                
-                // Activities per week
-                VStack(alignment: .leading, spacing: 8) {
-                    Text("Actividades por semana")
-                        .font(.subheadline)
-                        .foregroundColor(.secondary)
-                    
-                    HStack {
-                        Button {
-                            if viewModel.plan.activitiesPerWeek > 1 {
-                                viewModel.plan.activitiesPerWeek -= 1
-                            }
-                        } label: {
-                            Image(systemName: "minus.circle.fill")
-                                .font(.title2)
-                                .foregroundColor(.green)
-                        }
-                        
-                        Text("\(viewModel.plan.activitiesPerWeek)")
-                            .font(.title)
-                            .fontWeight(.bold)
-                            .frame(maxWidth: .infinity)
-                        
-                        Button {
-                            viewModel.plan.activitiesPerWeek += 1
-                        } label: {
-                            Image(systemName: "plus.circle.fill")
-                                .font(.title2)
-                                .foregroundColor(.green)
-                        }
-                    }
-                }
-            }
-            .padding()
-            .background(
-                RoundedRectangle(cornerRadius: 20)
-                    .fill(Color(hex: "1E293B").opacity(0.5))
-                    .overlay(
-                        RoundedRectangle(cornerRadius: 20)
-                            .stroke(Color.white.opacity(0.1), lineWidth: 1)
-                    )
-            )
-            .padding(.horizontal)
-        }
-    }
     
-    // MARK: - Activities Section
-    private var activitiesSection: some View {
-        VStack(alignment: .leading, spacing: 16) {
-            HStack(spacing: 12) {
-                Image(systemName: "calendar")
-                    .font(.title2)
-                    .foregroundColor(.orange)
-                
-                Text("Actividades del plan")
-                    .font(.title2)
-                    .fontWeight(.semibold)
-            }
-            .padding(.horizontal)
-            
-            if viewModel.plan.elements.isEmpty {
-                emptyActivitiesState
-            } else {
-                activitiesList
-            }
-            
-            // Calendar Grid
-            calendarGrid
-            
-            // Add Activity Button
-            Button {
-                // Show instruction to select a day
-            } label: {
-                HStack(spacing: 16) {
-                    Image(systemName: "plus.circle.fill")
-                        .font(.title2)
-                    
-                    VStack(alignment: .leading, spacing: 2) {
-                        Text("Añade una actividad")
-                            .font(.headline)
-                        Text("Selecciona un día del calendario")
-                            .font(.caption)
-                            .opacity(0.8)
-                    }
-                    
-                    Spacer()
-                    
-                    Image(systemName: "arrow.right")
-                        .font(.title3)
-                }
-                .foregroundColor(.white)
-                .padding()
-                .background(
-                    LinearGradient(
-                        colors: [Color.blue, Color.blue.opacity(0.8)],
-                        startPoint: .leading,
-                        endPoint: .trailing
-                    )
-                )
-                .cornerRadius(20)
-                .shadow(color: Color.blue.opacity(0.3), radius: 10, y: 5)
-            }
-            .padding(.horizontal)
-        }
-    }
     
-    private var emptyActivitiesState: some View {
-        VStack(spacing: 16) {
-            Image(systemName: "figure.walk")
-                .font(.system(size: 60))
-                .foregroundColor(.secondary.opacity(0.5))
-                .padding()
-                .background(
-                    Circle()
-                        .fill(Color(hex: "1E293B").opacity(0.5))
-                )
-            
-            VStack(spacing: 8) {
-                Text("Aún no has agregado actividades")
-                    .font(.headline)
-                    .foregroundColor(.primary)
-                
-                Text("Agrega actividades para cada día de tu plan")
-                    .font(.subheadline)
-                    .foregroundColor(.secondary)
-                    .multilineTextAlignment(.center)
-            }
-        }
-        .frame(maxWidth: .infinity)
-        .padding(.vertical, 40)
-        .background(
-            RoundedRectangle(cornerRadius: 20)
-                .fill(Color(hex: "1E293B").opacity(0.5))
-                .overlay(
-                    RoundedRectangle(cornerRadius: 20)
-                        .stroke(Color.white.opacity(0.1), lineWidth: 1)
-                )
-        )
-        .padding(.horizontal)
-    }
     
+
     private var activitiesList: some View {
         VStack(spacing: 12) {
             ForEach(Array(viewModel.plan.elements.enumerated()), id: \.element.id) { index, element in
@@ -397,151 +105,10 @@ struct CreatePlanView: View {
         .padding(.horizontal)
     }
     
-    private var calendarGrid: some View {
-        LazyVGrid(columns: Array(repeating: GridItem(.flexible(), spacing: 8), count: 7), spacing: 8) {
-            ForEach(1...viewModel.plan.totalDays, id: \.self) { day in
-                let hasActivity = viewModel.plan.elements.contains { $0.day == day }
-                
-                Button {
-                    selectedDay = day
-                    showActivityTypeSheet = true
-                } label: {
-                    VStack(spacing: 4) {
-                        Text("D")
-                            .font(.system(size: 8))
-                            .foregroundColor(.secondary)
-                        Text("\(day)")
-                            .font(.system(size: 14, weight: .semibold))
-                    }
-                    .frame(maxWidth: .infinity)
-                    .aspectRatio(1, contentMode: .fit)
-                    .background(
-                        RoundedRectangle(cornerRadius: 12)
-                            .fill(hasActivity ? Color.blue : Color(hex: "1E293B").opacity(0.5))
-                            .overlay(
-                                RoundedRectangle(cornerRadius: 12)
-                                    .stroke(Color.white.opacity(hasActivity ? 0 : 0.1), lineWidth: 1)
-                            )
-                    )
-                    .foregroundColor(hasActivity ? .white : .secondary)
-                }
-            }
-        }
-        .padding(.horizontal)
-    }
     
-    // MARK: - Tags Section
-    private var tagsSection: some View {
-        VStack(alignment: .leading, spacing: 16) {
-            HStack(spacing: 12) {
-                Image(systemName: "tag.fill")
-                    .font(.title2)
-                    .foregroundColor(.pink)
-                
-                Text("Tags y categorías")
-                    .font(.title2)
-                    .fontWeight(.semibold)
-            }
-            .padding(.horizontal)
-            
-            VStack(spacing: 12) {
-                HStack(spacing: 8) {
-                    TextField("Agregar nuevo tag", text: .constant(""))
-                        .textFieldStyle(CustomTextFieldStyle())
-                    
-                    Button {
-                        // Add tag
-                    } label: {
-                        Text("Agregar")
-                            .font(.subheadline)
-                            .fontWeight(.medium)
-                            .foregroundColor(.white)
-                            .padding(.horizontal, 16)
-                            .padding(.vertical, 8)
-                            .background(Color(hex: "475569"))
-                            .cornerRadius(12)
-                    }
-                }
-                
-                TextField("Categorías (ej. cardio, fuerza)", text: .constant(""))
-                    .textFieldStyle(CustomTextFieldStyle())
-            }
-            .padding()
-            .background(
-                RoundedRectangle(cornerRadius: 20)
-                    .fill(Color(hex: "1E293B").opacity(0.5))
-                    .overlay(
-                        RoundedRectangle(cornerRadius: 20)
-                            .stroke(Color.white.opacity(0.1), lineWidth: 1)
-                    )
-            )
-            .padding(.horizontal)
-        }
-    }
     
-    // MARK: - Bottom Actions
-    private var bottomActions: some View {
-        VStack(spacing: 12) {
-            Button {
-                Task {
-                    await viewModel.savePlan()
-                    dismiss()
-                }
-            } label: {
-                HStack {
-                    Image(systemName: "checkmark")
-                        .font(.title3)
-                    Text("Guardar plan")
-                        .font(.headline)
-                }
-                .foregroundColor(.white)
-                .frame(maxWidth: .infinity)
-                .padding()
-                .background(
-                    LinearGradient(
-                        colors: [Color.green, Color.green.opacity(0.8)],
-                        startPoint: .leading,
-                        endPoint: .trailing
-                    )
-                )
-                .cornerRadius(20)
-                .shadow(color: Color.green.opacity(0.3), radius: 10, y: 5)
-            }
-            
-            Button {
-                // Share plan
-            } label: {
-                HStack {
-                    Image(systemName: "square.and.arrow.up")
-                        .font(.title3)
-                    Text("Compartir plan")
-                        .font(.headline)
-                }
-                .foregroundColor(.blue)
-                .frame(maxWidth: .infinity)
-                .padding()
-                .background(
-                    RoundedRectangle(cornerRadius: 20)
-                        .fill(Color(hex: "1E293B").opacity(0.5))
-                        .overlay(
-                            RoundedRectangle(cornerRadius: 20)
-                                .stroke(Color.white.opacity(0.1), lineWidth: 1)
-                        )
-                )
-            }
-        }
-        .padding()
-        .background(
-            Color(hex: "0F172A").opacity(0.95)
-                .overlay(
-                    Rectangle()
-                        .fill(Color.white.opacity(0.1))
-                        .frame(height: 1),
-                    alignment: .top
-                )
-                .ignoresSafeArea()
-        )
-    }
+    
+   
 }
 
 // MARK: - Custom Text Field Style

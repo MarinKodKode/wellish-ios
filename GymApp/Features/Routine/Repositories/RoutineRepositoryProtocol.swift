@@ -11,5 +11,4 @@ public protocol RoutineRepositoryProtocol {
     func saveRoutine(_ routine: Routine) async throws -> Routine
     func fetchRoutines() async throws -> [Routine]
     func fetchRoutine(id: String) async throws -> Routine?
-    // TODO: add update/delete when wiring to Firebase
 }

@@ -7,6 +7,7 @@
 
 import SwiftUI
 import FirebaseAuth
+import ActivityKit
 
 struct ContentView: View {
     @StateObject private var onboardingService = OnboardingService()
@@ -16,6 +17,7 @@ struct ContentView: View {
     @EnvironmentObject var navigationRouter: NavigationRouter
     
     var body: some View {
+        
         NavigationStack(path: $navigationRouter.path) {
             Group {
                 if onboardingService.shouldShowOnboarding {
@@ -41,6 +43,12 @@ struct ContentView: View {
                         .environmentObject(navigationRouter)
                 case .workoutTimer :
                     WorkoutTimerView(showWorkoutTimer: $showWorkoutTimer)
+                        .environmentObject(navigationRouter)
+                case .todayWorkout :
+                    WorkoutRoutineViewLocal()
+                        .environmentObject(navigationRouter)
+                case .createPlan :
+                    CreatePlanView()
                         .environmentObject(navigationRouter)
                 default :
                     SignInView()

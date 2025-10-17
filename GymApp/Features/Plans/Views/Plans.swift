@@ -10,8 +10,9 @@ import SwiftUI
 struct PlansView: View {
     
     @StateObject var vm: RoutineViewModel
+    @StateObject var plansVM: PlansViewViewModel
     @EnvironmentObject var navigationRouter: NavigationRouter
-
+    
     @State private var selectedTab = 0
 
     var body: some View {
@@ -53,22 +54,22 @@ struct PlansView: View {
                                     .foregroundColor(.fitnessTextPrimary)
                                 Spacer()
                                 Button(action: {
-                                    navigationRouter.goTo(.createRoutine)
+                                    navigationRouter.goTo(.createPlan)
                                 }){
                                     Text(StringConstants.plansAddNewPlan)
                                 }
                             }
                             .padding(.horizontal)
 
-                            if $vm.savedRoutines.isEmpty {
-                                Text("No routines saved yet.")
+                            if $plansVM.plans.isEmpty {
+                                Text("No plans saved yet.")
                                     .foregroundColor(.fitnessTextSecondary)
                                     .italic()
                                     .frame(maxWidth: .infinity)
                                     .padding()
                             } else {
-                                ForEach(vm.savedRoutines) { routine in
-                                    PlansRoutineRowView(routine: routine)
+                                ForEach(plansVM.plans) { plan in
+//                                    PlansRoutineRowView(routine: routine)
                                 }
                                 .buttonStyle(PlainButtonStyle())
                             }
@@ -89,14 +90,14 @@ struct PlansView: View {
                             }
                             .padding(.horizontal)
 
-                            if $vm.savedRoutines.isEmpty {
+                            if $plansVM.routines.isEmpty {
                                 Text("No routines saved yet.")
                                     .foregroundColor(.fitnessTextSecondary)
                                     .italic()
                                     .frame(maxWidth: .infinity)
                                     .padding()
                             } else {
-                                ForEach(vm.savedRoutines) { routine in
+                                ForEach(plansVM.routines) { routine in
                                     PlansRoutineRowView(routine: routine)
                                 }
                                 .buttonStyle(PlainButtonStyle())
@@ -108,11 +109,13 @@ struct PlansView: View {
                 }
             }
             .navigationBarTitle("Planes")
+            .onAppear{
+                plansVM.initView()
+            }
         }
     }
     
 }
-// MARK: - All Routines List
 
 private struct AllRoutinesView: View {
     @ObservedObject var vm: RoutineViewModel
@@ -130,19 +133,5 @@ private struct AllRoutinesView: View {
         }
         .background(Color.fitnessBackgroundPrimary)
         .navigationTitle("All Routines")
-    }
-}
-
-// MARK: - Previews
-
-struct PlansView_Previews: PreviewProvider {
-    static var previews: some View {
-        Group {
-            PlansView(vm: RoutineViewModel())
-                .preferredColorScheme(.light)
-
-            PlansView(vm: RoutineViewModel())
-                .preferredColorScheme(.dark)
-        }
     }
 }

@@ -8,6 +8,9 @@
 import SwiftUI
 
 struct TodayWorkoutView: View {
+    
+    @EnvironmentObject var navigationRouter: NavigationRouter
+    
     var body: some View {
         VStack() {
             
@@ -35,7 +38,9 @@ struct TodayWorkoutView: View {
             .frame(height: 250)
             .cornerRadius(12)
             .padding(.horizontal, 12)
-            
+            .onTapGesture {
+                navigationRouter.goTo(.todayWorkout)
+            }
         }
         
     }

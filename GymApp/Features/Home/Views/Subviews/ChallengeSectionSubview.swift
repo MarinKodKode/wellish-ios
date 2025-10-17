@@ -7,7 +7,7 @@ struct ChallengeSectionSubview: View {
     var body: some View {
         VStack(alignment: .leading, spacing: 12) {
             
-            SectionBarTitle(title: StringConstants.challengesOfTheWeek, icon :"arrow.right")
+            SectionBarTitle(StringConstants.challengesOfTheWeek)
             
             ScrollView(.horizontal, showsIndicators: false) {
                 HStack(spacing: 8) {

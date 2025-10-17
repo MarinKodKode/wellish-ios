@@ -8,7 +8,6 @@
 import CoreFoundation
 import Foundation
 import UIKit
-import SwiftUICore
 import SwiftUI
 
 struct LoadingOverlayView : View {

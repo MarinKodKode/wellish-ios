@@ -249,10 +249,10 @@ public struct RoutineCreatorSheet: View {
     private var saveButton: some View {
         Button(action: {
             Task {
-                let ok = await vm.save()
-                if ok {
-                    isPresented = false
-                }
+//                let ok = await $vm.save
+//                if ok {
+//                    isPresented = false
+//                }
             }
         }) {
             Text(vm.isSaving ? "Saving..." : "Save Routine")

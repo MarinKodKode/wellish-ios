@@ -6,7 +6,7 @@
 //
 
 import Foundation
-import SwiftUICore
+import SwiftUI
 
 enum Difficulty: String, CaseIterable {
     case beginner = "Beginner"

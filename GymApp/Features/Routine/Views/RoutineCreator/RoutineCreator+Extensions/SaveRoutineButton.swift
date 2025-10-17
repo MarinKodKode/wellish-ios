@@ -12,7 +12,8 @@ extension RoutineCreatorView{
     var saveButton: some View {
         Button(action: {
             Task {
-                let ok = await vm.save()
+                print("Saving routine...")
+                let ok = await vm.saveRoutine()
                 if ok {
                     // Success feedback can be added later
                 }

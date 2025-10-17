@@ -28,13 +28,11 @@ struct MainTabViewContainer: View {
                     Label("Activity", systemImage: "figure.walk")
                 }
                 .tag(1)
-            
-            PlansView(vm: RoutineViewModel())
+            PlansView(vm: RoutineViewModel(), plansVM: PlansViewViewModel())
                 .tabItem {
                     Label("Plans", systemImage: "clipboard")
                 }
                 .tag(2)
-            
             ProfileView(showWorkoutTimer: $showWorkoutTimer_true)
                 .tabItem {
                     Label("Profile", systemImage: "person")
@@ -45,3 +43,5 @@ struct MainTabViewContainer: View {
         .preferredColorScheme(.dark)
     }
 }
+
+

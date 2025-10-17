@@ -19,7 +19,7 @@ struct PopularWorkoutSectionView: View {
                     .aspectRatio(contentMode: .fill)
                     .clipped()
                 
-                Color.black.opacity(0.6)
+                Color.fitnessBackgroundPrimary.opacity(0.8)
                 
                 VStack (alignment: .leading) {
                     Text("Burning Chest\nWorkout")

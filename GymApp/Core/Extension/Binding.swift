@@ -1,6 +1,6 @@
 
 import Foundation
-import SwiftUICore
+import SwiftUI
 
 extension Binding where Value == String? {
     func replacingNilWith(_ defaultValue: String) -> Binding<String> {

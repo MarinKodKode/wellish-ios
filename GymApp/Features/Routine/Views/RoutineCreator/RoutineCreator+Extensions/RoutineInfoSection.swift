@@ -1,9 +1,3 @@
-//
-//  RoutineInfoSection.swift
-//  Wellish
-//
-//  Created by Manuel Alejandro Hernandez Marín on 01/09/25.
-//
 
 import SwiftUI
 
@@ -32,17 +26,4 @@ extension RoutineCreatorView {
             }
         }
     }
-}
-
-
-// MARK: - Preview
-
-#Preview {
-    RoutineCreatorView(viewModel: RoutineViewModel())
-        .preferredColorScheme(.light)
-}
-
-#Preview {
-    RoutineCreatorView(viewModel: RoutineViewModel())
-        .preferredColorScheme(.dark)
 }

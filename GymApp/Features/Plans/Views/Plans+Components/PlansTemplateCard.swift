@@ -111,16 +111,4 @@ struct TemplateCard: View {
 }
 
 
-// MARK: - Previews
 
-struct TemplatePlansView_Previews: PreviewProvider {
-    static var previews: some View {
-        Group {
-            PlansView(vm: RoutineViewModel())
-                .preferredColorScheme(.light)
-            
-            PlansView(vm: RoutineViewModel())
-                .preferredColorScheme(.dark)
-        }
-    }
-}

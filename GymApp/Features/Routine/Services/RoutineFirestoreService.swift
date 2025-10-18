@@ -247,7 +247,7 @@ extension RoutineFirestoreService {
             throw NSError(
                 domain: "",
                 code: 404,
-                userInfo : [NSLocalizedDescriptionKey : "Routine not founded"]
+                userInfo : [NSLocalizedDescriptionKey : "Routine not found"]
                 )
         }
         

@@ -306,6 +306,7 @@ enum LocalStorageError : LocalizedError {
     case deleteFailed(Error)
     case routineNotFound(String)
     case indexCorrupted
+    case planNotFound(String)
     
     var errorDescription: String? {
         switch self {
@@ -319,6 +320,8 @@ enum LocalStorageError : LocalizedError {
             return "Routine not found: \(id)"
         case .indexCorrupted :
             return "Index corrupted"
+        case .planNotFound(let id) :
+            return "Plan not found: \(id)"
         }
     }
 }

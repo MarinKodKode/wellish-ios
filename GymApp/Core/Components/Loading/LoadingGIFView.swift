@@ -15,19 +15,18 @@ struct LoadingView: View {
         ZStack(alignment: .center) {
             
             Color.black.opacity(0.6)
-//            Color.white.opacity(0.6)
                 .edgesIgnoringSafeArea(.all)
+                .ignoresSafeArea()
             
-            if let url = Bundle.main.url(forResource: "LoadingAnimation", withExtension: "gif") {
-                WebImage(url: gifURL())
-                    .resizable()
-                    .indicator(.activity)
-                    .scaledToFit()
-                    .frame(width: 80, height: 80, alignment: .center)
-                    .padding(.top, 20)
-                
-            }
+            WebImage(url: gifURL())
+                .resizable()
+                .indicator(.activity)
+                .scaledToFit()
+                .frame(width: 80, height: 80, alignment: .center)
+                .padding(.top, 20)
         }
+        .ignoresSafeArea(.all)
+        .ignoresSafeArea()
     }
     
     private func gifURL() -> URL? {
@@ -45,4 +44,8 @@ struct LoadingView: View {
         
         return screenWidth * 0.8
     }
+}
+
+#Preview {
+    LoadingView()
 }

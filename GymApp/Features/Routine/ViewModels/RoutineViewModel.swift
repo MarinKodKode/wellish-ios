@@ -15,6 +15,7 @@ public final class RoutineViewModel : ObservableObject {
     @Published var error : ErrorWrapper?
     @Published var savedRoutines : [Routine] = []
     @Published var tagsInput : String = ""
+    @Published var savedSuccess : Bool = false
     
     //Connection Status
     @Published public var isOnline : Bool = true
@@ -23,6 +24,7 @@ public final class RoutineViewModel : ObservableObject {
     let repository : RoutineRepositoryProtocol
     let firestoreService = RoutineFirestoreService()
     let localStorageService = RoutineLocalStorageService()
+    let service = RoutineService()
     
     public init(
         routine : Routine = Routine(

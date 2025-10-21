@@ -10,59 +10,48 @@ import Foundation
 extension RoutineViewModel {
     
     public func saveRoutine() async -> Bool {
+        
+        //Turn on loading spinner
+        
         guard canSave else {
-            errorMessage = "Plase provide a name and at least one exercise."
+            //Throw alert
             return false
         }
         
-        //Validate
         let validation = validateRoutine()
+        
         if !validation.isValid {
-            errorMessage = validation.errors.joined(separator: "\n")
+            //Throw alert
             return false
         }
         
         isSaving = true
-        errorMessage = nil
+        
         prepareRoutineForSave()
         
-        var savedSuccessfully = false
-        var errors : [String] = []
+        let saveLocally = await service.saveRoutineLocally(routine)
         
-        print("Saving routine")
-        
-        //Save locally first
-        do {
-            try await localStorageService.saveRoutine(routine)
-            savedSuccessfully = true
-        }catch{
-            errors.append("Local: \(error.localizedDescription)")
-        }
-        
-        //Try to save into FirebaseStorage (online required)
-        do {
-            _ = try await firestoreService.uploadRoutinesWithID(routine)
-            isOnline = true
-            lastSyncDate = Date()
-        }catch {
-            errors.append("Firebase: \(error.localizedDescription)")
-            isOnline = false
-        }
+        let saveRemote = await service.saveRoutineFirebase(routine)
         
         isSaving = false
         
-        if savedSuccessfully {
-            if errors.isEmpty {
-                print("Routine saved successfully.")
+        if saveLocally {
+            //Display success animation
+            if saveRemote {
+                //Display success animation
             }else{
-                print("Routine saved successfully in localStorage. But some errors occurred in another process.")
-                errorMessage = "Saved Locally: \(errors.joined(separator: ","))"
+                //Report to Analitycs
+                // Display toast for untrusted connection
             }
+            //turn off loading spinner
+            //Dismiss view
             return true
-        }else{
-            errorMessage = "Error saving routine \(errors.joined(separator: ","))"
+        } else{
+            //Display alert
+            //Report to Analitycs
+            //turn off loading spinner
+            //Dismiss view
             return false
         }
     }
-    
 }

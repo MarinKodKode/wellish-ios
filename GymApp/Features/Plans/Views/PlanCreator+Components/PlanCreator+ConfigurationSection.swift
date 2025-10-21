@@ -33,8 +33,8 @@ extension CreatePlanView {
                     
                     HStack {
                         Button {
-                            if viewModel.plan.durationWeeks > 1 {
-                                viewModel.plan.durationWeeks -= 1
+                            if vm.plan.durationWeeks > 1 {
+                                vm.plan.durationWeeks -= 1
                             }
                         } label: {
                             Image(systemName: "minus.circle.fill")
@@ -42,13 +42,13 @@ extension CreatePlanView {
                                 .foregroundColor(.green)
                         }
                         
-                        Text("\(viewModel.plan.durationWeeks)")
+                        Text("\(vm.plan.durationWeeks)")
                             .font(.title)
                             .fontWeight(.bold)
                             .frame(maxWidth: .infinity)
                         
                         Button {
-                            viewModel.plan.durationWeeks += 1
+                            vm.plan.durationWeeks += 1
                         } label: {
                             Image(systemName: "plus.circle.fill")
                                 .font(.title2)
@@ -68,8 +68,8 @@ extension CreatePlanView {
                     
                     HStack {
                         Button {
-                            if viewModel.plan.activitiesPerWeek > 1 {
-                                viewModel.plan.activitiesPerWeek -= 1
+                            if vm.plan.activitiesPerWeek > 1 {
+                                vm.plan.activitiesPerWeek -= 1
                             }
                         } label: {
                             Image(systemName: "minus.circle.fill")
@@ -77,13 +77,13 @@ extension CreatePlanView {
                                 .foregroundColor(.green)
                         }
                         
-                        Text("\(viewModel.plan.activitiesPerWeek)")
+                        Text("\(vm.plan.activitiesPerWeek)")
                             .font(.title)
                             .fontWeight(.bold)
                             .frame(maxWidth: .infinity)
                         
                         Button {
-                            viewModel.plan.activitiesPerWeek += 1
+                            vm.plan.activitiesPerWeek += 1
                         } label: {
                             Image(systemName: "plus.circle.fill")
                                 .font(.title2)

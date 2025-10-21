@@ -3,7 +3,9 @@ import SwiftUI
 public struct RoutineCreatorView: View {
    
     @ObservedObject var vm: RoutineViewModel
-
+    
+    @Environment(\.dismiss) private var dismiss
+    
     @State var showingExercisePicker = false
     @State var selectedSetIndex: Int? = nil
     @State var newTagText: String = ""
@@ -34,9 +36,17 @@ public struct RoutineCreatorView: View {
                     saveButton
                     
                     shareButton
+                    
+                   
                 }
                 .padding(.horizontal, 24)
                 .padding(.vertical, 16)
+            }
+            
+            if vm.savedSuccess {
+                LiveAnimationView(animationName: "saved_animation"){
+                    dismiss()
+                }
             }
         }
         .sheet(isPresented: $showingExercisePicker) {
@@ -48,12 +58,10 @@ public struct RoutineCreatorView: View {
         .sheet(isPresented: $showRoutineCreator) {
             RoutineCreatorSheet(isPresented: $showRoutineCreator)
         }
-        .alert(item: $vm.error) { err in
-            Alert(title: Text("Error"), message: Text(err.message), dismissButton: .default(Text("OK")))
-        }
         .navigationBarTitle(StringConstants.createRoutine, displayMode: .large)
         .navigationBarBackButtonHidden(true)
         .enableNativeSwipeBack()
         .hideKeyboardOnTap()
+        .showLoadingView(when: vm.isLoading)
     }
 }

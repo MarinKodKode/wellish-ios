@@ -8,7 +8,7 @@
 import Foundation
 
 final class RoutineService : RoutineServiceProtocol {
-
+    
     
     public var errorMessage : String?
     
@@ -21,7 +21,7 @@ final class RoutineService : RoutineServiceProtocol {
     
     
     // MARK: - Public Methods (GET and SET)
-
+    
     /// Fetches all available routines, including those stored locally or remotely.
     ///
     /// This asynchronous method attempts to retrieve all routines using the internal `fetchRoutines()`
@@ -36,7 +36,7 @@ final class RoutineService : RoutineServiceProtocol {
             return []
         }
     }
-
+    
     /// Fetches a specific routine given its unique identifier.
     ///
     /// This asynchronous method attempts to retrieve a routine by its ID using the internal
@@ -52,8 +52,15 @@ final class RoutineService : RoutineServiceProtocol {
             return nil
         }
     }
-
     
+    public func saveRoutineLocally(_ routine : Routine) async  -> Bool {
+        return await saveRoutineInLocalStorage(routine)
+    }
+    
+    public func saveRoutineFirebase(_ routine : Routine) async  -> Bool {
+        return await saveRoutineInFirebaseStorage(routine)
+    }
+
     //MARK: - Private methods
     
     internal func fetchRoutines() async throws -> [Routine] {
@@ -115,6 +122,23 @@ final class RoutineService : RoutineServiceProtocol {
         }
     }
 
+    internal func saveRoutineInLocalStorage(_ routine : Routine) async -> Bool {
+        do {
+            try await localStorageService.saveRoutine(routine)
+            return true
+        }catch {
+            print("Could not save routine to local storage")
+            return false
+        }
+    }
     
+    internal func saveRoutineInFirebaseStorage(_ routine : Routine) async -> Bool {
+        do {
+            _ = try await firestoreService.uploadRoutinesWithID(routine)
+            return true
+        }catch {
+            print("Could not save routine to firebase storage")
+            return false
+        }
+    }
 }
-

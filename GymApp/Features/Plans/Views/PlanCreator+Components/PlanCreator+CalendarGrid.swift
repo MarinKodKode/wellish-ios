@@ -11,8 +11,8 @@ extension CreatePlanView {
     
     var PlanCreator_CalendarGrid : some View {
         LazyVGrid(columns: Array(repeating: GridItem(.flexible(), spacing: 8), count: 7), spacing: 8) {
-            ForEach(1...viewModel.plan.totalDays, id: \.self) { day in
-                let hasActivity = viewModel.plan.elements.contains { $0.day == day }
+            ForEach(1...vm.plan.totalDays, id: \.self) { day in
+                let hasActivity = vm.plan.elements.contains { $0.day == day }
                 
                 Button {
                     selectedDay = day

@@ -23,7 +23,7 @@ extension CreatePlanView {
             }
             .padding(.horizontal)
             
-            if viewModel.plan.elements.isEmpty {
+            if vm.plan.elements.isEmpty {
                 
                 PlanCreator_EmptyActivitiesState
                 

@@ -17,6 +17,9 @@ final class PlanService : PlanServiceProtocol {
     
     private let localStorageService = PlanLocalStorageService()
     
+    
+    //MARK: - Public interface methods
+    
     public func getPlans() async -> [Plan] {
         do {
             let plans = try await self.fetchPlans()
@@ -33,6 +36,14 @@ final class PlanService : PlanServiceProtocol {
         } catch {
             return nil
         }
+    }
+    
+    public func savePlanLocally(_ plan: Plan) async -> Bool {
+        return await savePlanInLocalStorage(plan)
+    }
+    
+    public func savePlanRemote(_ plan: Plan) async -> Bool {
+        return await savePlanInFirebaseStorage(plan)
     }
     
     //MARK: - Private methods
@@ -82,7 +93,25 @@ final class PlanService : PlanServiceProtocol {
         }
     }
     
-    func savePlan(_ plan: Plan) async throws -> Bool {
-        <#code#>
+    internal func savePlanInLocalStorage(_ plan: Plan) async -> Bool {
+        do {
+            try await localStorageService.savePlan(plan)
+            return true
+        }catch {
+            //Send analitycs event
+            print("Could not save plans in localStorage")
+            return false
+        }
+    }
+    
+    internal func savePlanInFirebaseStorage(_ plan : Plan) async -> Bool {
+        do {
+            _ = try await firestoreService.uploadPlanWithID(plan)
+            return true
+        }catch {
+            print("Could not send plan to remote server")
+            //Send analytics event
+            return false
+        }
     }
 }

@@ -27,19 +27,19 @@ extension CreatePlanView{
                 showGoalPicker = true
             } label: {
                 HStack(spacing: 16) {
-                    Image(systemName: viewModel.plan.goal.icon)
+                    Image(systemName: vm.plan.goal.icon)
                         .font(.title2)
                         .foregroundColor(.white)
                         .frame(width: 44, height: 44)
-                        .background(Color(viewModel.plan.goal.color))
+                        .background(Color(vm.plan.goal.color))
                         .cornerRadius(12)
                     
                     VStack(alignment: .leading, spacing: 4) {
-                        Text(viewModel.plan.goal.displayName)
+                        Text(vm.plan.goal.displayName)
                             .font(.headline)
                             .foregroundColor(.primary)
                         
-                        Text(viewModel.plan.goal.description)
+                        Text(vm.plan.goal.description)
                             .font(.caption)
                             .foregroundColor(.secondary)
                     }

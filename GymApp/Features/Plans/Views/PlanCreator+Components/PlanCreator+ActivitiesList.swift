@@ -11,7 +11,7 @@ extension CreatePlanView {
     
     var PlanCreator_ActivitiesList : some View {
         VStack(spacing: 12) {
-            ForEach(Array(viewModel.plan.elements.enumerated()), id: \.element.id) { index, element in
+            ForEach(Array(vm.plan.elements.enumerated()), id: \.element.id) { index, element in
                 HStack(spacing: 12) {
                     Image(systemName: element.icon)
                         .font(.title3)
@@ -31,7 +31,7 @@ extension CreatePlanView {
                     Spacer()
                     
                     Button {
-                        viewModel.plan.removeElement(at: index)
+                        vm.plan.removeElement(at: index)
                     } label: {
                         Image(systemName: "xmark.circle.fill")
                             .foregroundColor(.red)

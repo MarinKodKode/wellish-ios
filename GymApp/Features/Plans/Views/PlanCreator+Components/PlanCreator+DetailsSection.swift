@@ -23,12 +23,12 @@ extension CreatePlanView {
             .padding(.horizontal)
             
             VStack(spacing: 12) {
-                TextField("Nuevo plan", text: $viewModel.plan.name)
+                TextField("Nuevo plan", text: $vm.plan.name)
                     .textFieldStyle(CustomTextFieldStyle())
                 
                 TextField("Añade una descripción (opcional)", text: Binding(
-                    get: { viewModel.plan.description ?? "" },
-                    set: { viewModel.plan.description = $0.isEmpty ? nil : $0 }
+                    get: { vm.plan.description ?? "" },
+                    set: { vm.plan.description = $0.isEmpty ? nil : $0 }
                 ), axis: .vertical)
                     .textFieldStyle(CustomTextFieldStyle())
                     .lineLimit(3...5)

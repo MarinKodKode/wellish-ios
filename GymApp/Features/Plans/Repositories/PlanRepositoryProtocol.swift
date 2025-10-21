@@ -9,7 +9,9 @@ import Foundation
 
 public protocol PlanServiceProtocol {
     
-    func savePlan(_ plan : Plan) async throws -> Bool
+    func savePlanLocally(_ plan : Plan) async -> Bool
+    
+    func savePlanRemote(_ plan : Plan) async -> Bool
     
     func fetchPlans() async throws -> [Plan]
     

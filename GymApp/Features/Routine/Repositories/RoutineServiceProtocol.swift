@@ -13,6 +13,10 @@ protocol RoutineServiceProtocol {
     
     func fetchRoutine(by id: String) async throws -> Routine?
     
+    func saveRoutineLocally(_ routine : Routine) async -> Bool
+    
+    func saveRoutineFirebase(_ routine : Routine) async -> Bool
+    
     
     
 }

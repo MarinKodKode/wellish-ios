@@ -34,4 +34,12 @@ public final class PlanCreatorViewModel : ObservableObject {
         _ = await service.savePlanRemote(plan)
         _ = await service.savePlanRemote(plan)
     }
+    
+    public func createPlan(){
+        
+    }
+    
+    public func addActivityToPlan(_ activity : Routine ) {
+        self.plan.ac
+    }
 }

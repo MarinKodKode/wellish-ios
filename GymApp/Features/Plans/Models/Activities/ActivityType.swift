@@ -8,6 +8,7 @@
 import Foundation
 
 enum ActivityType {
+    case gym
     case running
     case rest
     case cycling

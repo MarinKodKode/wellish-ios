@@ -18,6 +18,8 @@ public final class PlanCreatorViewModel : ObservableObject {
     @Published var showToast : Bool = false
     @Published var savedPlanSuccess : Bool = false
     
+    @Published var selectedDay : Int?
+    
     
     
     let service = PlanService()
@@ -39,7 +41,15 @@ public final class PlanCreatorViewModel : ObservableObject {
         
     }
     
-    public func addActivityToPlan(_ activity : Routine ) {
-        self.plan.ac
+    public func addActivityToPlan(_ activity: PlanActivity) {
+        guard let day = self.selectedDay else {
+            return
+        }
+        
+        let planElement = PlanElement(
+            activity: activity,
+            day: day
+        )
+        self.plan.elements.append(planElement)
     }
 }

@@ -1,10 +1,3 @@
-//
-//  PlanCreator+ButtonSection.swift
-//  Wellish
-//
-//  Created by Manuel Alejandro Hernandez Marín on 16/10/25.
-//
-
 import SwiftUI
 
 extension CreatePlanView {
@@ -13,8 +6,7 @@ extension CreatePlanView {
         VStack(spacing: 12) {
             Button {
                 Task {
-//                    await viewModel.savePlan()
-                    dismiss()
+                    print("PLan - \(vm.plan)")
                 }
             } label: {
                 HStack {
@@ -38,7 +30,7 @@ extension CreatePlanView {
             }
             
             Button {
-                // Share plan
+
             } label: {
                 HStack {
                     Image(systemName: "square.and.arrow.up")
@@ -71,6 +63,4 @@ extension CreatePlanView {
                 .ignoresSafeArea()
         )
     }
-    
-    
 }

@@ -27,7 +27,7 @@ struct ActivityTypePickerSheet: View {
         Section {
             NavigationLink {
                 RoutinePickerView(
-                    viewModel: viewModel,
+                    vm: viewModel,
                     day: day,
                     dismissSheet: $isPresented
                 )

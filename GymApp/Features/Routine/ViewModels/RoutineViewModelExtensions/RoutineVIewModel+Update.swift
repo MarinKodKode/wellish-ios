@@ -7,7 +7,7 @@
 
 import Foundation
 
-extension RoutineViewModel {
+extension GymActivityViewModel {
     
     public func updateInFirebase() async -> Bool {
         guard canSave else {

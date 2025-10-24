@@ -28,7 +28,7 @@ struct MainTabViewContainer: View {
                     Label("Activity", systemImage: "figure.walk")
                 }
                 .tag(1)
-            PlansView(vm: RoutineViewModel(), plansVM: PlansViewViewModel())
+            PlansView(vm: GymActivityViewModel(), plansVM: PlansViewViewModel())
                 .tabItem {
                     Label("Plans", systemImage: "clipboard")
                 }

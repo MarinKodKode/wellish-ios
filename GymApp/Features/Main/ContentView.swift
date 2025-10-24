@@ -39,7 +39,7 @@ struct ContentView: View {
                     SignInView()
                         .environmentObject(navigationRouter)
                 case .createRoutine :
-                    RoutineCreatorView(viewModel: RoutineViewModel())
+                    RoutineCreatorView(viewModel: GymActivityViewModel())
                         .environmentObject(navigationRouter)
                 case .workoutTimer :
                     WorkoutTimerView(showWorkoutTimer: $showWorkoutTimer)

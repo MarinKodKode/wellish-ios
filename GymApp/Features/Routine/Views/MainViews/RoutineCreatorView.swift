@@ -2,7 +2,7 @@ import SwiftUI
 
 public struct RoutineCreatorView: View {
    
-    @ObservedObject var vm: RoutineViewModel
+    @ObservedObject var vm: GymActivityViewModel
     
     @Environment(\.dismiss) private var dismiss
     
@@ -11,7 +11,7 @@ public struct RoutineCreatorView: View {
     @State var newTagText: String = ""
     @State var showRoutineCreator: Bool = false
 
-    public init(viewModel: RoutineViewModel) {
+    public init(viewModel: GymActivityViewModel) {
         _vm = ObservedObject(wrappedValue: viewModel)
     }
 

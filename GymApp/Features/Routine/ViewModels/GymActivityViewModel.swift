@@ -4,7 +4,7 @@ import SwiftUI
 
 @MainActor
 
-public final class RoutineViewModel : ObservableObject {
+public final class GymActivityViewModel : ObservableObject {
     
     @Published public var gymActivity : GymActivity
     

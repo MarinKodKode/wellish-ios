@@ -7,7 +7,7 @@
 
 import Foundation
 
-extension RoutineViewModel {
+extension GymActivityViewModel {
     
     public func loadRoutines() async {
         isLoading = true

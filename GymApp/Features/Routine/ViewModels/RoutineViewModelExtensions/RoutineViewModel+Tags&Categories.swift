@@ -7,7 +7,7 @@
 
 import Foundation
 
-extension RoutineViewModel {
+extension GymActivityViewModel {
         
     public func addTag(_ tag : String){
         let t = tag.trimmingCharacters(in: .whitespacesAndNewlines)

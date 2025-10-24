@@ -3,7 +3,7 @@ import SwiftUI
 public struct RoutineCreatorSheet: View {
    
     @Binding var isPresented: Bool
-    @StateObject private var vm = RoutineViewModel()
+    @StateObject private var vm = GymActivityViewModel()
 
     @State private var showingExercisePicker: Bool = false
     @State private var exercisePickerTargetSetIndex: Int? = nil

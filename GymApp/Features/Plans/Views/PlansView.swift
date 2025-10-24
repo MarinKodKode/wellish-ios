@@ -9,7 +9,7 @@ import SwiftUI
 
 struct PlansView: View {
     
-    @StateObject var vm: RoutineViewModel
+    @StateObject var vm: GymActivityViewModel
     @StateObject var plansVM: PlansViewViewModel
     @EnvironmentObject var navigationRouter: NavigationRouter
     
@@ -118,7 +118,7 @@ struct PlansView: View {
 }
 
 private struct AllRoutinesView: View {
-    @ObservedObject var vm: RoutineViewModel
+    @ObservedObject var vm: GymActivityViewModel
 
     var body: some View {
         List {

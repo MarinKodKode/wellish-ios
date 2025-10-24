@@ -8,7 +8,7 @@
 import Foundation
 
 
-extension RoutineViewModel {
+extension GymActivityViewModel {
     
     public func validategymActivity() -> (isValid : Bool, errors : [String]){
         

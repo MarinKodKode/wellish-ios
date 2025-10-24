@@ -7,7 +7,7 @@
 
 import Foundation
 
-extension RoutineViewModel {
+extension GymActivityViewModel {
     
     public func deleteFromFirebase() async -> Bool {
         isSaving = true

@@ -24,11 +24,11 @@ extension RoutineCreatorView {
 
 
 #Preview {
-    RoutineCreatorView(viewModel: RoutineViewModel())
+    RoutineCreatorView(viewModel: GymActivityViewModel())
         .preferredColorScheme(.light)
 }
 
 #Preview {
-    RoutineCreatorView(viewModel: RoutineViewModel())
+    RoutineCreatorView(viewModel: GymActivityViewModel())
         .preferredColorScheme(.dark)
 }

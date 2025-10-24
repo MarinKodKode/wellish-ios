@@ -7,7 +7,7 @@
 
 import Foundation
 
-extension RoutineViewModel {
+extension GymActivityViewModel {
     
     public func saveRoutine() async -> Bool {
         

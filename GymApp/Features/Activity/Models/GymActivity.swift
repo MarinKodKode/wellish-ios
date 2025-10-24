@@ -1,13 +1,8 @@
-
 import Foundation
 import FirebaseFirestore
 
-// MARK: - GymActivity
-
 public struct GymActivity : Activity {
-    
-    // MARK: - Activity Protocol Properties
-    
+
     public let id: String
     public var name: String
     public var description: String?
@@ -19,15 +14,11 @@ public struct GymActivity : Activity {
     public var shareable: Bool
     public var clubId: String?
     public var creator: String?
-    
-    // MARK: - Activity Type
-    
+
     public var activityType: ActivityCategory {
         .gym
     }
-    
-    // MARK: - UI Properties
-    
+
     public var icon: String {
         category?.lowercased().contains("cardio") ?? false
             ? "figure.run"
@@ -35,7 +26,7 @@ public struct GymActivity : Activity {
     }
     
     public var colorHex: String {
-        "3B82F6" // Azul para gym
+        "3B82F6"
     }
     
     // MARK: - Gym-Specific Properties

@@ -10,7 +10,7 @@ import SwiftUI
 import UIKit
 
 struct RoutineDetailView_Stack: View {
-    @ObservedObject var vm: RoutineViewModel
+    @ObservedObject var vm: GymActivityViewModel
     var routine: GymActivity
 
     @State private var isEditingRoutine = false
@@ -141,7 +141,7 @@ struct RoutineDetailView_Stack: View {
             }
             .sheet(isPresented: $isEditingRoutine) {
                 // Reopen in editor
-                RoutineCreatorView(viewModel: RoutineViewModel())
+                RoutineCreatorView(viewModel: GymActivityViewModel())
             }
         }
     }

@@ -876,7 +876,7 @@ struct MainHomeViewTest: View {
 
 //MARK: - Routine Creator
 public struct RoutineCreatorTestView: View {
-    @ObservedObject var vm: RoutineViewModel
+    @ObservedObject var vm: GymActivityViewModel
 
     // Small local UI state
     @State private var showingExercisePicker = false
@@ -884,7 +884,7 @@ public struct RoutineCreatorTestView: View {
     @State private var newTagText: String = ""
     @State private var showRoutineCreator: Bool = false
 
-    public init(viewModel: RoutineViewModel) {
+    public init(viewModel: GymActivityViewModel) {
         _vm = ObservedObject(wrappedValue: viewModel)
     }
 
@@ -1196,12 +1196,12 @@ private extension View {
 // MARK: - Preview
 
 #Preview {
-    RoutineCreatorTestView(viewModel: RoutineViewModel())
+    RoutineCreatorTestView(viewModel: GymActivityViewModel())
         .preferredColorScheme(.light)
 }
 
 #Preview {
-    RoutineCreatorTestView(viewModel: RoutineViewModel())
+    RoutineCreatorTestView(viewModel: GymActivityViewModel())
         .preferredColorScheme(.dark)
 }
 

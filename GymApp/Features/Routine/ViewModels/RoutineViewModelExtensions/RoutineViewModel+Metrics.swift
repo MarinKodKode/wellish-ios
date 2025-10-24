@@ -7,7 +7,7 @@
 
 import Foundation
 
-extension RoutineViewModel {
+extension GymActivityViewModel {
     
     public var estimatedVolumeKg : Double {
         gymActivity.estimatedVolumeKg

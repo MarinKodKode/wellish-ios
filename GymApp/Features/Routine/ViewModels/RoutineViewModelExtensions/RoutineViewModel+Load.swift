@@ -60,7 +60,7 @@ extension RoutineViewModel {
         //Tries firebase first
         do {
             let loadedRoutine = try await firestoreService.fetchRoutine(id: id)
-            self.routine = loadedRoutine
+            self.gymActivity = loadedRoutine
             isOnline = true
             
             try await localStorageService.saveRoutine(loadedRoutine)
@@ -77,7 +77,7 @@ extension RoutineViewModel {
         do {
             let loadedRoutine = try await localStorageService
                 .fetchRoutine(id: id)
-            self.routine = loadedRoutine
+            self.gymActivity = loadedRoutine
             isLoading = false
             return true
         }catch {

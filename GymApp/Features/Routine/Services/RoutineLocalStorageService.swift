@@ -41,7 +41,7 @@ class RoutineLocalStorageService {
     
     ///Save routines in a JSON file
     @MainActor
-    func saveRoutine(_ routine : Routine) async throws {
+    func saveRoutine(_ routine : GymActivity) async throws {
         
         let fileURL = routineFileURL(for : routine.id)
         
@@ -63,7 +63,7 @@ class RoutineLocalStorageService {
     
     ///Save multiple routines at once
     @MainActor
-    func saveRoutines(_ routines : [Routine]) async throws {
+    func saveRoutines(_ routines : [GymActivity]) async throws {
         for routine in routines {
             try await saveRoutine(routine)
         }
@@ -73,7 +73,7 @@ class RoutineLocalStorageService {
     //MARK: - Read routines methods
     
     ///Gets a routine given an specific ID
-    func fetchRoutine(id : String) async throws -> Routine {
+    func fetchRoutine(id : String) async throws -> GymActivity {
         let fileURL = routineFileURL(for: id)
         
         guard fileManager.fileExists(atPath: fileURL.path) else {
@@ -82,7 +82,7 @@ class RoutineLocalStorageService {
         
         do {
             let data = try Data(contentsOf: fileURL)
-            let routine = try decoder.decode(Routine.self, from: data)
+            let routine = try decoder.decode(GymActivity.self, from: data)
             print("Routine loaded : \(routine.name)")
             return routine
         }catch {
@@ -93,9 +93,9 @@ class RoutineLocalStorageService {
     
     /// Gets all routines saved locally
     @MainActor
-    func fetchRoutines() async throws -> [Routine] {
+    func fetchRoutines() async throws -> [GymActivity] {
         let routineIDs = try await loadIndex()
-        var routines : [Routine] = []
+        var routines : [GymActivity] = []
         
         for id in routineIDs {
             do {
@@ -146,27 +146,27 @@ class RoutineLocalStorageService {
     
     ///Gets routines by category
     @MainActor
-    func fetchRoutines(byCategory category : String) async throws -> [Routine]{
+    func fetchRoutines(byCategory category : String) async throws -> [GymActivity]{
         let allRoutines = try await fetchRoutines()
         return allRoutines.filter{ $0.category == category }
     }
     
     ///Fetch routines by creatorID
     @MainActor
-    func fetchRoutines(byCreator creatorID  : String ) async throws -> [Routine] {
+    func fetchRoutines(byCreator creatorID  : String ) async throws -> [GymActivity] {
         let allRoutines = try await fetchRoutines()
         return allRoutines.filter{ $0.creator == creatorID }
     }
     
     ///Fetch shareable routines
     @MainActor
-    func fetchShareableRoutines() async throws -> [Routine] {
+    func fetchShareableRoutines() async throws -> [GymActivity] {
         let allRoutines = try await fetchRoutines()
         return allRoutines.filter{ $0.shareable == true }
     }
     
     @MainActor
-    func searchRoutines(query : String) async throws -> [Routine] {
+    func searchRoutines(query : String) async throws -> [GymActivity] {
         let allRoutines = try await fetchRoutines()
         let lowercasedQuery = query.lowercased()
         

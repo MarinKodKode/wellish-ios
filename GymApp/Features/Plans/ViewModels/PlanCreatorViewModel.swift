@@ -45,11 +45,11 @@ public final class PlanCreatorViewModel : ObservableObject {
         guard let day = self.selectedDay else {
             return
         }
-        
-        let planElement = PlanElement(
-            activity: activity,
-            day: day
-        )
-        self.plan.elements.append(planElement)
+//        
+//        let planElement = PlanElement(
+//            activity: .gym(activity),
+//            day: day
+//        )
+//        self.plan.elements.append(planElement)
     }
 }

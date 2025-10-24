@@ -9,11 +9,11 @@ import Foundation
 
 public protocol RoutineRepositoryProtocol {
     
-    func saveRoutine(_ routine: Routine) async throws -> Routine
+    func saveRoutine(_ routine: GymActivity) async throws -> GymActivity
     
-    func fetchRoutines() async throws -> [Routine]
+    func fetchRoutines() async throws -> [GymActivity]
     
-    func fetchRoutine(id: String) async throws -> Routine?
+    func fetchRoutine(id: String) async throws -> GymActivity?
     
 }
 

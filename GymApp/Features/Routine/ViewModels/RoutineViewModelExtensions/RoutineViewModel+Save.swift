@@ -18,7 +18,7 @@ extension RoutineViewModel {
             return false
         }
         
-        let validation = validateRoutine()
+        let validation = validategymActivity()
         
         if !validation.isValid {
             //Throw alert
@@ -27,11 +27,11 @@ extension RoutineViewModel {
         
         isSaving = true
         
-        prepareRoutineForSave()
+        preparegymActivityForSave()
         
-        let saveLocally = await service.saveRoutineLocally(routine)
+        let saveLocally = await service.saveRoutineLocally(gymActivity)
         
-        let saveRemote = await service.saveRoutineFirebase(routine)
+        let saveRemote = await service.saveRoutineFirebase(gymActivity)
         
         isSaving = false
         

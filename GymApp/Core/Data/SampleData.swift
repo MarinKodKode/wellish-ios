@@ -98,9 +98,9 @@ let plank = Exercise(
 
 // MARK: - Sample Routines
 
-let routines: [Routine] = [
+let routines: [GymActivity] = [
         // 💪 Full Body Strength
-        Routine(
+    GymActivity(
             name: "Full Body Strength",
             description: "A balanced full-body routine for strength and hypertrophy.",
             
@@ -139,7 +139,7 @@ let routines: [Routine] = [
         ),
 
         // 🏃‍♂️ Beginner Running Plan
-        Routine(
+    GymActivity(
             name: "Beginner 5K Plan",
             description: "Couch to 5K in 8 weeks. Walk-run intervals.",
             sets: [
@@ -165,7 +165,7 @@ let routines: [Routine] = [
             estimatedDurationMinutes: 30
         ),
 
-        Routine(
+    GymActivity(
             name: "Isometric Core Flow",
             description: "Hold-based core routine for stability and endurance.",
             sets: [
@@ -198,7 +198,7 @@ let routines: [Routine] = [
             estimatedDurationMinutes: 20
         ),
 
-        Routine(
+    GymActivity(
             name: "Cycling HIIT",
             description: "High-Intensity Interval Training on the bike.",
             sets: [
@@ -227,7 +227,7 @@ let routines: [Routine] = [
         ),
 
         // 🔥 Upper Body Blast
-        Routine(
+    GymActivity(
             name: "Upper Body Blast",
             description: "Push-pull upper body workout with supersets.",
             sets: [

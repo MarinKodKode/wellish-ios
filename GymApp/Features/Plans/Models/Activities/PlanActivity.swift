@@ -3,7 +3,7 @@ import Foundation
 
 public enum PlanActivity: Codable, Hashable, Identifiable {
     
-    case routine(Routine)
+    case routine(GymActivity)
     case exercise(Exercise)
     case cardio(CardioActivity)
     case rest(RestDay)

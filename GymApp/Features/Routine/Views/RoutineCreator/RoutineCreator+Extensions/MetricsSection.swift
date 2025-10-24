@@ -33,7 +33,7 @@ extension RoutineCreatorView {
                     
                     metricCard(
                         title: StringConstants.routineTotalSeries,
-                        value: "\(vm.routine.totalSeriesCount)",
+                        value: "\(vm.gymActivity.totalSeriesCount)",
                         icon: "list.number",
                         color: .energyFitnessOrange
                     )

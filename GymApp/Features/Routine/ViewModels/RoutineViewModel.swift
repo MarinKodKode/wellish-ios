@@ -6,14 +6,14 @@ import SwiftUI
 
 public final class RoutineViewModel : ObservableObject {
     
-    @Published public var routine : Routine
+    @Published public var gymActivity : GymActivity
     
     //UI State
     @Published public var isSaving : Bool = false
     @Published public var isLoading : Bool = false
     @Published public var errorMessage : String?
     @Published var error : ErrorWrapper?
-    @Published var savedRoutines : [Routine] = []
+    @Published var savedRoutines : [GymActivity] = []
     @Published var tagsInput : String = ""
     @Published var savedSuccess : Bool = false
     
@@ -27,12 +27,12 @@ public final class RoutineViewModel : ObservableObject {
     let service = RoutineService()
     
     public init(
-        routine : Routine = Routine(
+        gymActivity : GymActivity = GymActivity(
             name : StringConstants.routineNewRoutine
         ),
         repository : RoutineRepositoryProtocol = MockRoutineRepository()
     ){
-        self.routine = routine
+        self.gymActivity = gymActivity
         self.repository = repository
     }
 

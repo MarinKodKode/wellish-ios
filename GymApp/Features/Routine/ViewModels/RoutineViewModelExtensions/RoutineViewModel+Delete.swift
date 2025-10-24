@@ -14,7 +14,7 @@ extension RoutineViewModel {
         errorMessage = nil
         
         do {
-            try await firestoreService.deleteRoutine(id: routine.id)
+            try await firestoreService.deleteRoutine(id: gymActivity.id)
             isSaving = false
             return true
         }catch {

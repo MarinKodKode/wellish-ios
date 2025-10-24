@@ -28,7 +28,7 @@ final class RoutineService : RoutineServiceProtocol {
     /// function. In case of failure, it returns an empty array.
     ///
     /// - Returns: An array of `Routine` objects. Returns an empty array if the fetch operation fails.
-    public func getRoutines() async -> [Routine] {
+    public func getRoutines() async -> [GymActivity] {
         do {
             let routines = try await self.fetchRoutines()
             return routines
@@ -44,7 +44,7 @@ final class RoutineService : RoutineServiceProtocol {
     ///
     /// - Parameter id: The unique identifier of the routine to fetch.
     /// - Returns: A `Routine` object if found; otherwise, `nil`.
-    public func getRoutine(by id: String) async -> Routine? {
+    public func getRoutine(by id: String) async -> GymActivity? {
         do {
             let routine = try await fetchRoutine(by: id)
             return routine
@@ -53,17 +53,17 @@ final class RoutineService : RoutineServiceProtocol {
         }
     }
     
-    public func saveRoutineLocally(_ routine : Routine) async  -> Bool {
+    public func saveRoutineLocally(_ routine : GymActivity) async  -> Bool {
         return await saveRoutineInLocalStorage(routine)
     }
     
-    public func saveRoutineFirebase(_ routine : Routine) async  -> Bool {
+    public func saveRoutineFirebase(_ routine : GymActivity) async  -> Bool {
         return await saveRoutineInFirebaseStorage(routine)
     }
 
     //MARK: - Private methods
     
-    internal func fetchRoutines() async throws -> [Routine] {
+    internal func fetchRoutines() async throws -> [GymActivity] {
         errorMessage = nil
         
         do {
@@ -98,7 +98,7 @@ final class RoutineService : RoutineServiceProtocol {
         }
     }
 
-    internal func fetchRoutine(by id: String) async throws -> Routine? {
+    internal func fetchRoutine(by id: String) async throws -> GymActivity? {
         errorMessage = nil
         do {
             let loadedRoutine = try await firestoreService.fetchRoutine(id: id)
@@ -122,7 +122,7 @@ final class RoutineService : RoutineServiceProtocol {
         }
     }
 
-    internal func saveRoutineInLocalStorage(_ routine : Routine) async -> Bool {
+    internal func saveRoutineInLocalStorage(_ routine : GymActivity) async -> Bool {
         do {
             try await localStorageService.saveRoutine(routine)
             return true
@@ -132,7 +132,7 @@ final class RoutineService : RoutineServiceProtocol {
         }
     }
     
-    internal func saveRoutineInFirebaseStorage(_ routine : Routine) async -> Bool {
+    internal func saveRoutineInFirebaseStorage(_ routine : GymActivity) async -> Bool {
         do {
             _ = try await firestoreService.uploadRoutinesWithID(routine)
             return true

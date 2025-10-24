@@ -11,7 +11,7 @@ struct RoutinePickerView: View {
     
     let routineService = RoutineService()
     
-    @State var routiness : [Routine] = []
+    @State var routiness : [GymActivity] = []
     
     var body: some View {
         List {
@@ -32,7 +32,7 @@ struct RoutinePickerView: View {
         }
     }
     
-    private func handleRoutineSelection(_ routine: Routine) {
+    private func handleRoutineSelection(_ routine: GymActivity) {
         vm.addActivityToPlan(.routine(routine))
         dismissSheet = false
     }

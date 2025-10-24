@@ -22,7 +22,7 @@ class RoutineFirestoreService {
     ///   - routine: La rutina a subir
     ///   - completion: Closure que retorna el ID del documento o un error
     
-    func uploadRoutine(_ routine : Routine, completion: @escaping(Result<String, Error>) -> Void){
+    func uploadRoutine(_ routine : GymActivity, completion: @escaping(Result<String, Error>) -> Void){
         do {
             //Firestore handles automatically conversation of Codable and JSON
             let docRef = try db.collection(routinesCollection).addDocument(from : routine)
@@ -44,7 +44,7 @@ class RoutineFirestoreService {
     ///   - routine: La rutina a subir
     ///   - completion: Closure que indica éxito o error
     
-    func uploadRoutineWithID(_ routine : Routine, completion : @escaping(Result<Void, Error>) -> Void){
+    func uploadRoutineWithID(_ routine : GymActivity, completion : @escaping(Result<Void, Error>) -> Void){
         do{
             try db.collection(routinesCollection)
                 .document(routine.id)
@@ -62,7 +62,7 @@ class RoutineFirestoreService {
     
     /// Obtiene todas las rutina
     
-    func fetchRoutine(completion : @escaping(Result<[Routine], Error>) -> Void){
+    func fetchRoutine(completion : @escaping(Result<[GymActivity], Error>) -> Void){
         db.collection(routinesCollection)
             .getDocuments{ snapshot, error in
                 if let error = error {
@@ -75,15 +75,15 @@ class RoutineFirestoreService {
                     return
                 }
                 
-                let routines = documents.compactMap { doc -> Routine? in
-                    try? doc.data(as: Routine.self)
+                let routines = documents.compactMap { doc -> GymActivity? in
+                    try? doc.data(as: GymActivity.self)
                 }
                 
                 completion(.success(routines))
             }
     }
     
-    func fetchRoutine(id: String, completion : @escaping(Result<Routine, Error>) -> Void){
+    func fetchRoutine(id: String, completion : @escaping(Result<GymActivity, Error>) -> Void){
         db.collection(routinesCollection)
             .document(id)
             .getDocument { document, error in
@@ -103,7 +103,7 @@ class RoutineFirestoreService {
                 }
                 
                 do {
-                    let routine = try document.data(as: Routine.self)
+                    let routine = try document.data(as: GymActivity.self)
                     completion(.success(routine))
                 }catch{
                     completion(.failure(error))
@@ -116,7 +116,7 @@ class RoutineFirestoreService {
     
     /// Actualiza una rutina existente
 
-    func updateRoutine(_ routine : Routine, completion : @escaping (Result<Void, Error>) -> Void){
+    func updateRoutine(_ routine : GymActivity, completion : @escaping (Result<Void, Error>) -> Void){
         
         var updateRoutine = routine
         updateRoutine.updatedAt = Date()
@@ -152,7 +152,7 @@ class RoutineFirestoreService {
     
     // MARK: - Specific Queries
     
-    func fetchRoutines(byCategory category : String, completion: @escaping(Result<[Routine], Error>) -> Void){
+    func fetchRoutines(byCategory category : String, completion: @escaping(Result<[GymActivity], Error>) -> Void){
         db.collection(routinesCollection)
             .whereField("category", isEqualTo: category)
             .getDocuments { snapshot, error in
@@ -161,8 +161,8 @@ class RoutineFirestoreService {
                     return
                 }
                 
-                let routines = snapshot?.documents.compactMap { doc -> Routine? in
-                    try? doc.data(as: Routine.self)
+                let routines = snapshot?.documents.compactMap { doc -> GymActivity? in
+                    try? doc.data(as: GymActivity.self)
                 } ?? []
                 
                 completion(.success(routines))
@@ -171,7 +171,7 @@ class RoutineFirestoreService {
     
     ///Fetch user routines
     
-    func fetchRoutines(byCreator creatorID : String, completion: @escaping(Result<[Routine], Error>) -> Void){
+    func fetchRoutines(byCreator creatorID : String, completion: @escaping(Result<[GymActivity], Error>) -> Void){
         db.collection(routinesCollection)
             .whereField("creator", isEqualTo: creatorID)
             .getDocuments { snapshot, error in
@@ -180,8 +180,8 @@ class RoutineFirestoreService {
                     return
                 }
                 
-                let routines = snapshot?.documents.compactMap{ doc -> Routine? in
-                    try? doc.data(as : Routine.self)
+                let routines = snapshot?.documents.compactMap{ doc -> GymActivity? in
+                    try? doc.data(as : GymActivity.self)
                 } ?? []
                 completion(.success(routines))
             }
@@ -189,7 +189,7 @@ class RoutineFirestoreService {
     
     /// Obtiene rutinas compartibles (shareable = true)
     
-    func fetchShareableRoutines(completion : @escaping(Result<[Routine], Error>) -> Void ){
+    func fetchShareableRoutines(completion : @escaping(Result<[GymActivity], Error>) -> Void ){
         db.collection(routinesCollection)
             .whereField("shareable", isEqualTo: true)
             .getDocuments{ snapshot, error in
@@ -198,8 +198,8 @@ class RoutineFirestoreService {
                     return
                 }
                 
-                let routines = snapshot?.documents.compactMap { doc -> Routine? in
-                    try? doc.data(as : Routine.self)
+                let routines = snapshot?.documents.compactMap { doc -> GymActivity? in
+                    try? doc.data(as : GymActivity.self)
                 } ?? []
                 completion(.success(routines))
             }
@@ -211,14 +211,14 @@ class RoutineFirestoreService {
 extension RoutineFirestoreService {
     
     @MainActor
-    func uploadRoutine(_ routine : Routine) async throws -> String {
+    func uploadRoutine(_ routine : GymActivity) async throws -> String {
         let docRef = try db.collection(routinesCollection).addDocument(from : routine)
         print("Routine uploaded successfully with ID: \(docRef.documentID)")
         return docRef.documentID
     }
     
     @MainActor
-    func uploadRoutinesWithID(_ routine : Routine) async throws {
+    func uploadRoutinesWithID(_ routine : GymActivity) async throws {
         try db.collection(routinesCollection)
             .document(routine.id)
             .setData(from: routine)
@@ -226,19 +226,19 @@ extension RoutineFirestoreService {
     }
     
     @MainActor
-    func fetchRoutines() async throws -> [Routine] {
+    func fetchRoutines() async throws -> [GymActivity] {
         
         let snapshot = try await db.collection(routinesCollection).getDocuments()
         
-        let routines = snapshot.documents.compactMap{ doc -> Routine? in
-            try? doc.data(as: Routine.self)
+        let routines = snapshot.documents.compactMap{ doc -> GymActivity? in
+            try? doc.data(as: GymActivity.self)
         }
         print("Fetched routines: \(routines)")
         return routines
     }
     
     @MainActor
-    func fetchRoutine(id: String) async throws -> Routine {
+    func fetchRoutine(id: String) async throws -> GymActivity {
         let document = try await db.collection(routinesCollection)
             .document(id)
             .getDocument()
@@ -251,7 +251,7 @@ extension RoutineFirestoreService {
                 )
         }
         
-        let routine = try document.data(as : Routine.self)
+        let routine = try document.data(as : GymActivity.self)
         print("Routine fetched  - \(routine.name)")
         return routine
     }
@@ -259,7 +259,7 @@ extension RoutineFirestoreService {
     //MARK: - Updating routines async/await methods
     
     @MainActor
-    func updateRoutine(_ routine : Routine) async throws {
+    func updateRoutine(_ routine : GymActivity) async throws {
         var updatedRoutine = routine
         updatedRoutine.updatedAt = Date()
         
@@ -283,42 +283,42 @@ extension RoutineFirestoreService {
     // Obtiene rutinas por categoría usando async/await
 
     @MainActor
-    func fetchRoutines(byCategory category : String) async throws -> [Routine] {
+    func fetchRoutines(byCategory category : String) async throws -> [GymActivity] {
         let snapshot = try await db.collection(routinesCollection)
             .whereField("caterogy", isEqualTo: category)
             .getDocuments()
         
-        return snapshot.documents.compactMap{doc -> Routine? in
-            try? doc.data(as: Routine.self)
+        return snapshot.documents.compactMap{doc -> GymActivity? in
+            try? doc.data(as: GymActivity.self)
         }
     }
     
     @MainActor
-    func fetchRoutines(byCreator creatorID : String) async throws -> [Routine]{
+    func fetchRoutines(byCreator creatorID : String) async throws -> [GymActivity]{
         let snapshot = try await db.collection(routinesCollection)
             .whereField("creator", isEqualTo: creatorID)
             .getDocuments()
         
-        return snapshot.documents.compactMap{doc -> Routine? in
-            try? doc.data(as: Routine.self)
+        return snapshot.documents.compactMap{doc -> GymActivity? in
+            try? doc.data(as: GymActivity.self)
         }
     }
     
     @MainActor
-    func fetchShareableRoutines() async throws -> [Routine]{
+    func fetchShareableRoutines() async throws -> [GymActivity]{
         let snapshot = try await db.collection(routinesCollection)
             .whereField("shareable", isEqualTo: true)
             .getDocuments()
         
-        return snapshot.documents.compactMap{ doc -> Routine? in
-            try? doc.data(as: Routine.self)
+        return snapshot.documents.compactMap{ doc -> GymActivity? in
+            try? doc.data(as: GymActivity.self)
         }
     }
     
     
     //Realtime listener for changes in routines
     @MainActor
-    func listenRoutines(completion : @escaping(Result<[Routine], Error>) -> Void) -> ListenerRegistration{
+    func listenRoutines(completion : @escaping(Result<[GymActivity], Error>) -> Void) -> ListenerRegistration{
         
         return db.collection(routinesCollection)
             .addSnapshotListener{snapshot, error in
@@ -326,8 +326,8 @@ extension RoutineFirestoreService {
                     completion(.failure(error))
                     return
                 }
-                let routines = snapshot?.documents.compactMap{ doc -> Routine? in
-                    try? doc.data(as : Routine.self)
+                let routines = snapshot?.documents.compactMap{ doc -> GymActivity? in
+                    try? doc.data(as : GymActivity.self)
                 } ?? []
                 
                 completion(.success(routines))

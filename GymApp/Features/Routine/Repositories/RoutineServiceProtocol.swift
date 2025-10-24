@@ -9,13 +9,13 @@ import Foundation
 
 protocol RoutineServiceProtocol {
     
-    func fetchRoutines() async throws -> [Routine]
+    func fetchRoutines() async throws -> [GymActivity]
     
-    func fetchRoutine(by id: String) async throws -> Routine?
+    func fetchRoutine(by id: String) async throws -> GymActivity?
     
-    func saveRoutineLocally(_ routine : Routine) async -> Bool
+    func saveRoutineLocally(_ routine : GymActivity) async -> Bool
     
-    func saveRoutineFirebase(_ routine : Routine) async -> Bool
+    func saveRoutineFirebase(_ routine : GymActivity) async -> Bool
     
     
     

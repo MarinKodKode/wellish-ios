@@ -11,7 +11,7 @@ import UIKit
 
 struct RoutineDetailView_Stack: View {
     @ObservedObject var vm: RoutineViewModel
-    var routine: Routine
+    var routine: GymActivity
 
     @State private var isEditingRoutine = false
     @State private var isSharing = false
@@ -276,7 +276,7 @@ struct ActivityViewController: UIViewControllerRepresentable {
 
 // MARK: - Shareable Text Extension
 
-extension Routine {
+extension GymActivity {
     func shareText() -> String {
         let exercises = sets.map { "\($0.exercise.name): \($0.series.count) sets" }.joined(separator: ", ")
         return """
@@ -286,44 +286,5 @@ extension Routine {
         Total Volume: \(String(format: "%.0f", estimatedVolumeKg)) kg
         Generated with Wellish 🏋️‍♂️
         """
-    }
-}
-
-// MARK: - Previews
-
-struct RoutineDetailView_Previews: PreviewProvider {
-    static var previews: some View {
-        let vm = RoutineViewModel()
-        let routine = Routine(
-            id: UUID().uuidString,
-            name: "Full Body Strength",
-            description: "A balanced 3-day strength routine for full-body development.",
-            
-            sets: [
-                RoutineSet(
-                    exercise: Exercise(name: "Bench Press", equipment: "Barbell"),
-                    series: [
-                        Serie(repetitions: 10, idealWeightKg: 60),
-                        Serie(repetitions: 10, idealWeightKg: 60),
-                        Serie(repetitions: 8, idealWeightKg: 65)
-                    ]
-                ),
-                RoutineSet(
-                    exercise: Exercise(name: "Squat", equipment: "Barbell"),
-                    series: [
-                        Serie(repetitions: 10, idealWeightKg: 80),
-                        Serie(repetitions: 10, idealWeightKg: 80),
-                        Serie(repetitions: 8, idealWeightKg: 85)
-                    ]
-                )
-            ],
-            tags: ["Beginner", "Full Body"],
-            category: "Strength"
-        )
-        return RoutineDetailView_Stack(vm: vm, routine: routine)
-            .preferredColorScheme(.light)
-
-        return RoutineDetailView_Stack(vm: vm, routine: routine)
-            .preferredColorScheme(.dark)
     }
 }

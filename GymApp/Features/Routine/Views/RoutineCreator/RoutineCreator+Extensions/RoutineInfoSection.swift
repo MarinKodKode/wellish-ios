@@ -12,14 +12,14 @@ extension RoutineCreatorView {
             VStack(spacing: 20) {
                 customTextField(
                     placeholder: StringConstants.routineName,
-                    text: $vm.routine.name,
+                    text: $vm.gymActivity.name,
                     icon: "pencil",
                     iconColor: .primaryFitnessBlue
                 )
                 
                 customTextField(
                     placeholder: StringConstants.routineDescription,
-                    text: $vm.routine.category.replacingNilWith(""),
+                    text: $vm.gymActivity.category.replacingNilWith(""),
                     icon: "text.alignleft",
                     iconColor: .fitnessTextSecondary
                 )

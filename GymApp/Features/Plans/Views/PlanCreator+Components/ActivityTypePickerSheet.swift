@@ -41,7 +41,7 @@ struct ActivityTypePickerSheet: View {
             }
             
             Button {
-                handleActivitySelection(.running)
+//                handleActivitySelection(.running)
             } label: {
                 ActivityTypeRows(
                     icon: "figure.run",
@@ -52,7 +52,7 @@ struct ActivityTypePickerSheet: View {
             }
             
             Button {
-                handleActivitySelection(.rest)
+//                handleActivitySelection(.rest)
             } label: {
                 ActivityTypeRows(
                     icon: "bed.double.fill",
@@ -67,7 +67,7 @@ struct ActivityTypePickerSheet: View {
     private var otherActivitiesSection: some View {
         Section("Otras actividades") {
             Button {
-                handleActivitySelection(.cycling)
+//                handleActivitySelection(.cycling)
             } label: {
                 ActivityTypeRows(
                     icon: "bicycle",
@@ -78,7 +78,7 @@ struct ActivityTypePickerSheet: View {
             }
             
             Button {
-                handleActivitySelection(.swimming)
+//                handleActivitySelection(.swimming)
             } label: {
                 ActivityTypeRows(
                     icon: "figure.pool.swim",
@@ -89,7 +89,7 @@ struct ActivityTypePickerSheet: View {
             }
             
             Button {
-                handleActivitySelection(.yoga)
+//                handleActivitySelection(.yoga)
             } label: {
                 ActivityTypeRows(
                     icon: "figure.mind.and.body",

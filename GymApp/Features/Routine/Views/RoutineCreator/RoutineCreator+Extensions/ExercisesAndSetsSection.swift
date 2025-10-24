@@ -16,12 +16,12 @@ extension RoutineCreatorView {
             iconColor: .energyFitnessOrange
         ) {
             VStack(spacing: 16) {
-                if vm.routine.sets.isEmpty {
+                if vm.gymActivity.sets.isEmpty {
                     EmptyStateView()
                 } else {
-                    ForEach(Array(vm.routine.sets.enumerated()), id: \.element.id) { index, _ in
+                    ForEach(Array(vm.gymActivity.sets.enumerated()), id: \.element.id) { index, _ in
                         EnhancedRoutineSetRowView(
-                            set: $vm.routine.sets[index],
+                            set: $vm.gymActivity.sets[index],
                             onAddSerie: { vm.addSerie(toSetAt: index) },
                             onRemove: { vm.removeSet(at: index) },
                             onEditSeria: { serieIndex, serie in

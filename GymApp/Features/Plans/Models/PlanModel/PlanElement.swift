@@ -2,37 +2,63 @@
 //  PlanElement.swift
 //  Wellish
 //
-//  Created by Manuel Alejandro Hernandez Marín on 22/10/25.
+//  Elemento de un plan de entrenamiento
+//  Ahora usa ActivityType en vez de PlanActivity
 //
 
 import Foundation
+import FirebaseFirestore
 
 public struct PlanElement: Identifiable, Codable, Hashable {
     
-    public let id: String
-    public var activity: PlanActivity
+    // MARK: - Core Properties
     
+    public let id: String
+    
+    /// Actividad asociada a este elemento (usa el nuevo ActivityType)
+    public var activity: ActivityType
+    
+    /// Día del plan (1-based)
     public var day: Int
+    
+    /// Hora programada (opcional)
     public var scheduledTime: Date?
     
-    // MARK:  Completion Tracking
+    // MARK: - Completion Tracking
+    
+    /// Indica si el elemento fue completado
     public var completed: Bool
+    
+    /// Fecha y hora de completación
     public var completedAt: Date?
     
-    // MARK:  Performance Tracking
+    // MARK: - Performance Tracking (Métricas Reales)
+    
+    /// Duración real en minutos
     public var actualDurationMinutes: Int?
+    
+    /// Distancia real en km (para cardio)
     public var actualDistanceKm: Double?
+    
+    /// Calorías reales quemadas
     public var actualCalories: Int?
+    
+    /// Rate of Perceived Exertion (1-10)
     public var rpe: Int?
+    
+    /// Notas sobre el rendimiento
     public var performanceNotes: String?
     
-    // MARK:  Context
+    // MARK: - Context
+    
+    /// Notas adicionales del usuario
     public var notes: String?
     
-    // MARK: Init
+    // MARK: - Init
+    
     public init(
         id: String = UUID().uuidString,
-        activity: PlanActivity,
+        activity: ActivityType,
         day: Int,
         scheduledTime: Date? = nil,
         completed: Bool = false,
@@ -58,7 +84,7 @@ public struct PlanElement: Identifiable, Codable, Hashable {
         self.notes = notes
     }
     
-    // MARK: - Computed Properties
+    // MARK: - Computed Properties (Delegados a Activity)
     
     /// Nombre a mostrar
     public var displayName: String {
@@ -66,18 +92,23 @@ public struct PlanElement: Identifiable, Codable, Hashable {
     }
     
     /// Categoría
-    public var activityCategory: String {
+    public var activityCategory: ActivityCategory {
         activity.category
     }
     
-    /// Músculos trabajados
-    public var musclesWorked: [String] {
-        activity.musclesWorked
+    /// Categoría como string
+    public var activityCategoryString: String {
+        activity.categoryString
     }
     
-    /// Icono
+    /// Icono SF Symbol
     public var icon: String {
         activity.icon
+    }
+    
+    /// Color hexadecimal
+    public var colorHex: String {
+        activity.colorHex
     }
     
     /// Descripción de la actividad
@@ -85,7 +116,12 @@ public struct PlanElement: Identifiable, Codable, Hashable {
         activity.description
     }
     
-    // MARK: - Performance Comparison (Esperado vs Conseguido)
+    /// Tags de la actividad
+    public var activityTags: [String] {
+        activity.tags
+    }
+    
+    // MARK: - Performance Comparison (Esperado vs Real)
     
     /// Duración esperada (del modelo base)
     public var expectedDuration: Int? {
@@ -97,7 +133,7 @@ public struct PlanElement: Identifiable, Codable, Hashable {
         activity.estimatedCalories
     }
     
-    /// Ratio de rendimiento de duración (conseguido / esperado)
+    /// Ratio de rendimiento de duración (real / esperado)
     public var durationPerformanceRatio: Double? {
         guard let actual = actualDurationMinutes,
               let expected = expectedDuration,
@@ -105,7 +141,7 @@ public struct PlanElement: Identifiable, Codable, Hashable {
         return Double(actual) / Double(expected)
     }
     
-    /// Diferencia en calorías (conseguido - esperado)
+    /// Diferencia en calorías (real - esperado)
     public var caloriesVariance: Int? {
         guard let actual = actualCalories,
               let expected = expectedCalories else { return nil }
@@ -143,7 +179,17 @@ public struct PlanElement: Identifiable, Codable, Hashable {
         guard let scheduledTime = scheduledTime else { return nil }
         let formatter = DateFormatter()
         formatter.timeStyle = .short
+        formatter.locale = Locale(identifier: "es_MX")
         return formatter.string(from: scheduledTime)
+    }
+    
+    /// Fecha completa formateada (día + hora)
+    public var formattedSchedule: String {
+        var result = formattedDay
+        if let time = formattedTime {
+            result += " a las \(time)"
+        }
+        return result
     }
     
     /// Resumen de rendimiento (si está completado)
@@ -171,7 +217,7 @@ public struct PlanElement: Identifiable, Codable, Hashable {
         return parts.isEmpty ? nil : parts.joined(separator: " · ")
     }
     
-    /// Resumen de comparación (esperado vs conseguido)
+    /// Resumen de comparación (esperado vs real)
     public var comparisonSummary: String? {
         guard completed else { return nil }
         
@@ -190,6 +236,54 @@ public struct PlanElement: Identifiable, Codable, Hashable {
         }
         
         return parts.isEmpty ? nil : parts.joined(separator: " · ")
+    }
+    
+    /// Badge de estado del rendimiento
+    public var performanceBadge: String? {
+        guard completed else { return nil }
+        
+        if let status = durationPerformanceStatus {
+            switch status {
+            case .underPerformed: return "⚠️"
+            case .onTarget: return "✅"
+            case .overPerformed: return "🔥"
+            }
+        }
+        
+        return nil
+    }
+    
+    /// Resumen completo para UI
+    public var fullSummary: String {
+        var lines: [String] = [displayName]
+        
+        if let desc = activityDescription {
+            lines.append(desc)
+        }
+        
+        lines.append(formattedSchedule)
+        
+        if completed, let performance = performanceSummary {
+            lines.append("Completado: \(performance)")
+            
+            if let comparison = comparisonSummary {
+                lines.append(comparison)
+            }
+        } else {
+            // Mostrar métricas esperadas
+            var expected: [String] = []
+            if let duration = expectedDuration {
+                expected.append("\(duration) min")
+            }
+            if let calories = expectedCalories {
+                expected.append("\(calories) kcal")
+            }
+            if !expected.isEmpty {
+                lines.append("Estimado: \(expected.joined(separator: " · "))")
+            }
+        }
+        
+        return lines.joined(separator: "\n")
     }
     
     // MARK: - Methods
@@ -222,42 +316,66 @@ public struct PlanElement: Identifiable, Codable, Hashable {
         self.performanceNotes = nil
     }
     
-    /// Validar RPE (debe estar entre 1 y 10)
+    /// Validar y setear RPE (debe estar entre 1 y 10)
     public mutating func setRPE(_ value: Int) {
         self.rpe = max(1, min(10, value))
     }
     
-    // MARK: - Firestore Helper
+    /// Actualizar la actividad subyacente
+    public mutating func updateActivity(_ newActivity: ActivityType) {
+        self.activity = newActivity
+    }
+    
+    // MARK: - Type Checking Helpers
+    
+    /// Indica si es una actividad de cardio
+    public var isCardioActivity: Bool {
+        activity.isCardio
+    }
+    
+    /// Indica si es una actividad de fuerza
+    public var isStrengthActivity: Bool {
+        activity.isStrength
+    }
+    
+    /// Indica si es descanso
+    public var isRestActivity: Bool {
+        activity.isRest
+    }
+    
+    // MARK: - CodingKeys
+    
+    enum CodingKeys: String, CodingKey {
+        case id
+        case activity
+        case day
+        case scheduledTime
+        case completed
+        case completedAt
+        case actualDurationMinutes
+        case actualDistanceKm
+        case actualCalories
+        case rpe
+        case performanceNotes
+        case notes
+    }
+    
+    // MARK: - Firestore Serialization
+    
     public func toDictionary() -> [String: Any] {
         var dict: [String: Any] = [
             "id": id,
+            "activity": activity.toDictionary(), // Usa serialización de ActivityType
             "day": day,
             "completed": completed
         ]
         
-        // Serializar activity (esto dependerá de cómo manejes enums en Firebase)
-        // Aquí hay un ejemplo básico:
-        switch activity {
-        case .routine(let routine):
-            dict["activityType"] = "routine"
-            dict["activityData"] = routine.toDictionary()
-        case .exercise(let exercise):
-            dict["activityType"] = "exercise"
-            dict["activityData"] = exercise.toDictionary()
-        case .cardio(let cardio):
-            dict["activityType"] = "cardio"
-            dict["activityData"] = try? JSONEncoder().encode(cardio)
-        case .rest(let rest):
-            dict["activityType"] = "rest"
-            dict["activityData"] = try? JSONEncoder().encode(rest)
-        }
-        
         if let scheduledTime = scheduledTime {
-            dict["scheduledTime"] = scheduledTime
+            dict["scheduledTime"] = Timestamp(date: scheduledTime)
         }
         
         if let completedAt = completedAt {
-            dict["completedAt"] = completedAt
+            dict["completedAt"] = Timestamp(date: completedAt)
         }
         
         if let actualDurationMinutes = actualDurationMinutes {
@@ -285,5 +403,53 @@ public struct PlanElement: Identifiable, Codable, Hashable {
         }
         
         return dict
+    }
+    
+    /// Crea un PlanElement desde un diccionario de Firestore
+    public static func fromDictionary(_ dict: [String: Any]) throws -> PlanElement {
+        guard let id = dict["id"] as? String,
+              let activityDict = dict["activity"] as? [String: Any],
+              let day = dict["day"] as? Int,
+              let completed = dict["completed"] as? Bool else {
+            throw PlanElementError.invalidData
+        }
+        
+        // Deserializar la actividad usando ActivityType
+        let activity = try ActivityType.fromDictionary(activityDict)
+        
+        // Convertir Timestamps a Date
+        let scheduledTime = (dict["scheduledTime"] as? Timestamp)?.dateValue()
+        let completedAt = (dict["completedAt"] as? Timestamp)?.dateValue()
+        
+        return PlanElement(
+            id: id,
+            activity: activity,
+            day: day,
+            scheduledTime: scheduledTime,
+            completed: completed,
+            completedAt: completedAt,
+            actualDurationMinutes: dict["actualDurationMinutes"] as? Int,
+            actualDistanceKm: dict["actualDistanceKm"] as? Double,
+            actualCalories: dict["actualCalories"] as? Int,
+            rpe: dict["rpe"] as? Int,
+            performanceNotes: dict["performanceNotes"] as? String,
+            notes: dict["notes"] as? String
+        )
+    }
+}
+
+// MARK: - Errors
+
+public enum PlanElementError: LocalizedError {
+    case invalidData
+    case missingRequiredField(String)
+    
+    public var errorDescription: String? {
+        switch self {
+        case .invalidData:
+            return "Los datos del elemento del plan son inválidos"
+        case .missingRequiredField(let field):
+            return "Falta el campo requerido: \(field)"
+        }
     }
 }

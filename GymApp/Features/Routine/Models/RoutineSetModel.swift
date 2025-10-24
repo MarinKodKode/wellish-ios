@@ -21,7 +21,7 @@ public struct RoutineSet: Identifiable, Codable, Hashable {
         id: String = UUID().uuidString,
         exercise: Exercise,
         series: [Serie] = [Serie()],
-        restBetweenSeriesSeconds: Int? = 90,
+        restBetweenSeriesSeconds: Int? = 30,
         notes: String? = nil,
         intensityTechnique: IntensityTechnique? = nil
     ) {

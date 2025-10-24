@@ -9,7 +9,7 @@ import Foundation
 import SwiftUI
 
 struct RoutineRow: View {
-    let routine: Routine
+    let routine: GymActivity
     
     var body: some View {
         HStack {

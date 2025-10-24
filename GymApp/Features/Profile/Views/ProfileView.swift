@@ -295,7 +295,7 @@ private struct ActionRow: View {
 
 /// Preview row for a saved routine
 private struct RoutinePreviewRow: View {
-    let routine: Routine
+    let routine: GymActivity
 
     var body: some View {
         HStack(spacing: 12) {

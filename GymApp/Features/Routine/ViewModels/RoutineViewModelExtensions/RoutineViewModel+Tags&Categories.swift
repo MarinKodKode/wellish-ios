@@ -11,14 +11,14 @@ extension RoutineViewModel {
         
     public func addTag(_ tag : String){
         let t = tag.trimmingCharacters(in: .whitespacesAndNewlines)
-        guard !t.isEmpty, !routine.tags.contains(t) else { return }
-        routine.tags.append(t)
-        routine.updatedAt = Date()
+        guard !t.isEmpty, !gymActivity.tags.contains(t) else { return }
+        gymActivity.tags.append(t)
+        gymActivity.updatedAt = Date()
     }
     
     public func removeTag(_ tag : String ){
-        routine.tags.removeAll{ $0 == tag }
-        routine.updatedAt = Date()
+        gymActivity.tags.removeAll{ $0 == tag }
+        gymActivity.updatedAt = Date()
     }
     
 }

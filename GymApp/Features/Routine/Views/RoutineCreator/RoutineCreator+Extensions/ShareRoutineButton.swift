@@ -11,7 +11,7 @@ extension RoutineCreatorView {
     
     var shareButton: some View {
         Button(action: {
-            print("\(vm.routine)")
+            print("\(vm.gymActivity)")
             Task {
 //                let success = await vm.saveToFirebase()
 //                if success {

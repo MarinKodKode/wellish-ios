@@ -9,7 +9,7 @@ import Foundation
 
 public final class PlansViewViewModel : ObservableObject {
     
-    @Published var routines : [Routine] = []
+    @Published var routines : [GymActivity] = []
     @Published var plans : [Plan] = []
     
     let localStorageService = RoutineLocalStorageService()

@@ -31,10 +31,10 @@ extension RoutineCreatorView {
                     .cornerRadius(12)
                 }
 
-                if !vm.routine.tags.isEmpty {
+                if !vm.gymActivity.tags.isEmpty {
                     ScrollView(.horizontal, showsIndicators: false) {
                         HStack(spacing: 12) {
-                            ForEach(vm.routine.tags, id: \.self) { tag in
+                            ForEach(vm.gymActivity.tags, id: \.self) { tag in
                                 EnhancedTagChip(tag: tag) { vm.removeTag(tag) }
                             }
                         }
@@ -44,7 +44,7 @@ extension RoutineCreatorView {
 
                 customTextField(
                     placeholder: StringConstants.routineCategories,
-                    text: $vm.routine.category.replacingNilWith(""),
+                    text: $vm.gymActivity.category.replacingNilWith(""),
                     icon: "square.grid.2x2",
                     iconColor: .fitnessTextSecondary
                 )

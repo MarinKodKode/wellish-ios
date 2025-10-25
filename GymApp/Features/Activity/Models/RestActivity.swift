@@ -300,21 +300,21 @@ public enum RestType: String, Codable, CaseIterable {
     public var defaultDuration: Int? {
         switch self {
         case .complete:
-            return nil // Todo el día
+            return nil
         case .active:
-            return 30 // 30 min de actividad ligera
+            return 30
         case .mobility:
-            return 20 // 20 min de movilidad
+            return 20
         case .stretching:
-            return 15 // 15 min de estiramientos
+            return 15
         case .foam:
-            return 15 // 15 min de foam rolling
+            return 15
         case .massage:
-            return 60 // 60 min de masaje
+            return 60
         case .sauna:
-            return 20 // 20 min de sauna
+            return 20
         case .ice:
-            return 10 // 10 min de baño de hielo
+            return 10
         }
     }
 }

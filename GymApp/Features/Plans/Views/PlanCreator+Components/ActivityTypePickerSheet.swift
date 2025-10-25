@@ -1,10 +1,11 @@
-
 import SwiftUI
 
 struct ActivityTypePickerSheet: View {
 
     @Binding var isPresented: Bool
+    
     let day: Int
+    
     @ObservedObject var viewModel: PlanCreatorViewModel
     
     var body: some View {
@@ -23,16 +24,20 @@ struct ActivityTypePickerSheet: View {
         }
     }
     
+    // MARK: - Main Activities Section
+    
     private var mainActivitiesSection: some View {
         Section {
+            // Gym
             NavigationLink {
-                RoutinePickerView(
+                ActivityPickerView(
                     vm: viewModel,
+                    category: .gym,
                     day: day,
                     dismissSheet: $isPresented
                 )
             } label: {
-                ActivityTypeRows(
+                ActivityTypeRow(
                     icon: "dumbbell.fill",
                     title: "Rutina de Gym",
                     subtitle: "Elige de tus rutinas",
@@ -40,10 +45,16 @@ struct ActivityTypePickerSheet: View {
                 )
             }
             
-            Button {
-//                handleActivitySelection(.running)
+            // Running
+            NavigationLink {
+                ActivityPickerView(
+                    vm: viewModel,
+                    category: .running,
+                    day: day,
+                    dismissSheet: $isPresented
+                )
             } label: {
-                ActivityTypeRows(
+                ActivityTypeRow(
                     icon: "figure.run",
                     title: "Correr",
                     subtitle: "Agrega distancia y tiempo",
@@ -51,10 +62,16 @@ struct ActivityTypePickerSheet: View {
                 )
             }
             
-            Button {
-//                handleActivitySelection(.rest)
+            // Rest
+            NavigationLink {
+                ActivityPickerView(
+                    vm: viewModel,
+                    category: .rest,
+                    day: day,
+                    dismissSheet: $isPresented
+                )
             } label: {
-                ActivityTypeRows(
+                ActivityTypeRow(
                     icon: "bed.double.fill",
                     title: "Día de descanso",
                     subtitle: "Recuperación activa",
@@ -64,12 +81,20 @@ struct ActivityTypePickerSheet: View {
         }
     }
     
+    // MARK: - Other Activities Section
+    
     private var otherActivitiesSection: some View {
         Section("Otras actividades") {
-            Button {
-//                handleActivitySelection(.cycling)
+            // Cycling
+            NavigationLink {
+                ActivityPickerView(
+                    vm: viewModel,
+                    category: .cycling,
+                    day: day,
+                    dismissSheet: $isPresented
+                )
             } label: {
-                ActivityTypeRows(
+                ActivityTypeRow(
                     icon: "bicycle",
                     title: "Ciclismo",
                     subtitle: "Configura tu ruta",
@@ -77,10 +102,16 @@ struct ActivityTypePickerSheet: View {
                 )
             }
             
-            Button {
-//                handleActivitySelection(.swimming)
+            // Swimming
+            NavigationLink {
+                ActivityPickerView(
+                    vm: viewModel,
+                    category: .swimming,
+                    day: day,
+                    dismissSheet: $isPresented
+                )
             } label: {
-                ActivityTypeRows(
+                ActivityTypeRow(
                     icon: "figure.pool.swim",
                     title: "Natación",
                     subtitle: "Define tu sesión",
@@ -88,31 +119,47 @@ struct ActivityTypePickerSheet: View {
                 )
             }
             
-            Button {
-//                handleActivitySelection(.yoga)
+            // Yoga
+            NavigationLink {
+                ActivityPickerView(
+                    vm: viewModel,
+                    category: .yoga,
+                    day: day,
+                    dismissSheet: $isPresented
+                )
             } label: {
-                ActivityTypeRows(
+                ActivityTypeRow(
                     icon: "figure.mind.and.body",
                     title: "Yoga",
                     subtitle: "Elige tu práctica",
                     color: .purple
                 )
             }
+            
+            // Walking
+            NavigationLink {
+                ActivityPickerView(
+                    vm: viewModel,
+                    category: .walking,
+                    day: day,
+                    dismissSheet: $isPresented
+                )
+            } label: {
+                ActivityTypeRow(
+                    icon: "figure.walk",
+                    title: "Caminar",
+                    subtitle: "Distancia y paso",
+                    color: Color(hex: "10B981")
+                )
+            }
         }
     }
+    
+    // MARK: - Cancel Button
     
     private var cancelButton: some View {
         Button("Cancelar") {
             isPresented = false
         }
     }
-    
-    private func handleActivitySelection(_ activity: ActivityType) {
-        // viewModel.addActivity(activity, forDay: day)
-        isPresented = false
-    }
 }
-
-
-
-

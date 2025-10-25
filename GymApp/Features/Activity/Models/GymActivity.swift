@@ -31,25 +31,18 @@ public struct GymActivity : Activity {
     
     // MARK: - Gym-Specific Properties
     
-    /// Sets de ejercicios que componen la rutina
     public var sets: [RoutineSet]
     
-    /// Categoría específica de la rutina (ej: "Full Body", "Upper Body")
     public var category: String?
     
-    /// Duración estimada en minutos
     public var estimatedDurationMinutes: Int?
     
-    /// Grupo muscular principal afectado
     public var muscularGroupAffected: String?
     
-    /// Lista de músculos trabajados
     public var musclesWorked: [String]?
     
-    /// Calorías estimadas
     public var estimatedCaloriesValue: Int?
     
-    /// Indica si es una rutina premium
     public var isPremiumRoutine: Bool
     
     // MARK: - Activity Protocol Computed Properties
@@ -129,22 +122,18 @@ public struct GymActivity : Activity {
     
     // MARK: - Computed Properties (Específicos de Gym)
     
-    /// Volumen total estimado en kg
     public var estimatedVolumeKg: Double {
         sets.reduce(0) { $0 + $1.estimatedVolumeKg }
     }
     
-    /// Total de series en la rutina
     public var totalSeriesCount: Int {
         sets.reduce(0) { $0 + $1.series.count }
     }
     
-    /// Total de repeticiones
     public var totalReps: Int {
         sets.reduce(0) { $0 + $1.totalReps }
     }
     
-    /// Volumen formateado para UI
     public var formattedVolume: String {
         NumberFormatter.localizedString(
             from: NSNumber(value: estimatedVolumeKg),
@@ -152,7 +141,6 @@ public struct GymActivity : Activity {
         ) + " kg"
     }
     
-    /// Fecha formateada
     public var formattedDate: String {
         let formatter = DateFormatter()
         formatter.dateStyle = .medium
@@ -160,12 +148,10 @@ public struct GymActivity : Activity {
         return formatter.string(from: createdAt)
     }
     
-    /// Indica si la rutina es del día actual
     public var isToday: Bool {
         Calendar.current.isDateInToday(createdAt)
     }
     
-    /// Días desde la creación
     public var daysOld: Int {
         Calendar.current.dateComponents([.day], from: createdAt, to: Date()).day ?? 0
     }

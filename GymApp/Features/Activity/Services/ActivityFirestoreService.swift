@@ -24,7 +24,7 @@ class ActivityFirestoreService {
     private func userActivitiesCollection(userId: String) -> CollectionReference {
         db.collection("users")
             .document(userId)
-            .collection("activities")
+            .collection("user-activities")
     }
     
     /// Obtiene el userId actual
@@ -45,7 +45,6 @@ class ActivityFirestoreService {
         let docRef = try userActivitiesCollection(userId: userId)
             .addDocument(from: activity)
         
-        print("✅ Activity uploaded: \(activity.displayName) [\(docRef.documentID)]")
         return docRef.documentID
     }
     
@@ -57,8 +56,6 @@ class ActivityFirestoreService {
         try userActivitiesCollection(userId: userId)
             .document(activity.id)
             .setData(from: activity)
-        
-        print("✅ Activity uploaded with ID: \(activity.displayName) [\(activity.id)]")
     }
     
     /// Sube múltiples actividades
@@ -67,7 +64,6 @@ class ActivityFirestoreService {
         for activity in activities {
             try await uploadActivityWithID(activity)
         }
-        print("✅ \(activities.count) activities uploaded")
     }
     
     // MARK: - READ (Fetch Activities)
@@ -83,8 +79,6 @@ class ActivityFirestoreService {
         let activities = snapshot.documents.compactMap { doc -> ActivityType? in
             try? doc.data(as: ActivityType.self)
         }
-        
-        print("✅ Fetched \(activities.count) user activities")
         return activities
     }
     
@@ -101,7 +95,6 @@ class ActivityFirestoreService {
             try? doc.data(as: ActivityType.self)
         }
         
-        print("✅ Fetched \(activities.count) \(category.rawValue) activities")
         return activities
     }
     
@@ -119,7 +112,6 @@ class ActivityFirestoreService {
         }
         
         let activity = try document.data(as: ActivityType.self)
-        print("✅ Activity fetched: \(activity.displayName)")
         return activity
     }
     
@@ -138,8 +130,6 @@ class ActivityFirestoreService {
         try userActivitiesCollection(userId: userId)
             .document(activity.id)
             .setData(from: updatedActivity, merge: true)
-        
-        print("✅ Activity updated: \(activity.displayName)")
     }
     
     // MARK: - DELETE
@@ -153,7 +143,6 @@ class ActivityFirestoreService {
             .document(id)
             .delete()
         
-        print("✅ Activity deleted: \(id)")
     }
     
     /// Elimina múltiples actividades
@@ -162,7 +151,6 @@ class ActivityFirestoreService {
         for id in ids {
             try await deleteActivity(id: id)
         }
-        print("✅ \(ids.count) activities deleted")
     }
     
     // MARK: - QUERIES (User Activities)
@@ -222,7 +210,6 @@ class ActivityFirestoreService {
             try? doc.data(as: ActivityType.self)
         }
         
-        print("✅ Fetched \(activities.count) global templates")
         return activities
     }
     
@@ -275,7 +262,6 @@ class ActivityFirestoreService {
         let newDocRef = try userActivitiesCollection(userId: userId)
             .addDocument(from: activity)
         
-        print("✅ Template copied to user: \(activity.displayName) [\(newDocRef.documentID)]")
         return newDocRef.documentID
     }
     
@@ -306,7 +292,6 @@ class ActivityFirestoreService {
                 "expiresAt": Calendar.current.date(byAdding: .day, value: 30, to: Date()) ?? Date()
             ])
         
-        print("✅ Share code generated: \(code)")
         return code
     }
     
@@ -344,7 +329,6 @@ class ActivityFirestoreService {
         let newDocRef = try userActivitiesCollection(userId: userId)
             .addDocument(from: activity)
         
-        print("✅ Activity imported from code: \(activity.displayName)")
         return newDocRef.documentID
     }
     
@@ -427,7 +411,6 @@ class ActivityFirestoreService {
         }
         
         try await batch.commit()
-        print("✅ Batch uploaded \(activities.count) activities")
     }
     
     // MARK: - HELPERS

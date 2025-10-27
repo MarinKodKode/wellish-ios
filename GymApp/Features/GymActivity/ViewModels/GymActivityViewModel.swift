@@ -24,6 +24,7 @@ public final class GymActivityViewModel : ObservableObject {
     let repository : RoutineRepositoryProtocol
     let firestoreService = RoutineFirestoreService()
     let localStorageService = RoutineLocalStorageService()
+    let activityService = ActivityService()
     let service = RoutineService()
     
     public init(

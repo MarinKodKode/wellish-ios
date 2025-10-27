@@ -29,15 +29,14 @@ extension GymActivityViewModel {
         
         preparegymActivityForSave()
         
-        let saveLocally = await service.saveRoutineLocally(gymActivity)
+        let saveActivity = await activityService.saveActivity(.gym(gymActivity))
         
-        let saveRemote = await service.saveRoutineFirebase(gymActivity)
         
         isSaving = false
         
-        if saveLocally {
+        if saveActivity {
             //Display success animation
-            if saveRemote {
+            if saveActivity {
                 //Display success animation
             }else{
                 //Report to Analitycs

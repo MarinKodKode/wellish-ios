@@ -104,7 +104,7 @@ final class RoutineService : RoutineServiceProtocol {
             let loadedRoutine = try await firestoreService.fetchRoutine(id: id)
             isOnline = true
             
-            try await localStorageService.saveRoutine(loadedRoutine)
+//            try await localStorageService.saveRoutine(loadedRoutine)
             
             return loadedRoutine
         }catch {
@@ -124,7 +124,7 @@ final class RoutineService : RoutineServiceProtocol {
 
     internal func saveRoutineInLocalStorage(_ routine : GymActivity) async -> Bool {
         do {
-            try await localStorageService.saveRoutine(routine)
+//            try await localStorageService.saveRoutine(routine)
             return true
         }catch {
             print("Could not save routine to local storage")

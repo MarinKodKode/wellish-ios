@@ -69,7 +69,7 @@ struct PlansView: View {
                                     .padding()
                             } else {
                                 ForEach(plansVM.plans) { plan in
-//                                    PlansRoutineRowView(routine: routine)
+                                    PlansPlanElementRow(plan: plan)
                                 }
                                 .buttonStyle(PlainButtonStyle())
                             }

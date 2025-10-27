@@ -63,7 +63,7 @@ extension GymActivityViewModel {
             self.gymActivity = loadedRoutine
             isOnline = true
             
-            try await localStorageService.saveRoutine(loadedRoutine)
+//            try await localStorageService.saveRoutine(loadedRoutine)
             
             isLoading = false
             return true

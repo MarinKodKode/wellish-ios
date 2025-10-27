@@ -41,7 +41,7 @@ class RoutineLocalStorageService {
     
     ///Save routines in a JSON file
     @MainActor
-    func saveRoutine(_ routine : GymActivity) async throws {
+    func  ssaveRoutine(_ routine : GymActivity) async throws {
         
         let fileURL = routineFileURL(for : routine.id)
         
@@ -65,7 +65,8 @@ class RoutineLocalStorageService {
     @MainActor
     func saveRoutines(_ routines : [GymActivity]) async throws {
         for routine in routines {
-            try await saveRoutine(routine)
+//            try await saveRoutine(routine)
+            print("\(routines.count) saved successfully.")
         }
         print("\(routines.count) saved successfully.")
     }
@@ -77,7 +78,7 @@ class RoutineLocalStorageService {
         let fileURL = routineFileURL(for: id)
         
         guard fileManager.fileExists(atPath: fileURL.path) else {
-            throw LocalStorageError.routineNotFound(id)
+            throw LocalStorageError.activityNotFound(id)
         }
         
         do {
@@ -117,7 +118,7 @@ class RoutineLocalStorageService {
         let fileURL = routineFileURL(for: id)
         
         guard fileManager.fileExists(atPath: fileURL.path) else {
-            throw LocalStorageError.routineNotFound(id)
+            throw LocalStorageError.activityNotFound(id)
         }
         
         do {
@@ -297,34 +298,6 @@ class RoutineLocalStorageService {
     }
 }
 
-
-//MARK: Supporting Types
-
-enum LocalStorageError : LocalizedError {
-    case saveFailed(Error)
-    case readFailed(Error)
-    case deleteFailed(Error)
-    case routineNotFound(String)
-    case indexCorrupted
-    case planNotFound(String)
-    
-    var errorDescription: String? {
-        switch self {
-        case .saveFailed(let error) :
-            return "Error saving \(error.localizedDescription)"
-        case .readFailed(let error) :
-            return "Error reading : \(error.localizedDescription)"
-        case .deleteFailed(let error) :
-            return "Error deleting : \(error.localizedDescription)"
-        case .routineNotFound(let id) :
-            return "Routine not found: \(id)"
-        case .indexCorrupted :
-            return "Index corrupted"
-        case .planNotFound(let id) :
-            return "Plan not found: \(id)"
-        }
-    }
-}
 
 struct LocalStorageStatistics {
     let totalRoutines : Int

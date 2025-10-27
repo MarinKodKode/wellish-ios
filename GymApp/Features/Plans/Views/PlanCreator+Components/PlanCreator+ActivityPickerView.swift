@@ -5,36 +5,22 @@ struct ActivityPickerView: View {
     @ObservedObject var vm: PlanCreatorViewModel
     
     let category: ActivityCategory
-    
-    /// Día del plan
     let day: Int
     
     @Binding var dismissSheet: Bool
-    
+        
     @State private var activities: [ActivityType] = []
     @State private var isLoading = false
     @State private var errorMessage: String?
     
     var body: some View {
         Group {
-            if isLoading {
-                loadingView
-            } else if let error = errorMessage {
-                errorView(error)
-            } else if activities.isEmpty {
-                emptyView
-            } else {
-                activitiesList
-            }
+            activitiesList
         }
         .navigationTitle(navigationTitle)
         .navigationBarTitleDisplayMode(.inline)
-        .task {
-            await loadActivities()
-        }
     }
     
-    // MARK: - Navigation Title
     
     private var navigationTitle: String {
         switch category {
@@ -52,28 +38,15 @@ struct ActivityPickerView: View {
         
     private var activitiesList: some View {
         List {
-            ForEach(ActivityDataset.allActivitiesAsTypes) { activityType in
+            ForEach(ActivityDataset.activities(for: category)) { activityType in
                 Button {
-//                    handleActivitySelection(activityType)
+                    handleActivitySelection(activityType)
                 } label: {
                     ActivityRowView(activityType: activityType)
                 }
             }
         }
     }
-    
-    // MARK: - Loading View
-    
-    private var loadingView: some View {
-        VStack(spacing: 16) {
-            ProgressView()
-            Text("Cargando actividades...")
-                .foregroundColor(.secondary)
-        }
-        .frame(maxWidth: .infinity, maxHeight: .infinity)
-    }
-    
-    // MARK: - Empty View
     
     private var emptyView: some View {
         VStack(spacing: 16) {
@@ -91,45 +64,15 @@ struct ActivityPickerView: View {
                 .padding(.horizontal)
             
             Button("Crear nueva") {
-                // Navegar a creación de actividad
-                // vm.showActivityCreation(category: category)
+                // handle page navigation for crating new activity
             }
             .buttonStyle(.borderedProminent)
         }
         .frame(maxWidth: .infinity, maxHeight: .infinity)
     }
-    
-    // MARK: - Error View
-    
-    private func errorView(_ error: String) -> some View {
-        VStack(spacing: 16) {
-            Image(systemName: "exclamationmark.triangle")
-                .font(.system(size: 60))
-                .foregroundColor(.orange)
-            
-            Text("Error al cargar")
-                .font(.headline)
-            
-            Text(error)
-                .font(.subheadline)
-                .foregroundColor(.secondary)
-                .multilineTextAlignment(.center)
-                .padding(.horizontal)
-            
-            Button("Reintentar") {
-                Task {
-                    await loadActivities()
-                }
-            }
-            .buttonStyle(.bordered)
-        }
-        .frame(maxWidth: .infinity, maxHeight: .infinity)
-    }
-    
-    // MARK: - Actions
-    
+
     private func handleActivitySelection(_ activityType: ActivityType) {
-//        vm.addActivityToPlan(activityType, forDay: day)
+        vm.addActivityToPlan(activityType)
         dismissSheet = false
     }
     
@@ -140,14 +83,11 @@ struct ActivityPickerView: View {
     }
 }
 
-// MARK: - Activity Row View
-
 private struct ActivityRowView: View {
     let activityType: ActivityType
     
     var body: some View {
         HStack(spacing: 12) {
-            // Icono
             ZStack {
                 Circle()
                     .fill(Color(hex: activityType.colorHex).opacity(0.2))
@@ -158,31 +98,16 @@ private struct ActivityRowView: View {
                     .font(.system(size: 20))
             }
             
-            // Info
             VStack(alignment: .leading, spacing: 4) {
                 Text(activityType.displayName)
                     .font(.headline)
-                
-                // Subtítulo según tipo
                 if let subtitle = activitySubtitle {
                     Text(subtitle)
                         .font(.subheadline)
                         .foregroundColor(.secondary)
                 }
             }
-            
             Spacer()
-//            
-//            // Badge si es template o premium
-//            if activityType.isTemplate {
-//                Text("Template")
-//                    .font(.caption2)
-//                    .padding(.horizontal, 8)
-//                    .padding(.vertical, 4)
-//                    .background(Color.blue.opacity(0.2))
-//                    .foregroundColor(.blue)
-//                    .cornerRadius(4)
-//            }
         }
         .padding(.vertical, 4)
     }
@@ -198,7 +123,6 @@ private struct ActivityRowView: View {
             parts.append("\(calories) kcal")
         }
         
-        // Info específica por tipo
         switch activityType {
         case .running(let running):
             if let distance = running.targetDistanceKm {
@@ -225,9 +149,6 @@ private struct ActivityRowView: View {
             
         case .rest(let rest):
             parts.append(rest.restType.rawValue)
-            
-        default:
-            break
         }
         
         return parts.isEmpty ? nil : parts.joined(separator: " · ")

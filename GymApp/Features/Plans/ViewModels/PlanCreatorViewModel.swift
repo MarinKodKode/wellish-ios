@@ -37,19 +37,16 @@ public final class PlanCreatorViewModel : ObservableObject {
         _ = await service.savePlanRemote(plan)
     }
     
-    public func createPlan(){
-        
-    }
-    
-    public func addActivityToPlan(_ activity: PlanActivity) {
+
+    public func addActivityToPlan(_ activity: ActivityType) {
         guard let day = self.selectedDay else {
             return
         }
-//        
-//        let planElement = PlanElement(
-//            activity: .gym(activity),
-//            day: day
-//        )
-//        self.plan.elements.append(planElement)
+        
+        let planElement = PlanElement(
+            activity: activity,
+            day: day
+        )
+        self.plan.elements.append(planElement)
     }
 }

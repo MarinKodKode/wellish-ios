@@ -33,7 +33,7 @@ struct RoutinePickerView: View {
     }
     
     private func handleRoutineSelection(_ routine: GymActivity) {
-        vm.addActivityToPlan(.routine(routine))
-        dismissSheet = false
+//        vm.addActivityToPlan(.routine(routine))
+//        dismissSheet = false
     }
 }

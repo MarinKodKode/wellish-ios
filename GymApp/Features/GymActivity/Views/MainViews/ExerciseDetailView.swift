@@ -193,7 +193,7 @@ struct ExerciseDetailView: View {
                         RoundedRectangle(cornerRadius: 16)
                             .stroke(Color.white.opacity(0.1), lineWidth: 1)
                     )
-                    .padding(.top, 20)
+                    .padding(.top, 60)
             }
         }
     }

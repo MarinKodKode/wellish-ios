@@ -53,6 +53,14 @@ struct ContentView: View {
                 case .adminConsole :
                     AdminConsole()
                         .environmentObject(navigationRouter)
+                case .gymActivityDetail(let activity) :
+                    GymActivityDetailView(activity: activity)
+                        .environmentObject(navigationRouter)
+                case .planDetail(let plan) :
+                    PlanDetailView(plan: plan)
+                        .environmentObject(navigationRouter)
+                case .exerciseDetail(let exercise) :
+                    ExerciseDetailView(exercise: exercise)
                 default :
                     SignInView()
                 }

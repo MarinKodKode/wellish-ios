@@ -69,7 +69,11 @@ struct PlansView: View {
                                     .padding()
                             } else {
                                 ForEach(plansVM.plans) { plan in
-                                    PlansPlanElementRow(plan: plan)
+                                    Button(action: {
+                                        navigationRouter.goTo(.planDetail(plan))
+                                    }, label: {
+                                        PlansPlanElementRow(plan: plan)
+                                    })
                                 }
                                 .buttonStyle(PlainButtonStyle())
                             }
@@ -97,8 +101,13 @@ struct PlansView: View {
                                     .frame(maxWidth: .infinity)
                                     .padding()
                             } else {
+                                
                                 ForEach(plansVM.routines) { routine in
-                                    PlansRoutineRowView(routine: routine)
+                                    Button(action: {
+                                        navigationRouter.goTo(.gymActivityDetail(routine))
+                                    }, label: {
+                                        PlansRoutineRowView(routine: routine)
+                                    })
                                 }
                                 .buttonStyle(PlainButtonStyle())
                             }

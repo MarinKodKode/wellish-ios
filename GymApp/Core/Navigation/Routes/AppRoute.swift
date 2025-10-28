@@ -20,4 +20,8 @@ enum AppRoute:  Hashable {
     case workoutTimer
     case todayWorkout
     case adminConsole
+    case gymActivityDetail(_ activity : GymActivity)
+    case runningActivityDetail
+    case exerciseDetail(_ exercise : Exercise)
+    case planDetail(_ plan : Plan)
 }

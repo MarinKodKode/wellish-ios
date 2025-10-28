@@ -10,13 +10,20 @@ import SwiftUI
 struct ExerciseSetCard: View {
     let set: RoutineSet
     let index: Int
+    @EnvironmentObject var navigationRouter: NavigationRouter
     
     var body: some View {
         VStack(alignment: .leading, spacing: 12) {
             HStack {
-                Text(set.exercise.name)
-                    .font(.system(size: 17, weight: .semibold))
-                    .foregroundColor(.white)
+                Button(action: {
+                    navigationRouter
+                        .goTo(.exerciseDetail(Exercise.dumbbellCurlExample))
+                }, label: {
+                    Text(set.exercise.name)
+                        .font(.system(size: 17, weight: .semibold))
+                        .foregroundColor(.white)
+                })
+                
                 
                 Spacer()
                 

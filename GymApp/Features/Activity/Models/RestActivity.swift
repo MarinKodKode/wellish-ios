@@ -18,6 +18,7 @@ public struct RestActivity: Activity {
     public var shareable: Bool
     public var clubId: String?
     public var creator: String?
+    public var imageURL: String?
     
     // MARK: - Activity Type
     

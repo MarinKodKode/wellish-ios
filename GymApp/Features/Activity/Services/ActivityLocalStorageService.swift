@@ -41,8 +41,6 @@ class ActivityLocalStorageService {
         
         // Configurar JSON para lectura y debug
         encoder.outputFormatting = [.prettyPrinted, .sortedKeys]
-        
-        print("Activities directory: \(activitiesDirectory.path)")
     }
     
     // MARK: - Create & Update
@@ -55,15 +53,8 @@ class ActivityLocalStorageService {
         do {
             let data = try encoder.encode(activity)
             try data.write(to: fileURL, options: .atomic)
-            
-            // Actualizar índice
             try await updateIndex(addingActivityID: activity.id)
-            
-            print("✅ Activity saved: \(activity.displayName) [\(activity.id)]")
-            print("   Type: \(activity.category.rawValue)")
-            print("   Location: \(fileURL.path)")
         } catch {
-            print("❌ Error saving activity: \(error.localizedDescription)")
             throw LocalStorageError.saveFailed(error)
         }
     }
@@ -74,12 +65,10 @@ class ActivityLocalStorageService {
         for activity in activities {
             try await saveActivity(activity)
         }
-        print("✅ \(activities.count) activities saved successfully")
     }
     
     // MARK: - Read
     
-    /// Obtiene una actividad por su ID
     func fetchActivity(id: String) async throws -> ActivityType {
         let fileURL = activityFileURL(for: id)
         
@@ -90,10 +79,8 @@ class ActivityLocalStorageService {
         do {
             let data = try Data(contentsOf: fileURL)
             let activity = try decoder.decode(ActivityType.self, from: data)
-            print("✅ Activity loaded: \(activity.displayName)")
             return activity
         } catch {
-            print("❌ Error reading activity \(id): \(error.localizedDescription)")
             throw LocalStorageError.readFailed(error)
         }
     }

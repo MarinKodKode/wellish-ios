@@ -17,6 +17,7 @@ public struct RunningActivity: Activity {
     public var shareable: Bool
     public var clubId: String?
     public var creator: String?
+    public var imageURL: String?
     
     // MARK: - Activity Type
     
@@ -175,6 +176,7 @@ public struct CyclingActivity: Activity {
     public var shareable: Bool
     public var clubId: String?
     public var creator: String?
+    public var imageURL: String?
     
     // MARK: - Activity Type
     
@@ -339,6 +341,7 @@ public struct SwimmingActivity: Activity {
     public var shareable: Bool
     public var clubId: String?
     public var creator: String?
+    public var imageURL: String?
     
     // MARK: - Activity Type
     
@@ -477,7 +480,6 @@ public struct SwimmingActivity: Activity {
 // MARK: - Walking Activity
 
 public struct WalkingActivity: Activity {
-    
     // MARK: - Activity Protocol Properties
     
     public let id: String
@@ -491,6 +493,7 @@ public struct WalkingActivity: Activity {
     public var shareable: Bool
     public var clubId: String?
     public var creator: String?
+    public var imageURL: String?
     
     // MARK: - Activity Type
     

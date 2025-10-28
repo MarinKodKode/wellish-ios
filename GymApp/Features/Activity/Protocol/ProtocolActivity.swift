@@ -64,6 +64,8 @@ public protocol Activity: Identifiable, Codable, Hashable {
     /// Creador de la actividad (userId)
     var creator: String? { get set }
     
+    var imageURL  : String? { get set }
+    
     // MARK: - Firestore Serialization
     
     /// Convierte la actividad a diccionario para Firestore

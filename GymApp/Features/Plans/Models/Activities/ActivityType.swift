@@ -110,6 +110,10 @@ public enum ActivityType: Codable, Hashable, Identifiable {
         activity.isClubContent
     }
     
+    public var imageURL : String? {
+        activity.imageURL
+    }
+    
     /// Fuente de la actividad
     public var source: ActivitySource {
         activity.source

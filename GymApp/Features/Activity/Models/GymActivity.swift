@@ -14,6 +14,7 @@ public struct GymActivity : Activity {
     public var shareable: Bool
     public var clubId: String?
     public var creator: String?
+    public var imageURL: String?
 
     public var activityType: ActivityCategory {
         .gym

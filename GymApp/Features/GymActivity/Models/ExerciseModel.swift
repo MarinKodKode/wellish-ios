@@ -1,10 +1,3 @@
-//
-//  ExerciseModel.swift
-//  Wellish
-//
-//  Created by Manuel Alejandro Hernandez Marín on 30/09/25.
-//
-
 import Foundation
 
 // MARK: - Exercise (Library)
@@ -15,6 +8,11 @@ public struct Exercise: Identifiable, Codable, Hashable {
     public var equipment: String?
     public var muscles: [String]
     public var thumbnailURL: URL?
+    
+    // --- NUEVAS PROPIEDADES AÑADIDAS (OPCIONALES) ---
+    public var videoUrl: URL? // Enlace al video de instrucciones
+    public var instructions: String? // Texto detallado de las instrucciones
+    // --------------------------------------------------
 
     public init(
         id: String = UUID().uuidString,
@@ -22,7 +20,10 @@ public struct Exercise: Identifiable, Codable, Hashable {
         category: ExerciseCategory? = nil,
         equipment: String? = nil,
         muscles: [String] = [],
-        thumbnailURL: URL? = nil
+        thumbnailURL: URL? = nil,
+        // Incluir las nuevas propiedades en el inicializador
+        videoUrl: URL? = nil,
+        instructions: String? = nil
     ) {
         self.id = id
         self.name = name
@@ -30,6 +31,10 @@ public struct Exercise: Identifiable, Codable, Hashable {
         self.equipment = equipment
         self.muscles = muscles
         self.thumbnailURL = thumbnailURL
+        
+        // Asignación de nuevas propiedades
+        self.videoUrl = videoUrl
+        self.instructions = instructions
     }
     
     // MARK: - CodingKeys
@@ -40,6 +45,11 @@ public struct Exercise: Identifiable, Codable, Hashable {
         case equipment
         case muscles
         case thumbnailURL
+        
+        // --- Añadir las nuevas propiedades a CodingKeys ---
+        case videoUrl
+        case instructions
+        // ---------------------------------------------------
     }
     
     // MARK: - Firestore Helper
@@ -63,6 +73,16 @@ public struct Exercise: Identifiable, Codable, Hashable {
         if let thumbnailURL = thumbnailURL {
             dict["thumbnailURL"] = thumbnailURL.absoluteString
         }
+        
+        // --- Guardar las nuevas propiedades si existen ---
+        if let videoUrl = videoUrl {
+            dict["videoUrl"] = videoUrl.absoluteString
+        }
+        
+        if let instructions = instructions {
+            dict["instructions"] = instructions
+        }
+        // -------------------------------------------------
         
         return dict
     }
@@ -89,7 +109,6 @@ public struct Exercise: Identifiable, Codable, Hashable {
         equipment ?? "Sin equipo"
     }
 }
-
 
 
 public enum ExerciseCategory: String, Codable {

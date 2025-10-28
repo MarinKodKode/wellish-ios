@@ -54,6 +54,9 @@ public struct PlanElement: Identifiable, Codable, Hashable {
     /// Notas adicionales del usuario
     public var notes: String?
     
+    //Parallax Element
+    public var imageURL: String?
+    
     // MARK: - Init
     
     public init(
@@ -68,7 +71,8 @@ public struct PlanElement: Identifiable, Codable, Hashable {
         actualCalories: Int? = nil,
         rpe: Int? = nil,
         performanceNotes: String? = nil,
-        notes: String? = nil
+        notes: String? = nil,
+        imageURL : String? = nil
     ) {
         self.id = id
         self.activity = activity
@@ -82,6 +86,7 @@ public struct PlanElement: Identifiable, Codable, Hashable {
         self.rpe = rpe
         self.performanceNotes = performanceNotes
         self.notes = notes
+        self.imageURL = imageURL
     }
     
     // MARK: - Computed Properties (Delegados a Activity)
@@ -418,8 +423,8 @@ public struct PlanElement: Identifiable, Codable, Hashable {
         let activity = try ActivityType.fromDictionary(activityDict)
         
         // Convertir Timestamps a Date
-        let scheduledTime = (dict["scheduledTime"] as? Timestamp)?.dateValue()
-        let completedAt = (dict["completedAt"] as? Timestamp)?.dateValue()
+        let scheduledTime = (dict["scheduledTime"] as? Timestamp)?.date
+        let completedAt = (dict["completedAt"] as? Timestamp)?.date
         
         return PlanElement(
             id: id,
@@ -433,7 +438,8 @@ public struct PlanElement: Identifiable, Codable, Hashable {
             actualCalories: dict["actualCalories"] as? Int,
             rpe: dict["rpe"] as? Int,
             performanceNotes: dict["performanceNotes"] as? String,
-            notes: dict["notes"] as? String
+            notes: dict["notes"] as? String,
+            imageURL: dict["imageURL"] as? String
         )
     }
 }

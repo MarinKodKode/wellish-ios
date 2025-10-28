@@ -19,4 +19,5 @@ enum AppRoute:  Hashable {
     case createPlan
     case workoutTimer
     case todayWorkout
+    case adminConsole
 }

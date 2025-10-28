@@ -50,6 +50,9 @@ struct ContentView: View {
                 case .createPlan :
                     CreatePlanView()
                         .environmentObject(navigationRouter)
+                case .adminConsole :
+                    AdminConsole()
+                        .environmentObject(navigationRouter)
                 default :
                     SignInView()
                 }

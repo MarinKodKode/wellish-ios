@@ -42,7 +42,7 @@ class ActivityLocalStorageService {
         // Configurar JSON para lectura y debug
         encoder.outputFormatting = [.prettyPrinted, .sortedKeys]
         
-        print("📁 Activities directory: \(activitiesDirectory.path)")
+        print("Activities directory: \(activitiesDirectory.path)")
     }
     
     // MARK: - Create & Update

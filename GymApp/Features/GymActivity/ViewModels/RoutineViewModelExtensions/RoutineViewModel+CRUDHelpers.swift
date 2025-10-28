@@ -51,7 +51,7 @@ extension GymActivityViewModel {
         
         // Si no hay categoría, tomar del primer ejercicio
         if gymActivity.category == nil || gymActivity.category?.isEmpty ?? true {
-            gymActivity.category = gymActivity.sets.first?.exercise.category
+            gymActivity.category = gymActivity.sets.first?.exercise.category?.rawValue
         }
         
         // Grupo muscular afectado (tomar el más común)

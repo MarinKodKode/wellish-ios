@@ -10,13 +10,8 @@ import SwiftUI
 struct ExercisePickerView: View {
     var onSelect: (Exercise) -> Void
 
-    private let library: [Exercise] = [
-        Exercise(name: "Bench Press", category: "Chest", equipment: "Barbell", muscles: ["Chest","Triceps"]),
-        Exercise(name: "Squat", category: "Legs", equipment: "Barbell", muscles: ["Quadriceps","Glutes"]),
-        Exercise(name: "Deadlift", category: "Back", equipment: "Barbell", muscles: ["Back","Hamstrings"]),
-        Exercise(name: "Overhead Press", category: "Shoulders", equipment: "Barbell", muscles: ["Deltoids"])
-    ]
-
+    @ObservedObject var vm = GymActivityViewModel()
+    
     @Environment(\.presentationMode) private var presentationMode
 
     var body: some View {
@@ -24,7 +19,7 @@ struct ExercisePickerView: View {
             ZStack {
                 Color.fitnessBackgroundPrimary.ignoresSafeArea()
                 
-                List(library) { ex in
+                List(vm.exerciseLibrary) { ex in
                     Button(action: {
                         onSelect(ex)
                         presentationMode.wrappedValue.dismiss()
@@ -43,7 +38,7 @@ struct ExercisePickerView: View {
                                     .foregroundColor(.fitnessTextPrimary)
                                 
                                 if let category = ex.category {
-                                    Text(category)
+                                    Text(category.rawValue)
                                         .font(.caption)
                                         .foregroundColor(.fitnessTextSecondary)
                                 }
@@ -69,6 +64,10 @@ struct ExercisePickerView: View {
                     }
                     .foregroundColor(.primaryFitnessBlue)
                 }
+            }
+            .task {
+                await vm.fetchGymExercise()
+                print(vm.exerciseLibrary)
             }
         }
     }

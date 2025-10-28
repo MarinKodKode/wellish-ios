@@ -50,7 +50,7 @@ let workouts = [
 
 let benchPress = Exercise(
     name: "Bench Press",
-    category: "Chest",
+    category: .chest,
     equipment: "Barbell",
     muscles: ["Pectorals", "Triceps", "Anterior Deltoids"],
     thumbnailURL: URL(string: "https://example.com/bench-press.jpg")
@@ -58,7 +58,7 @@ let benchPress = Exercise(
 
 let squat = Exercise(
     name: "Barbell Back Squat",
-    category: "Legs",
+    category: .legs,
     equipment: "Barbell",
     muscles: ["Quadriceps", "Glutes", "Hamstrings"],
     thumbnailURL: URL(string: "https://example.com/squat.jpg")
@@ -66,7 +66,7 @@ let squat = Exercise(
 
 let deadlift = Exercise(
     name: "Deadlift",
-    category: "Back",
+    category: .back,
     equipment: "Barbell",
     muscles: ["Erector Spinae", "Glutes", "Hamstrings", "Trapezius"],
     thumbnailURL: URL(string: "https://example.com/deadlift.jpg")
@@ -74,7 +74,7 @@ let deadlift = Exercise(
 
 let overheadPress = Exercise(
     name: "Overhead Press",
-    category: "Shoulders",
+    category: .shoulders,
     equipment: "Barbell",
     muscles: ["Deltoids", "Triceps", "Trapezius"],
     thumbnailURL: URL(string: "https://example.com/overhead-press.jpg")
@@ -82,7 +82,7 @@ let overheadPress = Exercise(
 
 let pullUp = Exercise(
     name: "Pull-Up",
-    category: "Back",
+    category: .back,
     equipment: "Pull-Up Bar",
     muscles: ["Latissimus Dorsi", "Biceps", "Rhomboids"],
     thumbnailURL: URL(string: "https://example.com/pullup.jpg")
@@ -90,7 +90,7 @@ let pullUp = Exercise(
 
 let plank = Exercise(
     name: "Plank",
-    category: "Core",
+    category: .core,
     equipment: "Bodyweight",
     muscles: ["Rectus Abdominis", "Transverse Abdominis"],
     thumbnailURL: URL(string: "https://example.com/plank.jpg")
@@ -98,9 +98,9 @@ let plank = Exercise(
 
 // MARK: - Sample Routines
 
-let routines: [Routine] = [
+let routines: [GymActivity] = [
         // 💪 Full Body Strength
-        Routine(
+    GymActivity(
             name: "Full Body Strength",
             description: "A balanced full-body routine for strength and hypertrophy.",
             
@@ -139,14 +139,14 @@ let routines: [Routine] = [
         ),
 
         // 🏃‍♂️ Beginner Running Plan
-        Routine(
+    GymActivity(
             name: "Beginner 5K Plan",
             description: "Couch to 5K in 8 weeks. Walk-run intervals.",
             sets: [
                 RoutineSet(
                     exercise: Exercise(
                         name: "Run/Walk Intervals",
-                        category: "Cardio",
+                        category: .cardio,
                         equipment: "Running Shoes",
                         muscles: ["Quadriceps", "Calves", "Heart"]
                     ),
@@ -165,7 +165,7 @@ let routines: [Routine] = [
             estimatedDurationMinutes: 30
         ),
 
-        Routine(
+    GymActivity(
             name: "Isometric Core Flow",
             description: "Hold-based core routine for stability and endurance.",
             sets: [
@@ -181,7 +181,7 @@ let routines: [Routine] = [
                 RoutineSet(
                     exercise: Exercise(
                         name: "Wall Sit",
-                        category: "Legs",
+                        category: .legs,
                         equipment: "Wall",
                         muscles: ["Quadriceps"]
                     ),
@@ -198,14 +198,14 @@ let routines: [Routine] = [
             estimatedDurationMinutes: 20
         ),
 
-        Routine(
+    GymActivity(
             name: "Cycling HIIT",
             description: "High-Intensity Interval Training on the bike.",
             sets: [
                 RoutineSet(
                     exercise: Exercise(
                         name: "Indoor Cycling",
-                        category: "Cardio",
+                        category: .cardio,
                         equipment: "Stationary Bike",
                         muscles: ["Quadriceps", "Glutes", "Cardiovascular"]
                     ),
@@ -227,7 +227,7 @@ let routines: [Routine] = [
         ),
 
         // 🔥 Upper Body Blast
-        Routine(
+    GymActivity(
             name: "Upper Body Blast",
             description: "Push-pull upper body workout with supersets.",
             sets: [

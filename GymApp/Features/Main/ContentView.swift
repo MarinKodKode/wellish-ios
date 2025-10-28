@@ -39,7 +39,7 @@ struct ContentView: View {
                     SignInView()
                         .environmentObject(navigationRouter)
                 case .createRoutine :
-                    RoutineCreatorView(viewModel: RoutineViewModel())
+                    RoutineCreatorView(viewModel: GymActivityViewModel())
                         .environmentObject(navigationRouter)
                 case .workoutTimer :
                     WorkoutTimerView(showWorkoutTimer: $showWorkoutTimer)
@@ -49,6 +49,9 @@ struct ContentView: View {
                         .environmentObject(navigationRouter)
                 case .createPlan :
                     CreatePlanView()
+                        .environmentObject(navigationRouter)
+                case .adminConsole :
+                    AdminConsole()
                         .environmentObject(navigationRouter)
                 default :
                     SignInView()

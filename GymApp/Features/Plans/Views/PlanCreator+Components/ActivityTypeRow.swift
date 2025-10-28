@@ -34,8 +34,6 @@ struct ActivityTypeRow: View {
             
             Spacer()
             
-            Image(systemName: "chevron.right")
-                .foregroundColor(.secondary)
         }
         .padding(.vertical, 4)
     }

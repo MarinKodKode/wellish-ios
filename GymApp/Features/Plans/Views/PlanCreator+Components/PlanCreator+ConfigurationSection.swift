@@ -13,19 +13,17 @@ extension CreatePlanView {
     var PlanCreator_ConfigurationSection : some View {
         
         VStack(alignment: .leading, spacing: 16) {
-            HStack(spacing: 12) {
-                Image(systemName: "clock.fill")
-                    .font(.title2)
-                    .foregroundColor(.green)
-                
-                Text("Configuración")
-                    .font(.title2)
-                    .fontWeight(.semibold)
-            }
-            .padding(.horizontal)
-            
+//            HStack(spacing: 12) {
+//                Image(systemName: "clock.fill")
+//                    .font(.title2)
+//                    .foregroundColor(.green)
+//
+//                Text("Configuración")
+//                    .font(.title2)
+//                    .fontWeight(.semibold)
+//            }
+//            .padding(.horizontal)
             VStack(spacing: 16) {
-                // Duration
                 VStack(alignment: .leading, spacing: 8) {
                     Text("Duración (semanas)")
                         .font(.subheadline)
@@ -57,40 +55,40 @@ extension CreatePlanView {
                     }
                 }
                 
-                Divider()
-                    .background(Color.white.opacity(0.1))
-                
-                // Activities per week
-                VStack(alignment: .leading, spacing: 8) {
-                    Text("Actividades por semana")
-                        .font(.subheadline)
-                        .foregroundColor(.secondary)
-                    
-                    HStack {
-                        Button {
-                            if vm.plan.activitiesPerWeek > 1 {
-                                vm.plan.activitiesPerWeek -= 1
-                            }
-                        } label: {
-                            Image(systemName: "minus.circle.fill")
-                                .font(.title2)
-                                .foregroundColor(.green)
-                        }
-                        
-                        Text("\(vm.plan.activitiesPerWeek)")
-                            .font(.title)
-                            .fontWeight(.bold)
-                            .frame(maxWidth: .infinity)
-                        
-                        Button {
-                            vm.plan.activitiesPerWeek += 1
-                        } label: {
-                            Image(systemName: "plus.circle.fill")
-                                .font(.title2)
-                                .foregroundColor(.green)
-                        }
-                    }
-                }
+//                Divider()
+//                    .background(Color.white.opacity(0.1))
+//                
+//                // Activities per week
+//                VStack(alignment: .leading, spacing: 8) {
+//                    Text("Actividades por semana")
+//                        .font(.subheadline)
+//                        .foregroundColor(.secondary)
+//                    
+//                    HStack {
+//                        Button {
+//                            if vm.plan.activitiesPerWeek > 1 {
+//                                vm.plan.activitiesPerWeek -= 1
+//                            }
+//                        } label: {
+//                            Image(systemName: "minus.circle.fill")
+//                                .font(.title2)
+//                                .foregroundColor(.green)
+//                        }
+//                        
+//                        Text("\(vm.plan.activitiesPerWeek)")
+//                            .font(.title)
+//                            .fontWeight(.bold)
+//                            .frame(maxWidth: .infinity)
+//                        
+//                        Button {
+//                            vm.plan.activitiesPerWeek += 1
+//                        } label: {
+//                            Image(systemName: "plus.circle.fill")
+//                                .font(.title2)
+//                                .foregroundColor(.green)
+//                        }
+//                    }
+//                }
             }
             .padding()
             .background(

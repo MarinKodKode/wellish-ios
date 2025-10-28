@@ -876,7 +876,7 @@ struct MainHomeViewTest: View {
 
 //MARK: - Routine Creator
 public struct RoutineCreatorTestView: View {
-    @ObservedObject var vm: RoutineViewModel
+    @ObservedObject var vm: GymActivityViewModel
 
     // Small local UI state
     @State private var showingExercisePicker = false
@@ -884,7 +884,7 @@ public struct RoutineCreatorTestView: View {
     @State private var newTagText: String = ""
     @State private var showRoutineCreator: Bool = false
 
-    public init(viewModel: RoutineViewModel) {
+    public init(viewModel: GymActivityViewModel) {
         _vm = ObservedObject(wrappedValue: viewModel)
     }
 
@@ -899,25 +899,25 @@ public struct RoutineCreatorTestView: View {
                     VStack(spacing: 24) {
                         sectionView(title: "Routine") {
                             VStack(spacing: 16) {
-                                TextField("Routine name", text: $vm.routine.name)
+                                TextField("Routine name", text: $vm.gymActivity.name)
                                     .inputFieldStyle()
 
-                                TextField("Description (optional)", text: $vm.routine.category.replacingNilWith(""))
+                                TextField("Description (optional)", text: $vm.gymActivity.category.replacingNilWith(""))
                                     .inputFieldStyle()
                             }
                         }
 
                         sectionView(title: "Exercises & Sets") {
-                            if vm.routine.sets.isEmpty {
+                            if vm.gymActivity.sets.isEmpty {
                                 Text("No sets yet. Add an exercise to begin.")
                                     .foregroundColor(.secondary)
                                     .font(.footnote)
                             }
 
                             VStack(spacing: 12) {
-                                ForEach(Array(vm.routine.sets.enumerated()), id: \.element.id) { index, _ in
+                                ForEach(Array(vm.gymActivity.sets.enumerated()), id: \.element.id) { index, _ in
                                     RoutineSetRowView(
-                                        set: $vm.routine.sets[index],
+                                        set: $vm.gymActivity.sets[index],
                                         onAddSerie: { vm.addSerie(toSetAt: index) },
                                         onRemove: { vm.removeSet(at: index) },
                                         onEditSeria: { serieIndex, serie in
@@ -952,13 +952,13 @@ public struct RoutineCreatorTestView: View {
 
                                 ScrollView(.horizontal, showsIndicators: false) {
                                     HStack(spacing: 8) {
-                                        ForEach(vm.routine.tags, id: \.self) { tag in
+                                        ForEach(vm.gymActivity.tags, id: \.self) { tag in
                                             TagChip(tag: tag) { vm.removeTag(tag) }
                                         }
                                     }
                                 }
 
-                                TextField("Category (e.g., Strength)", text: $vm.routine.category.replacingNilWith(""))
+                                TextField("Category (e.g., Strength)", text: $vm.gymActivity.category.replacingNilWith(""))
                                     .inputFieldStyle()
                             }
                         }
@@ -967,7 +967,7 @@ public struct RoutineCreatorTestView: View {
                             VStack(spacing: 12) {
                                 metricRow(title: "Estimated volume", value: String(format: "%.0f kg", vm.estimatedVolumeKg))
                                 metricRow(title: "Total reps", value: "\(vm.totalReps)")
-                                metricRow(title: "Total series", value: "\(vm.routine.totalSeriesCount)")
+                                metricRow(title: "Total series", value: "\(vm.gymActivity.totalSeriesCount)")
                             }
                         }
 
@@ -1196,12 +1196,12 @@ private extension View {
 // MARK: - Preview
 
 #Preview {
-    RoutineCreatorTestView(viewModel: RoutineViewModel())
+    RoutineCreatorTestView(viewModel: GymActivityViewModel())
         .preferredColorScheme(.light)
 }
 
 #Preview {
-    RoutineCreatorTestView(viewModel: RoutineViewModel())
+    RoutineCreatorTestView(viewModel: GymActivityViewModel())
         .preferredColorScheme(.dark)
 }
 

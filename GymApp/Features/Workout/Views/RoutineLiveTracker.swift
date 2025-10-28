@@ -1,10 +1,9 @@
-
 import SwiftUI
 
 public struct RoutineCreatorSheet: View {
    
     @Binding var isPresented: Bool
-    @StateObject private var vm = RoutineViewModel()
+    @StateObject private var vm = GymActivityViewModel()
 
     @State private var showingExercisePicker: Bool = false
     @State private var exercisePickerTargetSetIndex: Int? = nil
@@ -24,7 +23,7 @@ public struct RoutineCreatorSheet: View {
 
                         nameAndCategorySection
 
-                        setsSection
+//                        setsSection
 
                         tagsSection
 
@@ -46,9 +45,11 @@ public struct RoutineCreatorSheet: View {
             .sheet(isPresented: $showingExercisePicker) {
                 ExercisePickerView { exercise in
                     if let index = exercisePickerTargetSetIndex {
-                        guard vm.routine.sets.indices.contains(index) else { return }
-                        vm.routine.sets[index].exercise = exercise
+                        guard vm.gymActivity.sets.indices.contains(index) else { return }
+                        // Actualizar el nombre del ejercicio en el set existente
+                        vm.gymActivity.sets[index].exercise.name = exercise.name
                     } else {
+                        // Crear nuevo set con el ejercicio seleccionado
                         vm.addSet(with: exercise)
                     }
                     exercisePickerTargetSetIndex = nil
@@ -85,20 +86,26 @@ public struct RoutineCreatorSheet: View {
     private var nameAndCategorySection: some View {
         VStack(spacing: 16) {
             inputCard(title: "Routine Name") {
-                TextField("Enter name", text: $vm.routine.name)
+                TextField("Enter name", text: $vm.gymActivity.name)
                     .foregroundColor(.white)
                     .autocapitalization(.words)
             }
 
             inputCard(title: "Category") {
-                TextField("e.g., Strength", text: $vm.routine.category.replacingNilWith(""))
-                    .foregroundColor(.white)
+                TextField(
+                    "e.g., Strength",
+                    text: Binding(
+                        get: { vm.gymActivity.category ?? "" },
+                        set: { vm.gymActivity.category = $0.isEmpty ? nil : $0 }
+                    )
+                )
+                .foregroundColor(.white)
             }
 
             inputCard(title: "Description (optional)") {
                 TextField("Short description", text: Binding(
-                    get: { vm.routine.description ?? "" },
-                    set: { vm.routine.description = $0.isEmpty ? nil : $0 }
+                    get: { vm.gymActivity.description ?? "" },
+                    set: { vm.gymActivity.description = $0.isEmpty ? nil : $0 }
                 ))
                 .foregroundColor(.white)
             }
@@ -106,108 +113,101 @@ public struct RoutineCreatorSheet: View {
     }
 
     // MARK: - Sets / Series
-    private var setsSection: some View {
-        VStack(alignment: .leading, spacing: 16) {
-            HStack {
-                Text("Sets")
-                    .font(.system(size: 20, weight: .bold))
-                    .foregroundColor(.white)
-                Spacer()
-                Text("\(vm.routine.sets.count) items")
-                    .foregroundColor(.gray)
-            }
-
-            if vm.routine.sets.isEmpty {
-                Text("No sets yet. Add an exercise to begin.")
-                    .foregroundColor(.secondary)
-            }
-
-            // iterate using indices so we can create stable Bindings
-            ForEach(vm.routine.sets.indices, id: \.self) { index in
-                let setBinding = Binding<RoutineSet>(
-                    get: { vm.routine.sets[index] },
-                    set: { vm.routine.sets[index] = $0 }
-                )
-
-                VStack(spacing: 12) {
-                    HStack {
-                        Text(setBinding.wrappedValue.exercise.name)
-                            .foregroundColor(.white)
-                            .font(.headline)
-
-                        Spacer()
-
-                        Button(action: {
-                            // change existing set exercise
-                            exercisePickerTargetSetIndex = index
-                            showingExercisePicker = true
-                        }) {
-                            Text("Change")
-                                .font(.system(size: 14))
-                                .foregroundColor(.blue)
-                        }
-                    }
-
-                    // Series list (editable)
-                    VStack(spacing: 8) {
-                        ForEach(setBinding.wrappedValue.series.indices, id: \.self) { sIndex in
-                            // create binding to each Serie
-                            let serieBinding = Binding<Serie>(
-                                get: { setBinding.wrappedValue.series[sIndex] },
-                                set: { new in
-                                    vm.routine.sets[index].series[sIndex] = new
-                                }
-                            )
-
-                            SerieRowView(serie: serieBinding) {
-                                // onDelete
-                                vm.routine.sets[index].series.remove(at: sIndex)
-                            }
-                        }
-
-                        HStack {
-                            Button(action: {
-                                vm.addSerie(toSetAt: index)
-                            }) {
-                                HStack {
-                                    Image(systemName: "plus.circle")
-                                    Text("Add serie")
-                                }
-                                .foregroundColor(.blue)
-                            }
-
-                            Spacer()
-
-                            Button(action: {
-                                // remove the whole set
-                                withAnimation { vm.removeSet(at: index) }
-                            }) {
-                                Text("Remove set")
-                                    .foregroundColor(.red)
-                            }
-                        }
-                    }
-                    .padding(.top, 6)
-                }
-                .padding()
-                .background(Color(red: 0.1, green: 0.1, blue: 0.1))
-                .cornerRadius(16)
-            }
-
-            // Add set: open picker (no target index => add new set)
-            Button(action: {
-                exercisePickerTargetSetIndex = nil
-                showingExercisePicker = true
-            }) {
-                HStack {
-                    Image(systemName: "plus.circle.fill")
-                        .foregroundColor(.blue)
-                    Text("Add Set")
-                        .foregroundColor(.blue)
-                }
-            }
-        }
-    }
+//    private var setsSection: some View {
+//        VStack(alignment: .leading, spacing: 16) {
+//            HStack {
+//                Text("Sets")
+//                    .font(.system(size: 20, weight: .bold))
+//                    .foregroundColor(.white)
+//                Spacer()
+//                Text("\(vm.gymActivity.sets.count) items")
+//                    .foregroundColor(.gray)
+//            }
+//
+//            if vm.gymActivity.sets.isEmpty {
+//                Text("No sets yet. Add an exercise to begin.")
+//                    .foregroundColor(.secondary)
+//            }
+//
+//            // Iterar usando el array directamente con id
+//            ForEach(Array(vm.gymActivity.sets.enumerated()), id: \.element.id) { index, set in
+//                VStack(spacing: 12) {
+//                    HStack {
+//                        Text(set.exercise.name)
+//                            .foregroundColor(.white)
+//                            .font(.headline)
+//
+//                        Spacer()
+//
+//                        Button(action: {
+//                            // Cambiar ejercicio del set existente
+//                            exercisePickerTargetSetIndex = index
+//                            showingExercisePicker = true
+//                        }) {
+//                            Text("Change")
+//                                .font(.system(size: 14))
+//                                .foregroundColor(.blue)
+//                        }
+//                    }
+//
+//                    // Lista de series (editable)
+//                    VStack(spacing: 8) {
+//                        ForEach(Array(set.series.enumerated()), id: \.element.id) { sIndex, serie in
+//                            // Crear binding a cada Serie
+//                            let serieBinding = Binding<Serie>(
+//                                get: { vm.gymActivity.sets[index].series[sIndex] },
+//                                set: { vm.gymActivity.sets[index].series[sIndex] = $0 }
+//                            )
+//
+//                            SerieRowView(serie: serieBinding) {
+//                                // onDelete
+//                                vm.removeSerie(at: sIndex, fromSetAt: index)
+//                            }
+//                        }
+//
+//                        HStack {
+//                            Button(action: {
+//                                vm.addSerie(toSetAt: index)
+//                            }) {
+//                                HStack {
+//                                    Image(systemName: "plus.circle")
+//                                    Text("Add serie")
+//                                }
+//                                .foregroundColor(.blue)
+//                            }
+//
+//                            Spacer()
+//
+//                            Button(action: {
+//                                // Remover el set completo
+//                                withAnimation { vm.removeSet(at: index) }
+//                            }) {
+//                                Text("Remove set")
+//                                    .foregroundColor(.red)
+//                            }
+//                        }
+//                    }
+//                    .padding(.top, 6)
+//                }
+//                .padding()
+//                .background(Color(red: 0.1, green: 0.1, blue: 0.1))
+//                .cornerRadius(16)
+//            }
+//
+//            // Add set: abrir picker (sin target index => agregar nuevo set)
+//            Button(action: {
+//                exercisePickerTargetSetIndex = nil
+//                showingExercisePicker = true
+//            }) {
+//                HStack {
+//                    Image(systemName: "plus.circle.fill")
+//                        .foregroundColor(.blue)
+//                    Text("Add Set")
+//                        .foregroundColor(.blue)
+//                }
+//            }
+//        }
+//    }
 
     // MARK: - Tags
     private var tagsSection: some View {
@@ -231,7 +231,7 @@ public struct RoutineCreatorSheet: View {
 
             ScrollView(.horizontal, showsIndicators: false) {
                 HStack(spacing: 8) {
-                    ForEach(vm.routine.tags, id: \.self) { tag in
+                    ForEach(vm.gymActivity.tags, id: \.self) { tag in
                         Text(tag)
                             .font(.system(size: 12, weight: .medium))
                             .foregroundColor(.white)
@@ -248,12 +248,12 @@ public struct RoutineCreatorSheet: View {
     // MARK: - Save
     private var saveButton: some View {
         Button(action: {
-            Task {
-//                let ok = await $vm.save
+//            Task {
+//                let ok = await vm.save()
 //                if ok {
 //                    isPresented = false
 //                }
-            }
+//            }
         }) {
             Text(vm.isSaving ? "Saving..." : "Save Routine")
                 .font(.system(size: 16, weight: .bold))

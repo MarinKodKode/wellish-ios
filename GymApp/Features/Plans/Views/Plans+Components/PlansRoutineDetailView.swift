@@ -2,7 +2,7 @@
 import SwiftUI
 
 struct PlansRoutineDetailView: View {
-    let routine: Routine
+    let routine: GymActivity
 
     var body: some View {
         ScrollView {

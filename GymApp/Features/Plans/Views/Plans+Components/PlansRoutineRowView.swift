@@ -8,7 +8,7 @@
 import SwiftUI
 
 struct PlansRoutineRowView: View {
-    let routine: Routine
+    let routine: GymActivity
 
     var body: some View {
         HStack(spacing: 12) {

@@ -30,7 +30,7 @@ class WorkoutViewModel: ObservableObject {
     
     private var timer: Timer?
     private var restTimerInstance: Timer?
-    public  var currentActivity : Activity<WorkoutActivityAttributes>?
+    public  var currentActivity : Activity?
     
     var currentExercise: ExerciseLocal {
         exercises[currentExerciseIndex]
@@ -60,11 +60,11 @@ class WorkoutViewModel: ObservableObject {
     
     func startWorkout() {
         isTimerRunning = true
-        startLiveActivity()
+//        startLiveActivity()
         timer = Timer.scheduledTimer(withTimeInterval: 1.0, repeats: true) { [weak self] _ in
             guard let self = self, !self.isResting else { return }
             self.elapsedTime += 1
-            updateLiveActivity()
+//            updateLiveActivity()
         }
     }
     
@@ -73,7 +73,7 @@ class WorkoutViewModel: ObservableObject {
         timer?.invalidate()
         
         if isResting {
-            endLiveActivity()
+//            endLiveActivity()
             UNUserNotificationCenter
                 .current()
                 .removePendingNotificationRequests(withIdentifiers: ["restComplete"])
@@ -106,7 +106,7 @@ class WorkoutViewModel: ObservableObject {
             } else {
                 isTimerRunning = false
                 timer?.invalidate()
-                endLiveActivity()
+//                endLiveActivity()
                 showWorkoutComplete = true
             }
         }
@@ -119,7 +119,7 @@ class WorkoutViewModel: ObservableObject {
             isResting = false
             restTimer = 0
             restTimerInstance?.invalidate()
-            endLiveActivity()
+//            endLiveActivity()
             UNUserNotificationCenter
                 .current()
                 .removeDeliveredNotifications(withIdentifiers: ["restComplete"])
@@ -133,11 +133,11 @@ class WorkoutViewModel: ObservableObject {
             guard let self = self else { return }
             if self.restTimer > 0 {
                 self.restTimer -= 1
-                updateLiveActivity()
+//                updateLiveActivity()
             } else {
                 self.isResting = false
                 self.restTimerInstance?.invalidate()
-                updateLiveActivity()
+//                updateLiveActivity()
             }
         }
     }

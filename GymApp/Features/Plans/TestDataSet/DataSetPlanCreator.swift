@@ -193,6 +193,8 @@ struct ActivityDataset {
     /// Retorna actividades filtradas por categoría
     static func activities(for category: ActivityCategory) -> [ActivityType] {
         switch category {
+        case .gym:
+            return gymActivities.map { .running($0) }
         case .running:
             return runningActivities.map { .running($0) }
         case .rest:

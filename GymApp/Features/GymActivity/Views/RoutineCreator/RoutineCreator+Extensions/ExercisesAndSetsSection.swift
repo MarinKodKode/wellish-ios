@@ -32,8 +32,6 @@ extension RoutineCreatorView {
                     }
                     
                 }
-                
-                // Enhanced Add Exercise Button
                 Button(action: { showingExercisePicker = true }) {
                     HStack(spacing: 12) {
                         Image(systemName: "plus.circle.fill")
@@ -71,5 +69,4 @@ extension RoutineCreatorView {
             }
         }
     }
-
 }

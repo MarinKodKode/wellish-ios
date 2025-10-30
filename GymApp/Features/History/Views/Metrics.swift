@@ -398,30 +398,6 @@ struct MetricsView: View {
         )
     }
     
-    // MARK: - Helper Functions
-    private func levelColor(for level: String) -> Color {
-        switch level.lowercased() {
-        case "beginner":
-            return .fitnessSuccess
-        case "intermediate":
-            return .fitnessWarning
-        case "advanced":
-            return .fitnessError
-        default:
-            return .fitnessInfo
-        }
-    }
-    
-    private func progressColor(for progress: Double) -> Color {
-        switch progress {
-        case 0.0..<0.3:
-            return .fitnessError
-        case 0.3..<0.7:
-            return .fitnessWarning
-        default:
-            return .fitnessSuccess
-        }
-    }
 }
 
 #Preview {

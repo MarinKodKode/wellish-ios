@@ -1,25 +1,32 @@
+
 import SwiftUI
 
-extension CreatePlanView {
-
-    var PlanCreatorButtonsSection : some View {
+struct SaveButtonWidget: View {
+    
+    let text : String
+    let action: () async -> Void
+    @Binding var isLoading: Bool
+    
+    init(text: String, action: @escaping () async -> Void, isLoading: Binding<Bool>) {
+        self.text = text
+        self._isLoading = isLoading
+        self.action = action
+    }
+    
+    var body: some View {
         Button(action: {
-            self.vm.isLoading = true
+            isLoading = true
             Task {
-                await vm.savePlan()
-//                if ok {
-//                    // Success feedback can be added later
-//                }
-            }
-            DispatchQueue.main.asyncAfter(deadline: .now() + 3){
-                self.vm.isLoading = false
-//                self.vm.savedSuccess = true
+                await action()
+                DispatchQueue.main.asyncAfter(deadline: .now() + 3){
+                    isLoading = false
+                }
             }
         }) {
             HStack(spacing: 12) {
                 Image(systemName: "checkmark.circle.fill")
                     .font(.title2)
-                Text(StringConstants.saveRoutine)
+                Text(text)
                     .font(.headline)
                     .fontWeight(.semibold)
             }

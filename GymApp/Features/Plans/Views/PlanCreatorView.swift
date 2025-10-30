@@ -7,6 +7,7 @@ struct CreatePlanView: View {
     @Environment(\.dismiss) var dismiss
     
     @State var showGoalPicker = false
+    @State var showSpinner = false
     @State var showActivityTypeSheet = false
     
     public var body: some View {
@@ -29,11 +30,12 @@ struct CreatePlanView: View {
                     
                     PlanCreator_TagsSection
                     
-                    PlanCreatorButtonsSection
+                    SaveButtonWidget(text: "Guardar plan", action: {print("Plan")}, isLoading: $vm.isLoading)
                     
                 }
                 .padding(.vertical)
             }
+            .scrollIndicators(.hidden)
         }
         .sheet(isPresented: $showGoalPicker) {
             GoalPickerSheet(selectedGoal: $vm.plan.goal)

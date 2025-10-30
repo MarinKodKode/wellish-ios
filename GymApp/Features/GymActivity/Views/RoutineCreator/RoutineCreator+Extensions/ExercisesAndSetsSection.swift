@@ -10,7 +10,7 @@ import SwiftUI
 extension RoutineCreatorView {
     
     var exercisesAndSetsSection: some View {
-        enhancedSectionView(
+        widget.enhancedSectionView(
             title: StringConstants.routineExercisesAndSets,
             icon: "figure.strengthtraining.traditional",
             iconColor: .energyFitnessOrange

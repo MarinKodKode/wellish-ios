@@ -10,6 +10,8 @@ public struct RoutineCreatorView: View {
     @State var selectedSetIndex: Int? = nil
     @State var newTagText: String = ""
     @State var showRoutineCreator: Bool = false
+    
+    let widget = WidgetHelpers()
 
     public init(viewModel: GymActivityViewModel) {
         _vm = ObservedObject(wrappedValue: viewModel)

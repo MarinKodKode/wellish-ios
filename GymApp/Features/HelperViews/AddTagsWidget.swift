@@ -1,14 +1,26 @@
+//
+//  AddTagsWidget.swift
+//  Wellish
+//
+//  Created by Manuel Alejandro Hernandez Marín on 30/10/25.
+//
 
 import SwiftUI
 
-extension RoutineCreatorView {
-   
-    var tagsSection: some View {
+struct AddTagsWidget: View {
+    
+    let widget = WidgetHelpers()
+    
+    @Binding var newTagText : String
+    @Binding var category : String
+    @Binding var tagsArray : [String]
+    
+    var body: some View {
         widget.enhancedSectionView(
             title: StringConstants.routineTagsAndCategories,
             icon: "tag.fill",
             iconColor: .premiumFitnessPurple
-        ) {
+        )  {
             VStack(spacing: 20) {
                 HStack(spacing: 12) {
                     widget.customTextField(
@@ -17,9 +29,9 @@ extension RoutineCreatorView {
                         icon: "plus",
                         iconColor: .premiumFitnessPurple
                     )
-
+                    
                     Button(StringConstants.add) {
-                        vm.addTag(newTagText)
+//                        vm.addTag(newTagText)
                         newTagText = ""
                     }
                     .disabled(newTagText.trimmingCharacters(in: .whitespacesAndNewlines).isEmpty)
@@ -30,25 +42,28 @@ extension RoutineCreatorView {
                     .font(.subheadline.weight(.semibold))
                     .cornerRadius(12)
                 }
-
-                if !vm.gymActivity.tags.isEmpty {
+                
+                if !tagsArray.isEmpty {
                     ScrollView(.horizontal, showsIndicators: false) {
                         HStack(spacing: 12) {
-                            ForEach(vm.gymActivity.tags, id: \.self) { tag in
-                                EnhancedTagChip(tag: tag) { vm.removeTag(tag) }
+                            ForEach(tagsArray, id: \.self) { tag in
+                                EnhancedTagChip(tag: tag) {
+                                    //vm.removeTag(tag)
+                                }
                             }
                         }
                         .padding(.horizontal, 4)
                     }
                 }
-
+                
                 widget.customTextField(
                     placeholder: StringConstants.routineCategories,
-                    text: $vm.gymActivity.category.replacingNilWith(""),
+                    text: $category,
                     icon: "square.grid.2x2",
                     iconColor: .fitnessTextSecondary
                 )
             }
+            
         }
     }
 }

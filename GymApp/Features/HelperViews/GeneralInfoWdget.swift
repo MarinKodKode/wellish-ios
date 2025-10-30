@@ -1,9 +1,20 @@
+//
+//  GeneralInfoWdget.swift
+//  Wellish
+//
+//  Created by Manuel Alejandro Hernandez Marín on 30/10/25.
+//
 
 import SwiftUI
 
-extension RoutineCreatorView {
+struct GeneralInfoWdget: View {
     
-    var routineInfoSection: some View {
+    let widget = WidgetHelpers()
+    
+    @Binding var name : String
+    @Binding var description : String?
+    
+    var body: some View {
         widget.enhancedSectionView(
             title: StringConstants.routinedetailsTitle,
             icon: "dumbbell.fill",
@@ -12,14 +23,14 @@ extension RoutineCreatorView {
             VStack(spacing: 20) {
                 widget.customTextField(
                     placeholder: StringConstants.routineName,
-                    text: $vm.gymActivity.name,
+                    text: $name,
                     icon: "pencil",
                     iconColor: .primaryFitnessBlue
                 )
                 
                 widget.customTextField(
                     placeholder: StringConstants.routineDescription,
-                    text: $vm.gymActivity.category.replacingNilWith(""),
+                    text: $description.replacingNilWith(""),
                     icon: "text.alignleft",
                     iconColor: .fitnessTextSecondary
                 )

@@ -9,6 +9,9 @@ struct CreatePlanView: View {
     @State var showGoalPicker = false
     @State var showSpinner = false
     @State var showActivityTypeSheet = false
+    @State var newTagText : String = ""
+    @State var category : String = ""
+    @State var tagsArray : [String] = []
     
     public var body: some View {
         ZStack {
@@ -20,7 +23,10 @@ struct CreatePlanView: View {
                     
                     PlanCreator_Header
                     
-                    PlanCreator_DetailsSection
+                    GeneralInfoWdget(
+                        name: $vm.plan.name,
+                        description: $vm.plan.description
+                    )
                     
                     PlanCreator_GoalSection
                     
@@ -28,7 +34,7 @@ struct CreatePlanView: View {
                     
                     PlanCreator_ActivitiesSection
                     
-                    PlanCreator_TagsSection
+                    AddTagsWidget(newTagText: $newTagText, category: $category, tagsArray: $tagsArray)
                     
                     SaveButtonWidget(text: "Guardar plan", action: {print("Plan")}, isLoading: $vm.isLoading)
                     

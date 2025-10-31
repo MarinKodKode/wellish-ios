@@ -13,39 +13,8 @@ struct MetricsView: View {
     @State private var selectedCalorieTimeframe = "Weekly"
     @State private var isLoading : Bool = true
     @EnvironmentObject private var navigatorRouter : NavigationRouter
-    
-    let activityData = ActivityData(
-        steps: 8300,
-        time: (hours: 2, minutes: 25),
-        caloriesData: [
-            CalorieData(day: "Mon", calories: 720),
-            CalorieData(day: "Tue", calories: 780),
-            CalorieData(day: "Wed", calories: 650),
-            CalorieData(day: "Thu", calories: 874),
-            CalorieData(day: "Fri", calories: 520),
-            CalorieData(day: "Sat", calories: 680),
-            CalorieData(day: "Sun", calories: 710)
-        ]
-    )
-    
-    let todayPlans = [
-        WorkoutPlan(
-            name: "Dumbbell Curl",
-            level: "Beginner",
-            reps: "12 × 4 Reps",
-            duration: "12 Minutes",
-            imageURL: "https://images.unsplash.com/photo-1571019613454-1cb2f99b2d8b?w=300&h=200&fit=crop",
-            progress: 0.6
-        ),
-        WorkoutPlan(
-            name: "Bench Press",
-            level: "Intermediate",
-            reps: "10 × 3 Reps",
-            duration: "15 Minutes",
-            imageURL: "https://images.unsplash.com/photo-1549476464-37392f717541?w=300&h=200&fit=crop",
-            progress: 0.3
-        )
-    ]
+
+    let plans = PlanDataset().getPlans()
     
     var body: some View {
         NavigationView {
@@ -66,113 +35,7 @@ struct MetricsView: View {
         .navigationBarHidden(true)
     }
     
-    private var activityCardsView: some View {
-        VStack(alignment: .leading, spacing: 16) {
-            HStack {
-                Text("Activity Overview")
-                    .font(.system(size: 20, weight: .bold))
-                    .foregroundColor(.fitnessTextPrimary)
-                
-                Spacer()
-                
-                Menu {
-                    Button("Today") { selectedTimeframe = "Today" }
-                    Button("Weekly") { selectedTimeframe = "Weekly" }
-                    Button("Monthly") { selectedTimeframe = "Monthly" }
-                } label: {
-                    HStack(spacing: 4) {
-                        Text(selectedTimeframe)
-                            .font(.system(size: 14, weight: .medium))
-                            .foregroundColor(.fitnessTextPrimary)
-                        Image(systemName: "chevron.down")
-                            .font(.system(size: 12))
-                            .foregroundColor(.fitnessTextSecondary)
-                    }
-                    .padding(.horizontal, 12)
-                    .padding(.vertical, 6)
-                    .background(Color.fitnessBackgroundSecondary)
-                    .cornerRadius(8)
-                }
-            }
-            
-            HStack(spacing: 12) {
-                // Steps Card
-                VStack(spacing: 0) {
-                    HStack {
-                        Image(systemName: "figure.walk")
-                            .font(.system(size: 20))
-                            .foregroundColor(.fitnessPrimary)
-                        Spacer()
-                    }
-                    
-                    Spacer()
-                    
-                    VStack(alignment: .leading, spacing: 2) {
-                        HStack {
-                            Text("Steps")
-                                .font(.system(size: 16, weight: .semibold))
-                                .foregroundColor(.fitnessTextPrimary)
-                            Spacer()
-                        }
-                        
-                        HStack(alignment: .bottom, spacing: 2) {
-                            Text("8,3")
-                                .font(.system(size: 24, weight: .bold))
-                                .foregroundColor(.fitnessTextPrimary)
-                            Text("k")
-                                .font(.system(size: 16, weight: .bold))
-                                .foregroundColor(.fitnessTextPrimary)
-                            Text("steps")
-                                .font(.system(size: 14, weight: .medium))
-                                .foregroundColor(.fitnessTextSecondary)
-                                .padding(.bottom, 2)
-                        }
-                    }
-                }
-                .padding(16)
-                .frame(maxWidth: .infinity)
-                .frame(height: 120)
-                .background(Color.fitnessBackgroundSecondary)
-                .cornerRadius(16)
-                
-                // Time Card
-                VStack(spacing: 0) {
-                    HStack {
-                        Image(systemName: "clock")
-                            .font(.system(size: 20))
-                            .foregroundColor(.fitnessWarning)
-                        Spacer()
-                    }
-                    
-                    Spacer()
-                    
-                    VStack(alignment: .leading, spacing: 2) {
-                        HStack {
-                            Text("Time")
-                                .font(.system(size: 16, weight: .semibold))
-                                .foregroundColor(.fitnessTextPrimary)
-                            Spacer()
-                        }
-                        
-                        HStack(alignment: .bottom, spacing: 2) {
-                            Text("2 h 25")
-                                .font(.system(size: 24, weight: .bold))
-                                .foregroundColor(.fitnessTextPrimary)
-                            Text("minutes")
-                                .font(.system(size: 14, weight: .medium))
-                                .foregroundColor(.fitnessTextSecondary)
-                                .padding(.bottom, 2)
-                        }
-                    }
-                }
-                .padding(16)
-                .frame(maxWidth: .infinity)
-                .frame(height: 120)
-                .background(Color.fitnessBackgroundSecondary)
-                .cornerRadius(16)
-            }
-        }
-    }
+   
     
     private var caloriesChartView: some View {
         VStack(alignment: .leading, spacing: 16) {
@@ -181,7 +44,7 @@ struct MetricsView: View {
                     Image(systemName: "flame.fill")
                         .font(.system(size: 16))
                         .foregroundColor(.fitnessWarning)
-                    Text("Calories Burned")
+                    Text(StringConstants.calories)
                         .font(.system(size: 20, weight: .bold))
                         .foregroundColor(.fitnessTextPrimary)
                 }
@@ -189,9 +52,15 @@ struct MetricsView: View {
                 Spacer()
                 
                 Menu {
-                    Button("Daily") { selectedCalorieTimeframe = "Daily" }
-                    Button("Weekly") { selectedCalorieTimeframe = "Weekly" }
-                    Button("Monthly") { selectedCalorieTimeframe = "Monthly" }
+                    Button(StringConstants.today) {
+                        selectedTimeframe = "Today"
+                    }
+                    Button(StringConstants.weekly) {
+                        selectedTimeframe = "Weekly"
+                    }
+                    Button(StringConstants.monthly) {
+                        selectedTimeframe = "Monthly"
+                    }
                 } label: {
                     HStack(spacing: 4) {
                         Text(selectedCalorieTimeframe)
@@ -280,29 +149,24 @@ struct MetricsView: View {
                     Image(systemName: "calendar.badge.clock")
                         .font(.system(size: 16))
                         .foregroundColor(.fitnessPrimary)
-                    Text("Today Plan")
+                    Text(StringConstants.completedRoutines)
                         .font(.system(size: 20, weight: .bold))
                         .foregroundColor(.fitnessTextPrimary)
                 }
                 
                 Spacer()
                 
-                Button(action: {}) {
-                    Text("See All")
-                        .font(.system(size: 14, weight: .medium))
-                        .foregroundColor(.fitnessPrimary)
-                }
             }
             
             VStack(spacing: 12) {
-                ForEach(todayPlans, id: \.id) { plan in
-                    workoutPlanRow(plan: plan)
+                ForEach(plans, id: \.id) {  plan in
+                    workoutPlanRow(planElement : plan.elements)
                 }
             }
         }
     }
     
-    private func workoutPlanRow(plan: WorkoutPlan) -> some View {
+    private func workoutPlanRow(planElement: PlanElement) -> some View {
         HStack(spacing: 12) {
             AsyncImage(url: URL(string: plan.imageURL)) { image in
                 image
@@ -369,25 +233,6 @@ struct MetricsView: View {
                         .foregroundColor(.fitnessTextSecondary)
                 }
             }
-            
-            Button(action: {
-                navigatorRouter.push(.workoutTimer)
-                showWorkoutTimer = true
-            }) {
-                Image(systemName: "play.fill")
-                    .font(.system(size: 14))
-                    .foregroundColor(.white)
-                    .frame(width: 32, height: 32)
-                    .background(
-                        LinearGradient(
-                            colors: [.fitnessPrimary, .fitnessPrimary.opacity(0.8)],
-                            startPoint: .topLeading,
-                            endPoint: .bottomTrailing
-                        )
-                    )
-                    .clipShape(Circle())
-                    .shadow(color: .fitnessPrimary.opacity(0.3), radius: 4, x: 0, y: 2)
-            }
         }
         .padding(16)
         .background(Color.fitnessBackgroundSecondary)
@@ -398,10 +243,4 @@ struct MetricsView: View {
         )
     }
     
-}
-
-#Preview {
-    @Previewable @State var showWorkoutTimer = false
-    
-    MetricsView(showWorkoutTimer: $showWorkoutTimer)
 }

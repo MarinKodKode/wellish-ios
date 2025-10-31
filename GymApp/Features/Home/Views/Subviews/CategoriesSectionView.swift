@@ -12,7 +12,7 @@ public struct  CategoriesSectionView :  View {
     public var body : some View {
         VStack(alignment: .leading, spacing: 16) {
           
-            SectionBarTitle(title: "Categorias", icon :"arrow.right")
+            SectionBarTitle(title: "Categorias 💪🏻")
             
             ScrollView(.horizontal, showsIndicators: false){
                 HStack(spacing : 12){

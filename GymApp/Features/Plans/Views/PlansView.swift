@@ -14,6 +14,9 @@ struct PlansView: View {
     @EnvironmentObject var navigationRouter: NavigationRouter
     
     @State private var selectedTab = 0
+    
+    //TestInformation
+    private let testPlans = PlanDataset().getPlans()
 
     var body: some View {
         NavigationView {
@@ -68,7 +71,7 @@ struct PlansView: View {
                                     .frame(maxWidth: .infinity)
                                     .padding()
                             } else {
-                                ForEach(plansVM.plans) { plan in
+                                ForEach(self.testPlans) { plan in
                                     Button(action: {
                                         navigationRouter.goTo(.planDetail(plan))
                                     }, label: {

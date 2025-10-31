@@ -1,22 +1,21 @@
 //
-//  PlansRoutineRowView.swift
+//  InformationComponentRow.swift
 //  Wellish
 //
-//  Created by Manuel Alejandro Hernandez Marín on 04/09/25.
+//  Created by Manuel Alejandro Hernandez Marín on 28/10/25.
 //
 
 import SwiftUI
 
-struct InformationRoutineRowView: View {
+struct InformationComponentRow: View {
     
-    let routine: GymActivity
+    let plan : Plan
+    
     let urlIMage = "https://i.pinimg.com/736x/3d/30/bf/3d30bf0c579fa14498b8b03ef53067f0.jpg"
     
     var body: some View {
         HStack(spacing: 12) {
-            AsyncImage(
-                url: URL(string: routine.imageURL ?? urlIMage)
-            ) { image in
+                AsyncImage(url: URL(string: urlIMage)) { image in
                     image
                         .resizable()
                         .aspectRatio(contentMode: .fill)
@@ -35,13 +34,14 @@ struct InformationRoutineRowView: View {
                 
                 VStack(alignment: .leading, spacing: 8) {
                     HStack {
-                        Text(routine.name)
+                        Text(plan.name)
                             .font(.system(size: 16, weight: .semibold))
                             .foregroundColor(.fitnessTextPrimary)
                         
                         Spacer()
                         
-                        Text(routine.category ?? "Intermediate")
+                        //                    Text(plan.goal.rawValue)
+                        Text("Muscle Gain")
                             .font(.system(size: 12, weight: .medium))
                             .foregroundColor(Color.white)
                             .padding(.horizontal, 8)
@@ -52,7 +52,6 @@ struct InformationRoutineRowView: View {
                     }
                     
                     HStack(spacing: 16) {
-                        
                         HStack(spacing: 4) {
                             Image(systemName: "figure.strengthtraining.traditional")
                                 .font(.system(size: 12))
@@ -63,28 +62,18 @@ struct InformationRoutineRowView: View {
                         }
                         
                         HStack(spacing: 4) {
-                            Image(systemName: "clock")
+                            Image(systemName: "calendar")
                                 .font(.system(size: 12))
                                 .foregroundColor(.fitnessTextSecondary)
-                            if let duration = routine.estimatedDurationMinutes {
-                                Text("\(duration) mins.")
-                                    .font(.system(size: 12, weight: .medium))
-                                    .foregroundColor(.fitnessTextSecondary)
-                            }
-                        }
-                        
-                        HStack(spacing: 4) {
-                            if let calories = routine.estimatedCalories {
-                                Image(systemName: "flame.fill")
-                                    .font(.system(size: 12))
-                                    .foregroundColor(.fitnessTextSecondary)
-                                Text("\(calories) Kcal")
-                                    .font(.system(size: 12, weight: .medium))
-                                    .foregroundColor(.fitnessTextSecondary)
-                            }
+                            Text("4 weeks")
+                                .font(.system(size: 12, weight: .medium))
+                                .foregroundColor(.fitnessTextSecondary)
                         }
                     }
                     .padding(.bottom, 6)
+                    
+                    
+                    
                 }
         }
         .padding(16)
@@ -97,3 +86,8 @@ struct InformationRoutineRowView: View {
         .padding(.horizontal, 16)
     }
 }
+
+#Preview {
+//    InformationComponentRow()
+}
+

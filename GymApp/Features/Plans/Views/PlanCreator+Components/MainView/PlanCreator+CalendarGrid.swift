@@ -5,7 +5,11 @@ extension CreatePlanView {
     var PlanCreator_CalendarGrid : some View {
         LazyVGrid(columns: Array(repeating: GridItem(.flexible(), spacing: 8), count: 7), spacing: 8) {
             ForEach(1...vm.plan.totalDays, id: \.self) { day in
-                let hasActivity = vm.plan.elements.contains { $0.day == day }
+                
+                let activityElement = vm.plan.elements.first { $0.day == day }
+                
+                let hasActivity = activityElement != nil
+                
                 Button {
                     vm.selectedDay = day
                     showActivityTypeSheet = true
@@ -24,7 +28,7 @@ extension CreatePlanView {
                                     .fill(
                                         hasActivity
                                         ? Color(
-                                            hex: vm.plan.elements[0].activity.colorHex
+                                            hex: activityElement!.activity.colorHex
                                         )
                                         : Color(hex: "1E293B").opacity(0.5)
                                     )

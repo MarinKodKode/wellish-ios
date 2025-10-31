@@ -14,7 +14,7 @@ public struct GymActivity : Activity {
     public var shareable: Bool
     public var clubId: String?
     public var creator: String?
-    public var imageURL: String?
+    
 
     public var activityType: ActivityCategory {
         .gym
@@ -56,6 +56,8 @@ public struct GymActivity : Activity {
         estimatedCaloriesValue
     }
     
+    public var imageURL: String?
+    
     // MARK: - Init
     
     public init(
@@ -76,7 +78,8 @@ public struct GymActivity : Activity {
         globalActivityId: String? = nil,
         shareable: Bool = false,
         clubId: String? = nil,
-        isPremiumRoutine: Bool = false
+        isPremiumRoutine: Bool = false,
+        imageURL : String? = nil
     ) {
         self.id = id
         self.name = name
@@ -96,6 +99,7 @@ public struct GymActivity : Activity {
         self.shareable = shareable
         self.clubId = clubId
         self.isPremiumRoutine = isPremiumRoutine
+        self.imageURL = imageURL
     }
     
     // MARK: - CodingKeys

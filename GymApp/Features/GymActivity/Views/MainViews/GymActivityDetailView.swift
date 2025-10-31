@@ -8,6 +8,7 @@
 import SwiftUI
 
 struct GymActivityDetailView: View {
+    
     let activity: GymActivity
     @Environment(\.dismiss) private var dismiss
     

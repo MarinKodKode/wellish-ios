@@ -14,6 +14,9 @@ struct PlansView: View {
     @EnvironmentObject var navigationRouter: NavigationRouter
     
     @State private var selectedTab = 0
+    
+    //TestInformation
+    private let testPlans = PlanDataset().getPlans()
 
     var body: some View {
         NavigationView {
@@ -68,8 +71,12 @@ struct PlansView: View {
                                     .frame(maxWidth: .infinity)
                                     .padding()
                             } else {
-                                ForEach(plansVM.plans) { plan in
-                                    PlansPlanElementRow(plan: plan)
+                                ForEach(self.testPlans) { plan in
+                                    Button(action: {
+                                        navigationRouter.goTo(.planDetail(plan))
+                                    }, label: {
+                                        InformationComponentRow(plan : plan)
+                                    })
                                 }
                                 .buttonStyle(PlainButtonStyle())
                             }
@@ -90,15 +97,19 @@ struct PlansView: View {
                             }
                             .padding(.horizontal)
 
-                            if $plansVM.routines.isEmpty {
+                            if !$plansVM.routines.isEmpty {
                                 Text("No routines saved yet.")
                                     .foregroundColor(.fitnessTextSecondary)
                                     .italic()
                                     .frame(maxWidth: .infinity)
                                     .padding()
                             } else {
-                                ForEach(plansVM.routines) { routine in
-                                    PlansRoutineRowView(routine: routine)
+                                ForEach(routines) { routine in
+                                    Button(action: {
+                                        navigationRouter.goTo(.gymActivityDetail(routine))
+                                    }, label: {
+                                        InformationRoutineRowView(routine: routine)
+                                    })
                                 }
                                 .buttonStyle(PlainButtonStyle())
                             }
@@ -107,31 +118,12 @@ struct PlansView: View {
                     }
                     .padding(.top)
                 }
+                .scrollIndicators(.hidden)
             }
             .navigationBarTitle("Planes")
             .onAppear{
                 plansVM.initView()
             }
         }
-    }
-    
-}
-
-private struct AllRoutinesView: View {
-    @ObservedObject var vm: GymActivityViewModel
-
-    var body: some View {
-        List {
-            if vm.savedRoutines.isEmpty {
-                Text("No routines yet.")
-                    .foregroundColor(.fitnessTextSecondary)
-            } else {
-                ForEach(vm.savedRoutines) { routine in
-                    PlansRoutineRowView(routine: routine)
-                }
-            }
-        }
-        .background(Color.fitnessBackgroundPrimary)
-        .navigationTitle("All Routines")
     }
 }

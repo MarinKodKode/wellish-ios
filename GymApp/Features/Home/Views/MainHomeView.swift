@@ -26,7 +26,7 @@ struct MainHomeView: View {
                             .padding(.bottom, 30)
                     }
                 }
-                .clipped()
+//                .clipped()
             }
         }
         .navigationBarHidden(true)

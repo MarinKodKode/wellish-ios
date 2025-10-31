@@ -47,6 +47,15 @@ public class StringConstants {
     //MARK: - Metrics
     
     static let metricsTitle =  "Metricas"
+    static let completedRoutines = "Rutinas completadas"
+    static let activityOverview = "Resumen"
+    static let calories = "Calorías"
+    static let time = "Tiempo"
+    static let minutes = "Minutos"
+    static let today = "Hoy"
+    static let weekly = "Semana"
+    static let monthly = "Mes"
+    static let burned = "Burned"
     
     
     //MARK: - Home

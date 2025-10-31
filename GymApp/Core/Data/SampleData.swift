@@ -99,7 +99,6 @@ let plank = Exercise(
 // MARK: - Sample Routines
 
 let routines: [GymActivity] = [
-        // 💪 Full Body Strength
     GymActivity(
             name: "Full Body Strength",
             description: "A balanced full-body routine for strength and hypertrophy.",
@@ -135,7 +134,8 @@ let routines: [GymActivity] = [
             ],
             tags: ["Beginner", "Full Body", "Barbell"],
             category: "Strength",
-            estimatedDurationMinutes: 60
+            estimatedDurationMinutes: 60,
+            imageURL: "https://hips.hearstapps.com/hmg-prod/images/body-builder-training-in-industrial-urban-gym-royalty-free-image-1593693142.jpg"
         ),
 
         // 🏃‍♂️ Beginner Running Plan
@@ -162,7 +162,8 @@ let routines: [GymActivity] = [
             ],
             tags: ["Running", "Beginner", "Cardio"],
             category: "Cardio",
-            estimatedDurationMinutes: 30
+            estimatedDurationMinutes: 30,
+            imageURL: "https://as2.ftcdn.net/v2/jpg/00/99/82/15/1000_F_99821575_nVEHTBXzUnTcLIKN6yOymAWAnFwEybGb.jpg"
         ),
 
     GymActivity(
@@ -192,10 +193,10 @@ let routines: [GymActivity] = [
                     ]
                 )
             ],
-            
             tags: ["Core", "Isometric", "Bodyweight"],
             category: "Mobility",
-            estimatedDurationMinutes: 20
+            estimatedDurationMinutes: 20,
+            imageURL : "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcRGgqXwu_dbTvHAca8_dR70guHT1X-bDep1kw&s"
         ),
 
     GymActivity(
@@ -223,7 +224,8 @@ let routines: [GymActivity] = [
             ],
             tags: ["Cycling", "HIIT", "Cardio"],
             category: "Cardio",
-            estimatedDurationMinutes: 45
+            estimatedDurationMinutes: 45,
+            imageURL: "https://1upnutrition.com/cdn/shop/articles/Healthy_Habits_For_Life_9_Tips_For_Better_Fitness_600x400_crop_center.progressive.jpg?v=1633117323"
         ),
 
         // 🔥 Upper Body Blast
@@ -278,7 +280,8 @@ let routines: [GymActivity] = [
             ],
             tags: ["Upper Body", "Superset", "Intermediate"],
             category: "Strength",
-            estimatedDurationMinutes: 50
+            estimatedDurationMinutes: 50,
+            imageURL: "https://assets.johnsonhealthtech.com/transform/695b2902-64f8-46f2-bcde-c563c6c05aba/stretch-jpg?io=transform:fill,width:1200,height:542"
         )
     ]
 

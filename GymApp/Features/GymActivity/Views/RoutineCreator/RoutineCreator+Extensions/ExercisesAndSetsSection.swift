@@ -10,7 +10,7 @@ import SwiftUI
 extension RoutineCreatorView {
     
     var exercisesAndSetsSection: some View {
-        enhancedSectionView(
+        widget.enhancedSectionView(
             title: StringConstants.routineExercisesAndSets,
             icon: "figure.strengthtraining.traditional",
             iconColor: .energyFitnessOrange
@@ -32,8 +32,6 @@ extension RoutineCreatorView {
                     }
                     
                 }
-                
-                // Enhanced Add Exercise Button
                 Button(action: { showingExercisePicker = true }) {
                     HStack(spacing: 12) {
                         Image(systemName: "plus.circle.fill")
@@ -71,5 +69,4 @@ extension RoutineCreatorView {
             }
         }
     }
-
 }

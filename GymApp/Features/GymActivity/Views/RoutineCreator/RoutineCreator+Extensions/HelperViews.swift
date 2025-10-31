@@ -7,7 +7,7 @@
 
 import SwiftUI
 
-extension RoutineCreatorView{
+public class  WidgetHelpers {
     
     @ViewBuilder
     func enhancedSectionView<Content: View>(
@@ -27,6 +27,7 @@ extension RoutineCreatorView{
                     .fontWeight(.bold)
                     .foregroundColor(.fitnessTextPrimary)
             }
+            .padding(.horizontal, 16)
 
             content()
                 .padding(24)

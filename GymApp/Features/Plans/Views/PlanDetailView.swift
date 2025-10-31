@@ -3,6 +3,7 @@ import SwiftUI
 struct PlanDetailView: View {
     @State var plan: Plan
     @Environment(\.dismiss) private var dismiss
+    @EnvironmentObject var navigationRouter: NavigationRouter
     
     var body: some View {
         ZStack {
@@ -141,12 +142,17 @@ struct PlanDetailView: View {
                 emptyStateView
             } else {
                 ForEach(Array(plan.elements.enumerated()), id: \.element.id) { index, element in
-                    PlanElementRow(
-                        element: element,
-                        onToggleComplete: {
-                            plan.markElementCompleted(at: index, completed: !element.completed)
-                        }
-                    )
+                    Button(action: {
+                        navigationRouter
+                            .goTo(.gymActivityDetail(routines[0]))
+                    }, label: {
+                        PlanElementRow(
+                            element: element,
+                            onToggleComplete: {
+                                plan.markElementCompleted(at: index, completed: !element.completed)
+                            }
+                        )
+                    })
                 }
             }
         }

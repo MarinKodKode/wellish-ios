@@ -26,8 +26,11 @@ struct MetricsView: View {
                 ScrollView {
                     VStack(spacing: 24) {
                         
+                        HeaderWidgetView()
+                            .padding(.top, 20)
+                        
                         Metrics_StatisticsCard(title: "Resumen")
-                            .padding(.top, 32)
+                            .padding(.top, 20)
                         
                         Metrics_CaloriesChartView(tapped: false , title: "Estadisticas")
                         

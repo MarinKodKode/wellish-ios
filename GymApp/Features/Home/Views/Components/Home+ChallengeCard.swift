@@ -91,16 +91,10 @@ struct Home_ChallengeCard : View {
                 
                 Spacer()
                 
-                
-                Button(action: {}) {
-                    Image(systemName: "arrow.right")
-                        .font(.system(size: 24, weight: .semibold))
-                        .foregroundColor(.white)
-                }
             }
             .padding(20)
         }
-        .frame(width: UIScreen.main.bounds.width * 0.95, height: 180)
+        .frame(width: UIScreen.main.bounds.width * 0.85, height: 180)
         .clipShape(RoundedRectangle(cornerRadius: 20))
     }
     

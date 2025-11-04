@@ -13,7 +13,6 @@ struct MetricsView: View {
 //    @State private var selectedTimeframe = "Today"
 //    @State private var selectedCalorieTimeframe = "Weekly"
 //    @State private var isLoading : Bool = true
-    
 //    @EnvironmentObject private var navigatorRouter : NavigationRouter
 
     let plans = PlanDataset().getPlans()

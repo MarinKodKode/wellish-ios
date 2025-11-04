@@ -80,6 +80,9 @@ class WorkoutViewModel: ObservableObject {
         }
     }
     
+    func generic(param : Int, param2 : Int) {
+        
+    }
     
     
     func completeSet() {

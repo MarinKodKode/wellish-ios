@@ -13,6 +13,8 @@ struct ExerciseLocal: Identifiable {
 struct WorkoutRoutineViewLocal: View {
     @StateObject private var viewModel = WorkoutViewModel()
     
+    let element : PlanElement
+    
     var body: some View {
         ZStack {
             // Background
@@ -553,5 +555,147 @@ struct CompletionStat: View {
 struct WorkoutRoutineView_Previews: PreviewProvider {
     static var previews: some View {
         WorkoutRoutineViewLocal()
+    }
+}
+
+// MARK: - EditableStatBox (Nuevo Componente)
+struct EditableStatBox: View {
+    @Binding var value: Int
+    let label: String
+    let color: Color
+    let isEditable: Bool
+    
+    var body: some View {
+        VStack(spacing: 6) {
+            
+            // Usa un TextField si es editable, o solo Text si no lo es
+            if isEditable {
+                TextField("0", value: $value, formatter: NumberFormatter())
+                    .keyboardType(.numberPad)
+                    .multilineTextAlignment(.center)
+                    .font(.system(size: 28, weight: .bold))
+                    .foregroundColor(color)
+                    .fixedSize()
+                    .frame(minWidth: 50) // Asegurar un tamaño mínimo para el touch
+            } else {
+                Text(value > 0 ? "\(value)" : "BW")
+                    .font(.system(size: 28, weight: .bold))
+                    .foregroundColor(color)
+            }
+            
+            Text(label)
+                .font(.system(size: 12))
+                .foregroundColor(.gray)
+        }
+        .frame(maxWidth: .infinity)
+        .padding(.vertical, 14)
+        .background(Color(red: 0.15, green: 0.17, blue: 0.25))
+        .cornerRadius(12)
+    }
+}
+
+
+struct CurrentExerciseCardex: View {
+    // Propiedades existentes
+    let exercise: ExerciseLocal
+    let currentSet: Int
+    let currentExerciseIndex: Int
+    let completedSets: [Int] // Sets completados (solo índices)
+    let isTimerRunning: Bool
+    let isResting: Bool
+    
+    // Acciones existentes
+    let onStart: () -> Void
+    let onPause: () -> Void
+    
+    // NUEVA ACCIÓN: Pasa los datos REALES de la serie completada
+    let onCompleteSet: (Int, Int) -> Void // (actualReps, actualWeight)
+    
+    // NUEVOS ESTADOS para capturar la entrada del usuario
+    @State private var actualReps: Int
+    @State private var actualWeight: Int
+    
+    // Inicializador para configurar los estados con los valores planeados
+    init(
+        exercise: ExerciseLocal,
+        currentSet: Int,
+        currentExerciseIndex: Int,
+        completedSets: [Int],
+        isTimerRunning: Bool,
+        isResting: Bool,
+        onStart: @escaping () -> Void,
+        onPause: @escaping () -> Void,
+        onCompleteSet: @escaping (Int, Int) -> Void
+    ) {
+        self.exercise = exercise
+        self.currentSet = currentSet
+        self.currentExerciseIndex = currentExerciseIndex
+        self.completedSets = completedSets
+        self.isTimerRunning = isTimerRunning
+        self.isResting = isResting
+        self.onStart = onStart
+        self.onPause = onPause
+        self.onCompleteSet = onCompleteSet
+        
+        // Inicializa el State con los valores del plan para el set actual
+        _actualReps = State(initialValue: exercise.reps)
+        _actualWeight = State(initialValue: exercise.weight)
+    }
+
+    var body: some View {
+        VStack(spacing: 20) {
+            // ... (Header y Barritas de sets existentes) ...
+            
+            // Sección de Datos de la Serie (Ajustada a inputs)
+            HStack(spacing: 12) {
+                StatBox(value: "\(currentSet)", label: "Set", color: Color(red: 0.7, green: 0.4, blue: 0.95))
+                
+                // CAMPO 1: REPETICIONES REALES
+                EditableStatBox(
+                    value: $actualReps,
+                    label: "Reps",
+                    color: Color(red: 0.9, green: 0.3, blue: 0.7),
+                    isEditable: isTimerRunning && !isResting // Solo editar cuando está activo
+                )
+                
+                // CAMPO 2: PESO REAL
+                EditableStatBox(
+                    value: $actualWeight,
+                    label: "kg",
+                    color: Color(red: 0.3, green: 0.6, blue: 1.0),
+                    isEditable: isTimerRunning && !isResting
+                )
+            }
+            
+            // ... (Barra de progreso de Sets existente) ...
+
+            HStack(spacing: 12) {
+                if !isTimerRunning {
+                    // ... (Botón Iniciar Rutina existente) ...
+                } else {
+                    // ... (Botón Pausar existente) ...
+                    
+                    // BOTÓN COMPLETAR SET: Llama al closure con los datos reales
+                    Button(action: {
+                        // Pasar el valor real de los campos @State
+                        onCompleteSet(actualReps, actualWeight)
+                    }) {
+                        HStack(spacing: 8) {
+                            Image(systemName: "checkmark")
+                                .font(.system(size: 16, weight: .bold))
+                            Text("Completar Set")
+                                .font(.system(size: 16, weight: .semibold))
+                        }
+                        // ... (Estilos existentes) ...
+                    }
+                    .disabled(isResting)
+                }
+            }
+        }
+        .padding(20)
+        .background(Color(red: 0.12, green: 0.14, blue: 0.22))
+        .cornerRadius(24)
+        // Restablece los inputs al cambiar de ejercicio
+        .id(exercise.id)
     }
 }

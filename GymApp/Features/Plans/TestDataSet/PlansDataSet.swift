@@ -15,7 +15,7 @@ class PlanDataset {
                 category: "Gimnasio",
                 creator: "Wellish Pro",
                 tags: ["Hipertrofia", "Volumen", "PPL"],
-                thumbnailURL: URL(string: "https://example.com/images/ppl.jpg"),
+                thumbnailURL: "https://example.com/images/ppl.jpg",
                 notes: "Énfasis en la sobrecarga progresiva en los ejercicios compuestos.",
                 elements: [
                     createPlanElement(day: 1, activity: gymTemplates[5]),
@@ -40,7 +40,7 @@ class PlanDataset {
                 category: "Fitness",
                 creator: "User345",
                 tags: ["Pérdida de peso", "HIIT", "Cardio"],
-                thumbnailURL: URL(string: "https://example.com/images/fatloss.jpg"),
+                thumbnailURL: "https://example.com/images/fatloss.jpg",
                 elements: [
                     createPlanElement(day: 1, activity: gymTemplates[3]), // Full Body Express
                     createPlanElement(day: 2, activity: runningTemplates[1]), // Intervalos Cortos (HIIT)
@@ -64,7 +64,7 @@ class PlanDataset {
                 category: "Cardio",
                 creator: "Endurance Masters",
                 tags: ["Endurance", "Running", "21K"],
-                thumbnailURL: URL(string: "https://example.com/images/marathon.jpg"),
+                thumbnailURL: "https://example.com/images/marathon.jpg",
                 elements: [
                     createPlanElement(day: 1, activity: restTemplates[0]),
                     createPlanElement(day: 2, activity: runningTemplates[0]), // Carrera 5K Lenta
@@ -82,10 +82,11 @@ class PlanDataset {
 
             // MARK: - 4. Plan de Fuerza Pura (8 Semanas)
             Plan(
-                name: "Strongman 5x5",
+                name: "Strongman \n5x5",
                 description: "Aumento de la fuerza máxima en los tres levantamientos principales. Mínimo de cardio.",
                 category: "Powerlifting",
                 tags: ["Fuerza", "Powerlifting", "Básico"],
+                thumbnailURL: "https://images.unsplash.com/photo-1599058917212-d750089bc07e?ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&q=80&w=2938",
                 elements: [
                     createPlanElement(day: 1, activity: gymTemplates[1]), // Fuerza Pierna/Hombro (Pesado)
                     createPlanElement(day: 2, activity: restTemplates[0]),
@@ -98,7 +99,8 @@ class PlanDataset {
                 goal: .strength,
                 durationWeeks: 8,
                 activitiesPerWeek: 3,
-                shareable: true
+                shareable: true,
+                isBeingTracked: true,
             ),
             
             // MARK: - 5. Plan de Movilidad y Flexibilidad (4 Semanas)

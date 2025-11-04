@@ -14,7 +14,7 @@ public struct Plan: Identifiable, Codable, Hashable {
     public var category: String?
     public var creator: String?
     public var tags: [String]
-    public var thumbnailURL: URL?
+    public var thumbnailURL: String?
     public var notes: String?
     
     // MARK: - Plan Configuration
@@ -26,6 +26,7 @@ public struct Plan: Identifiable, Codable, Hashable {
     // MARK: - Premium & Sharing
     public var shareable: Bool
     public var isPremiumPlan: Bool
+    public var isBeingTracked : Bool
     
     // MARK: - Init
     public init(
@@ -35,7 +36,7 @@ public struct Plan: Identifiable, Codable, Hashable {
         category: String? = nil,
         creator: String? = nil,
         tags: [String] = [],
-        thumbnailURL: URL? = nil,
+        thumbnailURL: String? = nil,
         notes: String? = nil,
         elements: [PlanElement] = [],
         goal: PlanGoal = .general,
@@ -43,7 +44,8 @@ public struct Plan: Identifiable, Codable, Hashable {
         startDate: Date? = nil,
         activitiesPerWeek: Int = 3,
         shareable: Bool = false,
-        isPremiumPlan: Bool = false
+        isPremiumPlan: Bool = false,
+        isBeingTracked : Bool = false
     ) {
         self.id = id
         self.name = name
@@ -62,6 +64,7 @@ public struct Plan: Identifiable, Codable, Hashable {
         self.activitiesPerWeek = activitiesPerWeek
         self.shareable = shareable
         self.isPremiumPlan = isPremiumPlan
+        self.isBeingTracked = isBeingTracked
     }
     
     // MARK: - CodingKeys
@@ -69,7 +72,7 @@ public struct Plan: Identifiable, Codable, Hashable {
         case id, name, createdAt, updatedAt, elements
         case description, category, creator, tags, thumbnailURL, notes
         case goal, durationWeeks, startDate, activitiesPerWeek
-        case shareable, isPremiumPlan
+        case shareable, isPremiumPlan, isBeingTracked
     }
     
     // MARK: - Firestore Helper
@@ -101,7 +104,7 @@ public struct Plan: Identifiable, Codable, Hashable {
         }
         
         if let thumbnailURL = thumbnailURL {
-            dict["thumbnailURL"] = thumbnailURL.absoluteString
+            dict["thumbnailURL"] = thumbnailURL
         }
         
         if let notes = notes {
@@ -267,5 +270,9 @@ public struct Plan: Identifiable, Codable, Hashable {
         let daysPassed = calendar.dateComponents([.day], from: startDate, to: Date()).day ?? 0
         let currentDay = (daysPassed % totalDays) + 1
         return elements(forDay: currentDay)
+    }
+    
+    public func upcomingActivity() -> PlanElement? {
+        return elements.first{ $0.completed == false}
     }
 }

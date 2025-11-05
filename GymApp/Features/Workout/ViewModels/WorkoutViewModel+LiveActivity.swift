@@ -8,7 +8,7 @@
 import Foundation
 import ActivityKit
 
-extension WorkoutViewModel {
+extension GymLiveTrackerViewModel {
 
 //    public func startLiveActivity() {
 //        guard ActivityAuthorizationInfo().areActivitiesEnabled else {

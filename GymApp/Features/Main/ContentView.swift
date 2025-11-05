@@ -44,8 +44,8 @@ struct ContentView: View {
                 case .workoutTimer :
                     WorkoutTimerView(showWorkoutTimer: $showWorkoutTimer)
                         .environmentObject(navigationRouter)
-                case .todayWorkout :
-                    WorkoutRoutineViewLocal()
+                case .todayWorkout(let element) :
+                    LiveTrackerActivity(planElement: element)
                         .environmentObject(navigationRouter)
                 case .createPlan :
                     CreatePlanView()

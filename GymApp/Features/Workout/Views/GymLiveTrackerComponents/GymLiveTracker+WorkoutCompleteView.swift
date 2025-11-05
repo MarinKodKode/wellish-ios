@@ -38,13 +38,14 @@ struct GymLiveTracker_WorkoutCompleteView: View {
                 .font(.system(size: 60))
             
             HStack(spacing: 16) {
-                CompletionStat(
+                
+                GymLiveTracker_CompletionStat(
                     icon: "clock.fill",
                     value: formatTime(totalTime),
                     label: "Tiempo total",
                     color: Color(red: 0.3, green: 0.6, blue: 1.0)
                 )
-                CompletionStat(
+                GymLiveTracker_CompletionStat(
                     icon: "flame.fill",
                     value: "\(caloriesBurned)",
                     label: "Calorías",

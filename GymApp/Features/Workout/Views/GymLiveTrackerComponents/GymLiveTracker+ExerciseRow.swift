@@ -52,5 +52,6 @@ struct GymLiveTracker_ExerciseRow: View {
 }
 
 #Preview {
-    GymLiveTracker_ExerciseRow()
+    let set = ActivityDataset.gymActivities[0].sets[0]
+    GymLiveTracker_ExerciseRow(set: set, isCurrent: true, isCompleted: false)
 }

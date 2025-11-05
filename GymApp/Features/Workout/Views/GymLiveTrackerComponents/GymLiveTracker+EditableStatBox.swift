@@ -41,7 +41,3 @@ struct GymLiveTracker_EditableStatBox: View {
         .cornerRadius(12)
     }
 }
-
-#Preview {
-    GymLiveTracker_EditableStatBox()
-}

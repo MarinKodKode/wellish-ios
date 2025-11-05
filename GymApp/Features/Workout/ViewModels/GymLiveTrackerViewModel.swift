@@ -1,8 +1,8 @@
 //
-//  WorkoutOfTheDayViewModel.swift
+//  GymLiveTrackerViewModel.swift
 //  Wellish
 //
-//  Created by Manuel Alejandro Hernandez Marín on 30/09/25.
+//  Integrado con PerformanceLogService para trackear sesiones
 //
 
 import Foundation
@@ -13,10 +13,10 @@ import Combine
 
 class GymLiveTrackerViewModel: ObservableObject {
     
-    // MARK: - Singleton
     static let shared = GymLiveTrackerViewModel()
     
-    // MARK: - Published Properties
+    private let performanceService = PerformanceLogService.shared
+    
     @Published var currentExerciseIndex = 0
     @Published var currentSet = 1
     @Published var isTimerRunning = false
@@ -29,14 +29,16 @@ class GymLiveTrackerViewModel: ObservableObject {
     @Published var currentPlanElement: PlanElement?
     @Published var currentGymActivity: GymActivity? = PlanDataset().gymTemplates[0]
     
-    // MARK: - Private Properties
+    @Published var currentPerformance: GymActivityPerformance?
+    @Published var currentPerformedSet: PerformedRoutineSet?
+    @Published var currentSeriesInSet: [PerformedSeries] = []
+    
     private var timer: Timer?
     private var restTimerInstance: Timer?
     private var currentActivity: Activity?
     private var backgroundTask: UIBackgroundTaskIdentifier = .invalid
     private var cancellables = Set<AnyCancellable>()
     
-    // MARK: - Computed Properties
     var totalSets: Int {
         guard let gymActivity = currentGymActivity else { return 0 }
         return gymActivity.sets.reduce(0) { $0 + $1.series.count }
@@ -61,7 +63,6 @@ class GymLiveTrackerViewModel: ObservableObject {
         return gymActivity.sets[currentExerciseIndex]
     }
     
-    // MARK: - Init (Private for Singleton)
     private init() {
         requestNotificationPermissions()
         setupNotificationCategories()
@@ -69,12 +70,10 @@ class GymLiveTrackerViewModel: ObservableObject {
         restoreStateIfNeeded()
     }
     
-    // MARK: - Public Methods
     
     /// Inicia un nuevo workout con un PlanElement
     func startWorkout(with planElement: PlanElement) {
         guard case .gym(let gymActivity) = planElement.activity else {
-            print("⚠️ El PlanElement no contiene una GymActivity")
             return
         }
         
@@ -88,6 +87,21 @@ class GymLiveTrackerViewModel: ObservableObject {
         self.currentSet = 1
         self.elapsedTime = 0
         
+        // 🆕 CREAR PERFORMANCE LOG
+        self.currentPerformance = performanceService.createAndSaveSession(
+            planElementId: planElement.id,
+            gymActivityId: gymActivity.id,
+            userId: getCurrentUserId() // Tu método para obtener userId
+        )
+        
+        // Inicializar el primer PerformedRoutineSet
+        if let firstRoutineSet = gymActivity.sets.first {
+            self.currentPerformedSet = PerformedRoutineSet(
+                routineSetId: firstRoutineSet.id,
+                name: firstRoutineSet.exercise.name
+            )
+        }
+        
         // Iniciar timer
         startTimer()
         
@@ -95,6 +109,7 @@ class GymLiveTrackerViewModel: ObservableObject {
         saveState()
         
         print("✅ Workout iniciado: \(gymActivity.name)")
+        print("📊 Performance ID: \(currentPerformance?.id ?? "N/A")")
     }
     
     /// Inicia el timer principal
@@ -133,10 +148,40 @@ class GymLiveTrackerViewModel: ObservableObject {
         startTimer()
     }
     
+    func recordSeries(weightKg: Double, reps: Int, notes: String? = nil) {
+        guard let routineSet = currentRoutineSet else { return }
+        let exercise = routineSet.exercise
+        let series = PerformedSeries(
+            exerciseId: exercise.id,
+            exerciseName: exercise.name,
+            weightKg: weightKg,
+            reps: reps,
+            completedAt: Date(),
+            wasSuccessful: true,
+            notes: notes
+        )
+        
+        currentSeriesInSet.append(series)
+        
+        print("✅ Serie registrada: \(exercise.name) - \(weightKg)kg x \(reps) reps")
+    }
+    
     func completeSet() {
         guard let currentSet = currentRoutineSet else { return }
         
-        // Registrar set completado
+        if var performedSet = currentPerformedSet {
+            performedSet.completedSeries = currentSeriesInSet
+            
+            if var performance = currentPerformance {
+                performanceService.addPerformedSet(to: &performance, set: performedSet)
+                currentPerformance = performance
+            }
+            
+            print("✅ Set completado: \(performedSet.name)")
+            print("   Total reps: \(performedSet.totalReps)")
+            print("   Volumen: \(String(format: "%.1f", performedSet.totalVolumeKg)) kg")
+        }
+        
         var sets = completedSets[currentExerciseIndex] ?? []
         sets.append(self.currentSet)
         completedSets[currentExerciseIndex] = sets
@@ -147,15 +192,15 @@ class GymLiveTrackerViewModel: ObservableObject {
             self.showSetComplete = false
         }
         
-        // Verificar si hay más sets en este ejercicio
         if self.currentSet < currentSet.series.count {
             self.currentSet += 1
-            // Obtener tiempo de descanso del set actual
+            
+            currentSeriesInSet = []
+            
             if let restTime = currentSet.series.first?.formattedRestTime {
                 startRestTimer(duration: Int(restTime) ?? 60)
             }
         } else {
-            // Pasar al siguiente ejercicio
             moveToNextExercise()
         }
         
@@ -168,9 +213,17 @@ class GymLiveTrackerViewModel: ObservableObject {
         if currentExerciseIndex < gymActivity.sets.count - 1 {
             currentExerciseIndex += 1
             currentSet = 1
-            startRestTimer(duration: 60) // Descanso entre ejercicios
+            
+            if let nextRoutineSet = gymActivity.sets[safe: currentExerciseIndex] {
+                currentPerformedSet = PerformedRoutineSet(
+                    routineSetId: nextRoutineSet.id,
+                    name: nextRoutineSet.exercise.name
+                )
+                currentSeriesInSet = []
+            }
+            
+            startRestTimer(duration: 60)
         } else {
-            // Workout completado
             completeWorkout()
         }
     }
@@ -185,6 +238,14 @@ class GymLiveTrackerViewModel: ObservableObject {
         restTimer = 0
         restTimerInstance?.invalidate()
         
+        if let nextRoutineSet = gymActivity.sets[safe: currentExerciseIndex] {
+            currentPerformedSet = PerformedRoutineSet(
+                routineSetId: nextRoutineSet.id,
+                name: nextRoutineSet.exercise.name
+            )
+            currentSeriesInSet = []
+        }
+        
         UNUserNotificationCenter
             .current()
             .removeDeliveredNotifications(withIdentifiers: ["restComplete"])
@@ -198,19 +259,54 @@ class GymLiveTrackerViewModel: ObservableObject {
         restTimerInstance?.invalidate()
         showWorkoutComplete = true
         
-        // Actualizar PlanElement con datos de rendimiento
+        let durationMinutes = elapsedTime / 60
+        let calories = caloriesBurned
+        
+        if var performance = currentPerformance {
+            performanceService.completeSession(
+                &performance,
+                durationMinutes: durationMinutes,
+                calories: calories,
+                rpe: nil,
+                notes: nil
+            )
+            
+            if let gymActivity = currentGymActivity {
+                performance.calculateComparisons(plannedActivity: gymActivity)
+                performanceService.savePerformance(performance)
+            }
+            
+            print("✅ Performance completado:")
+            print("   ID: \(performance.id)")
+            print("   Volumen total: \(String(format: "%.1f", performance.totalVolumeKg)) kg")
+            print("   Sets completados: \(performance.totalSetsCompleted)")
+            print("   Reps totales: \(performance.totalRepsCompleted)")
+        }
+        
         if var planElement = currentPlanElement {
             planElement.markCompleted(
-                durationMinutes: elapsedTime / 60,
-                calories: caloriesBurned,
+                durationMinutes: durationMinutes,
+                calories: calories,
                 performanceNotes: "Completado con \(completedSetsCount) sets"
             )
             
-            // Aquí guardarías en Firebase/Core Data
             print("✅ Workout completado: \(planElement.displayName)")
         }
         
         clearState()
+    }
+    
+    func finishWorkoutWithFeedback(rpe: Int, notes: String?) {
+        guard var performance = currentPerformance else { return }
+        
+        performance.rpe = rpe
+        performance.notes = notes
+        
+        performanceService.savePerformance(performance)
+        
+        print("✅ Feedback guardado - RPE: \(rpe)/10")
+        
+        reset()
     }
     
     private func startRestTimer(duration: Int) {
@@ -229,7 +325,6 @@ class GymLiveTrackerViewModel: ObservableObject {
             }
         }
         
-        // Programar notificación para cuando termine el descanso
         scheduleRestCompleteNotification(duration: duration)
         
         RunLoop.current.add(restTimerInstance!, forMode: .common)
@@ -260,10 +355,15 @@ class GymLiveTrackerViewModel: ObservableObject {
         
         UserDefaults.standard.set(state, forKey: "GymTrackerState")
         
-        // Guardar el PlanElement
         if let planElement = currentPlanElement,
            let data = try? JSONEncoder().encode(planElement) {
             UserDefaults.standard.set(data, forKey: "CurrentPlanElement")
+        }
+        
+        // 🆕 GUARDAR PERFORMANCE ACTUAL
+        if let performance = currentPerformance,
+           let data = try? JSONEncoder().encode(performance) {
+            UserDefaults.standard.set(data, forKey: "CurrentPerformance")
         }
     }
     
@@ -287,6 +387,13 @@ class GymLiveTrackerViewModel: ObservableObject {
             self.currentGymActivity = gymActivity
         }
         
+        // 🆕 RESTAURAR PERFORMANCE
+        if let data = UserDefaults.standard.data(forKey: "CurrentPerformance"),
+           let performance = try? JSONDecoder().decode(GymActivityPerformance.self, from: data) {
+            self.currentPerformance = performance
+            print("✅ Performance restaurado: \(performance.id)")
+        }
+        
         // Restaurar estado
         currentExerciseIndex = state["currentExerciseIndex"] as? Int ?? 0
         currentSet = state["currentSet"] as? Int ?? 1
@@ -307,6 +414,7 @@ class GymLiveTrackerViewModel: ObservableObject {
     private func clearState() {
         UserDefaults.standard.removeObject(forKey: "GymTrackerState")
         UserDefaults.standard.removeObject(forKey: "CurrentPlanElement")
+        UserDefaults.standard.removeObject(forKey: "CurrentPerformance") // 🆕
     }
     
     func reset() {
@@ -324,6 +432,11 @@ class GymLiveTrackerViewModel: ObservableObject {
         completedSets = [:]
         currentPlanElement = nil
         currentGymActivity = nil
+        
+        // 🆕 RESETEAR PERFORMANCE
+        currentPerformance = nil
+        currentPerformedSet = nil
+        currentSeriesInSet = []
         
         clearState()
     }
@@ -443,11 +556,27 @@ class GymLiveTrackerViewModel: ObservableObject {
         }
     }
     
+    // MARK: - Helpers
+    
+    private func getCurrentUserId() -> String? {
+        // Implementa según tu sistema de auth
+        // Por ahora retorna un placeholder
+        return "user_123"
+    }
+    
     // MARK: - Deinit
     
     deinit {
         timer?.invalidate()
         restTimerInstance?.invalidate()
         endBackgroundTask()
+    }
+}
+
+// MARK: - Array Safe Subscript Extension
+
+extension Array {
+    subscript(safe index: Int) -> Element? {
+        return indices.contains(index) ? self[index] : nil
     }
 }

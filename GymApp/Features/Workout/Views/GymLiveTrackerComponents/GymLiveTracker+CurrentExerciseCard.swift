@@ -42,26 +42,24 @@ struct GymLiveTracker_CurrentExerciseCard: View {
             if currentSet <= routineSet.series.count {
                 let series = routineSet.series[currentSet - 1]
                 HStack(spacing: 12) {
-                    StatBox(
+                    GymLiveTracker_StatBox(
                         value: "\(currentSet)",
                         label: "Set",
                         color: Color(red: 0.7, green: 0.4, blue: 0.95)
                     )
-                    EditableStatBox(
-                        value: $property,
+                    GymLiveTracker_StatBox(
+                        value: "",
                         label: "Reps",
                         color: Color(
                             red: 0.9,
                             green: 0.3,
                             blue: 0.7
                         ),
-                        isEditable: true
                     )
-                    EditableStatBox(
-                        value: $property,
+                    GymLiveTracker_StatBox(
+                        value: "",
                         label: "kg",
                         color: Color(red: 0.3, green: 0.6, blue: 1.0),
-                        isEditable: true
                     )
                 }
             }

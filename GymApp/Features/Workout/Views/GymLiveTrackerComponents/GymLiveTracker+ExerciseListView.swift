@@ -23,7 +23,7 @@ struct GymLiveTracker_ExerciseListView: View {
             .padding(.bottom, 4)
             
             ForEach(Array(sets.enumerated()), id: \.element.id) { index, set in
-                ExerciseRow(
+                GymLiveTracker_ExerciseRow(
                     set: set,
                     isCurrent: index == currentIndex,
                     isCompleted: index < currentIndex

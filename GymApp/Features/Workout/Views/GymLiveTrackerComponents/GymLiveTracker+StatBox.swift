@@ -29,5 +29,9 @@ struct GymLiveTracker_StatBox: View {
 }
 
 #Preview {
-    GymLiveTracker_StatBox()
+    GymLiveTracker_StatBox(
+        value: "750",
+        label: "Calories",
+        color: Color.fitnessSuccess
+    )
 }

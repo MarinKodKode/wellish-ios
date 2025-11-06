@@ -24,4 +24,5 @@ enum AppRoute:  Hashable {
     case runningActivityDetail
     case exerciseDetail(_ exercise : Exercise)
     case planDetail(_ plan : Plan)
+    case summaryDay
 }

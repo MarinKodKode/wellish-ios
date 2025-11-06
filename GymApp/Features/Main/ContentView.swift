@@ -61,6 +61,8 @@ struct ContentView: View {
                         .environmentObject(navigationRouter)
                 case .exerciseDetail(let exercise) :
                     ExerciseDetailView(exercise: exercise)
+                case .summaryDay :
+                    SummaryDayView()
                 default :
                     SignInView()
                 }

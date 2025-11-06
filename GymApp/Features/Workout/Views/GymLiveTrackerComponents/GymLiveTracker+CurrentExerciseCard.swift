@@ -48,7 +48,7 @@ struct GymLiveTracker_CurrentExerciseCard: View {
                         color: Color(red: 0.7, green: 0.4, blue: 0.95)
                     )
                     GymLiveTracker_StatBox(
-                        value: "",
+                        value: "\(series.repetitions)",
                         label: "Reps",
                         color: Color(
                             red: 0.9,
@@ -56,11 +56,13 @@ struct GymLiveTracker_CurrentExerciseCard: View {
                             blue: 0.7
                         ),
                     )
-                    GymLiveTracker_StatBox(
-                        value: "",
-                        label: "kg",
-                        color: Color(red: 0.3, green: 0.6, blue: 1.0),
-                    )
+                    if let weight = series.idealWeightKg {
+                        GymLiveTracker_StatBox(
+                            value: "\(weight)",
+                            label: "kg",
+                            color: Color(red: 0.3, green: 0.6, blue: 1.0),
+                        )
+                    }
                 }
             }
             

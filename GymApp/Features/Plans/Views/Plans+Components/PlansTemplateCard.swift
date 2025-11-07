@@ -8,7 +8,7 @@
 import SwiftUI
 
 struct TemplateCard: View {
-    let template: RoutineTemplate
+    let plan : Plan
     var action: () -> Void
     
     @State private var imageLoadFailed = false
@@ -20,7 +20,7 @@ struct TemplateCard: View {
             VStack(alignment: .leading, spacing: 8) {
                 VStack(alignment: .leading, spacing: 6) {
                     
-                    Text(template.name)
+                    Text(plan.name)
                         .font(.system(size: 24, weight: .bold))
                         .fontWeight(.semibold)
                         .foregroundColor(.white)
@@ -28,7 +28,7 @@ struct TemplateCard: View {
                         .fixedSize(horizontal: false, vertical: true)
                         .frame(maxWidth: .infinity, alignment: .leading)
                     
-                    Text(template.description)
+                    Text(plan.description ?? "Descubre nuevos límites!")
                         .font(.system(size: 18))
                         .foregroundColor(.white.opacity(0.9))
                         .lineLimit(2)
@@ -38,18 +38,21 @@ struct TemplateCard: View {
                     
                     Spacer()
                     
-                    Label("\(template.estimatedDuration)min", systemImage: "clock")
+                    Label("\(plan.durationWeeks) weeks", systemImage: "calendar")
                         .font(.system(size: 18))
                         .foregroundColor(.white.opacity(0.8))
                     
                     HStack{
-                        Label("\(template.difficulty.rawValue)", systemImage: template.imageName)
+                        Label(
+                            "\(plan.goal.rawValue)",
+                            systemImage: plan.goal.icon
+                        )
                         .font(.caption)
                         .fontWeight(.medium)
                         .foregroundColor(.white)
                         .padding(.horizontal, 8)
                         .padding(.vertical, 4)
-                        .background(template.difficulty.color.opacity(0.8))
+                        .background(Color(plan.goal.color))
                         .cornerRadius(8)
                         
                     }
@@ -75,7 +78,7 @@ struct TemplateCard: View {
     
     @ViewBuilder
     private var backgroundView: some View {
-        if let imageURL = template.imageURL, !imageURL.isEmpty, !imageLoadFailed {
+        if let imageURL = plan.thumbnailURL, !imageURL.isEmpty, !imageLoadFailed {
             AsyncImage(url: URL(string: imageURL)) { phase in
                 switch phase {
                 case .success(let image):

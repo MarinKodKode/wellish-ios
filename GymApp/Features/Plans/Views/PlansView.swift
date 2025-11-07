@@ -14,9 +14,6 @@ struct PlansView: View {
     @EnvironmentObject var navigationRouter: NavigationRouter
     
     @State private var selectedTab = 0
-    
-    //TestInformation
-    private let testPlans = PlanDataset().getPlans()
 
     var body: some View {
         NavigationView {
@@ -29,25 +26,7 @@ struct PlansView: View {
                         
                         headerSection
                         
-                        VStack(alignment: .leading, spacing: 12) {
-                            Text(StringConstants.plansSubtitle)
-                                .font(.title2.bold())
-                                .foregroundColor(.fitnessTextPrimary)
-                                .padding(.horizontal)
-
-                            ScrollView(.horizontal, showsIndicators: false) {
-                                HStack(spacing: 8) {
-                                    ForEach(templates.indices, id: \.self) { index in
-                                        TemplateCard(template: templates[index]) {
-                                            print("Applied: \(templates[index].name)")
-                                        }
-                                        .padding(.leading, index == 0 ? 20 : 8)
-                                        .padding(.trailing,index == templates.count - 1 ? 20 : 8
-                                        )
-                                    }
-                                }
-                            }
-                        }
+                        PopularPlansSection()
 
                         
                         VStack(alignment: .leading, spacing: 12) {
@@ -71,7 +50,7 @@ struct PlansView: View {
                                     .frame(maxWidth: .infinity)
                                     .padding()
                             } else {
-                                ForEach(self.testPlans) { plan in
+                                ForEach(self.plansVM.plans) { plan in
                                     Button(action: {
                                         navigationRouter.goTo(.planDetail(plan))
                                     }, label: {

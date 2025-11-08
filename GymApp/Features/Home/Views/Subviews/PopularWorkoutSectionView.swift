@@ -31,10 +31,9 @@ struct PopularWorkoutSectionView: View {
                     HStack (alignment: .center){
                         
                         RoutineStatisticsRowView(
-                            size: 14,
-                            gap : 8,
-                            numberOfStats: 2,
-                            alignTo: .leading
+                            calories: "345 KCAL ",
+                            time: "90 mins",
+                            exercises: "23 exercises"
                         )
                         Spacer()
                         

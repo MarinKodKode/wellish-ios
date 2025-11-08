@@ -9,6 +9,7 @@ import SwiftUI
 
 struct MainHomeView: View {
     @EnvironmentObject var navigationRouter: NavigationRouter
+    let vm = PlanTrackerCurrentDayViewModel()
     
     var body: some View {
         NavigationView {

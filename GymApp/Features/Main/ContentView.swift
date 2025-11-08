@@ -44,8 +44,8 @@ struct ContentView: View {
                 case .workoutTimer :
                     WorkoutTimerView(showWorkoutTimer: $showWorkoutTimer)
                         .environmentObject(navigationRouter)
-                case .todayWorkout :
-                    WorkoutRoutineViewLocal()
+                case .todayWorkout(let element) :
+                    LiveTrackerActivity(planElement: element)
                         .environmentObject(navigationRouter)
                 case .createPlan :
                     CreatePlanView()
@@ -61,6 +61,8 @@ struct ContentView: View {
                         .environmentObject(navigationRouter)
                 case .exerciseDetail(let exercise) :
                     ExerciseDetailView(exercise: exercise)
+                case .summaryDay :
+                    SummaryDayView()
                 default :
                     SignInView()
                 }

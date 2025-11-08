@@ -10,42 +10,94 @@ import SwiftUI
 struct TodayWorkoutView: View {
     
     @EnvironmentObject var navigationRouter: NavigationRouter
+    let vm = PlanTrackerCurrentDayViewModel()
+    @State var activities : [TodayActivityModel] = []
     
     var body: some View {
         VStack() {
-            
-            SectionBarTitle(title: "La rutina de hoy 🔥", icon: "arrow.right")
-            
-            ZStack {
-                
+            SectionBarTitle("La rutina de hoy 🔥")
+            ScrollView(.horizontal){
+                HStack(alignment: .center){
+                    ForEach(activities){ activity in
+                            ZStack {
+                                
+                                BackgroundCardImage(image: activity.image)
+                                
+                                Color.black.opacity(0.4)
+                                VStack(spacing : 12) {
+                                   
+                                    TodayWorkoutTitleCard(title: activity.title)
+                                    
+                                    RoutineStatisticsRowView(
+                                        calories: "\(activity.calories) KCAL",
+                                        time: "\(activity.time) mins",
+                                        exercises: "23 exercises"
+                                    )
+                                }
+                            }
+                            .frame(
+                                width : UIScreen.screenWidth * 0.95,
+                                height: UIScreen.screenHeight * 0.25)
+                            .cornerRadius(12)
+                            .padding(.horizontal, 16)
+                            .onTapGesture {
+                                navigationRouter
+                                    .goTo(.todayWorkout(activity.element))
+                            }
+                    }
+                }
+            }
+            .scrollIndicators(.hidden)
+        }
+        .task {
+            self.activities = vm.buildTodayActivites()
+            vm.initView()
+        }
+    }
+}
+
+struct BackgroundCardImage : View {
+    
+    var image : String
+    
+    init(image: String) {
+        self.image = image
+    }
+    
+    var body: some View {
+        AsyncImage(url: URL(string: image)) { phase in
+            if let image = phase.image {
+                image
+                    .resizable()
+                    .aspectRatio(contentMode: .fill)
+                    .clipped()
+            } else if phase.error != nil {
                 Image("background_5")
                     .resizable()
                     .aspectRatio(contentMode: .fill)
                     .clipped()
-                
-                Color.black.opacity(0.4)
-                
-                VStack(spacing : 12) {
-                    
-                    Text("Upper Body\nWorkout")
-                        .font(.custom("Lemon", size: 40))
-                        .foregroundColor(.fitnessTextPrimary)
-                        .multilineTextAlignment(.center)
-                    
-                    RoutineStatisticsRowView(size: 14, gap : 24)
-                }
-            }
-            .frame(height: 250)
-            .cornerRadius(12)
-            .padding(.horizontal, 12)
-            .onTapGesture {
-                navigationRouter.goTo(.todayWorkout)
+            } else {
+                Image("background_5")
+                    .resizable()
+                    .aspectRatio(contentMode: .fill)
+                    .clipped()
             }
         }
-        
     }
 }
 
-#Preview {
-    TodayWorkoutView()
+struct TodayWorkoutTitleCard : View {
+    
+    let title : String?
+    
+    init(title: String?) {
+        self.title = title
+    }
+    
+    var body: some View {
+        Text("\(title?.prefix(22) ?? "Today's challenge")..." )
+            .font(.custom("Lemon", size: 40))
+            .foregroundColor(.fitnessTextPrimary)
+            .multilineTextAlignment(.center)
+    }
 }

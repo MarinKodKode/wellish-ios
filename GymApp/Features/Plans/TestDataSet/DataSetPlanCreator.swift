@@ -245,6 +245,7 @@ struct ActivityDataset {
         source: .template,
         globalActivityId: "GLOBAL-BACK-STRENGTH",
         isPremiumRoutine: true,
+        imageURL: "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcSEsuWVgaBxxnq70mlSyn8Pj7hn5Fxlv67Q6BTnQb384g6HiyF80hSK5lZn7wPvUUox2js&usqp=CAU"
     ),
     
     // --- 2. Pierna: Máxima Hipertrofia ---
@@ -309,6 +310,7 @@ struct ActivityDataset {
         musclesWorked: ["Cuádriceps", "Glúteos"],
         estimatedCalories: 700,
         source: .template,
+        imageURL: "https://images.unsplash.com/photo-1554284126-aa88f22d8b74?ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&q=80&w=3694"
         
     ),
     

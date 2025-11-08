@@ -9,6 +9,8 @@ import SwiftUI
 
 struct Metrics_CompletedActivitiesView: View {
     
+    @EnvironmentObject  var navigatorRouter : NavigationRouter
+    
     let title : String
 
     init(title: String) {
@@ -28,6 +30,9 @@ struct Metrics_CompletedActivitiesView: View {
             VStack(spacing: 16) {
                 ForEach(1..<5) {  _ in
                     CompletedActivityCard()
+                        .onTapGesture {
+                            navigatorRouter.goTo(.summaryDay)
+                        }
                 }
             }
         }

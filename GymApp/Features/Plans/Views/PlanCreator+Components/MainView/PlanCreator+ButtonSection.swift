@@ -6,20 +6,20 @@ extension CreatePlanView {
         Button(action: {
             self.vm.isLoading = true
             Task {
-                await vm.savePlan()
-//                if ok {
-//                    // Success feedback can be added later
-//                }
-            }
-            DispatchQueue.main.asyncAfter(deadline: .now() + 3){
-                self.vm.isLoading = false
-//                self.vm.savedSuccess = true
+                let ok = await vm.savePlan()
+             
+                if ok {
+                    DispatchQueue.main.asyncAfter(deadline: .now() + 3){
+                        self.vm.isLoading = false
+                        self.vm.savedPlanSuccess = true
+                    }
+                }
             }
         }) {
             HStack(spacing: 12) {
                 Image(systemName: "checkmark.circle.fill")
                     .font(.title2)
-                Text(StringConstants.saveRoutine)
+                Text(StringConstants.savePlan)
                     .font(.headline)
                     .fontWeight(.semibold)
             }

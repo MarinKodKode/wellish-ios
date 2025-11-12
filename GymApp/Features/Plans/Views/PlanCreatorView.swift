@@ -23,10 +23,7 @@ struct CreatePlanView: View {
                     
                     PlanCreator_Header
                     
-                    GeneralInfoWdget(
-                        name: $vm.plan.name,
-                        description: $vm.plan.description
-                    )
+                    PlanCreator_DetailsSection
                     
                     PlanCreator_GoalSection
                     
@@ -34,14 +31,19 @@ struct CreatePlanView: View {
                     
                     PlanCreator_ActivitiesSection
                     
-                    AddTagsWidget(newTagText: $newTagText, category: $category, tagsArray: $tagsArray)
+                    PlanCreator_TagsSection
                     
-                    SaveButtonWidget(text: "Guardar plan", action: {print("Plan")}, isLoading: $vm.isLoading)
+                    PlanCreatorButtonsSection
                     
                 }
                 .padding(.vertical)
             }
             .scrollIndicators(.hidden)
+            if vm.savedPlanSuccess {
+                LiveAnimationView(animationName: "saved_animation"){
+                    dismiss()
+                }
+            }
         }
         .sheet(isPresented: $showGoalPicker) {
             GoalPickerSheet(selectedGoal: $vm.plan.goal)

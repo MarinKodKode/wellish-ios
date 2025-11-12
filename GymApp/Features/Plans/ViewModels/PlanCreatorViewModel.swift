@@ -1,12 +1,4 @@
-//
-//  PlanCreatorViewModel.swift
-//  Wellish
-//
-//  Created by Manuel Alejandro Hernandez Marín on 17/10/25.
-//
-
 import Foundation
-
 
 public final class PlanCreatorViewModel : ObservableObject {
     
@@ -32,9 +24,11 @@ public final class PlanCreatorViewModel : ObservableObject {
         
     }
     
-    public func savePlan() async {
-        _ = await service.savePlanRemote(plan)
-        _ = await service.savePlanRemote(plan)
+    public func savePlan() async -> Bool {
+        let remoteSave = await service.savePlanRemote(plan)
+        let localSave = await service.savePlanRemote(plan)
+        
+        return localSave
     }
     
 

@@ -4,6 +4,7 @@ struct PlanDetailView: View {
     @State var plan: Plan
     @Environment(\.dismiss) private var dismiss
     @EnvironmentObject var navigationRouter: NavigationRouter
+    @State var startedPlan : Bool = false
     
     var body: some View {
         ZStack {
@@ -16,7 +17,22 @@ struct PlanDetailView: View {
 
                     headerSection
                     
-                    progressSection
+//                    if plan.isBeingTracked {
+                    Group {
+                        if startedPlan {
+                            progressSection
+                                .transition(.asymmetric(
+                                    insertion: .scale(scale: 0.95).combined(with: .opacity),
+                                    removal: .opacity
+                                ))
+                        } else {
+                            startPlanButton
+                                .transition(.asymmetric(
+                                    insertion: .scale(scale: 0.95).combined(with: .opacity),
+                                    removal: .opacity
+                                ))
+                        }
+                    }
                     
                     activitiesSection
                 }
@@ -24,71 +40,13 @@ struct PlanDetailView: View {
                 .padding(.top, 20)
                 .padding(.bottom, 100)
             }
-            
-            // Floating Start Button
-            VStack {
-                Spacer()
-                startPlanButton
-                    .padding(.horizontal, 16)
-                    .padding(.bottom, 32)
-            }
+            .animation(.easeInOut(duration: 0.3), value: startedPlan)
         }
         .navigationTitle(plan.name)
         .navigationBarTitleDisplayMode(.large)
         .navigationBarBackButtonHidden(true)
         .enableNativeSwipeBack()
         .hideKeyboardOnTap()
-    }
-    
-    // MARK: - Start Plan Button
-    private var startPlanButton: some View {
-        Button(action: {
-            startPlan()
-        }) {
-            HStack(spacing: 12) {
-                Image(systemName: "play.fill")
-                    .font(.system(size: 20, weight: .bold))
-                
-                Text(plan.isBeingTracked ? "Continue Plan" : "Start Plan")
-                    .font(.system(size: 18, weight: .bold))
-            }
-            .foregroundColor(.white)
-            .frame(maxWidth: .infinity)
-            .frame(height: 56)
-            .background(
-                LinearGradient(
-                    colors: [.blue, .purple],
-                    startPoint: .leading,
-                    endPoint: .trailing
-                )
-            )
-            .cornerRadius(16)
-            .shadow(color: Color.blue.opacity(0.4), radius: 12, x: 0, y: 6)
-        }
-    }
-    
-    private func startPlan() {
-        // Marcar el plan como iniciado si no lo está
-        if !plan.isBeingTracked {
-            plan.startDate = Date()
-        }
-        
-        // Navegar a la primera actividad no completada
-//        if let nextElement = plan. {
-//            switch nextElement.activity {
-//            case .gym(let gymActivity):
-//                navigationRouter.goTo(.gymActivityDetail(gymActivity))
-//            case .running(let runningActivity):
-//                // navigationRouter.goTo(.runningActivityDetail(runningActivity))
-//                break
-//            case .cycling(let cyclingActivity):
-//                // navigationRouter.goTo(.cyclingActivityDetail(cyclingActivity))
-//                break
-//            case .rest(let restActivity):
-//                // navigationRouter.goTo(.restActivityDetail(restActivity))
-//                break
-//            }
-//        }
     }
     
     // MARK: - Header Section
@@ -183,6 +141,32 @@ struct PlanDetailView: View {
             .cornerRadius(16)
         }
     }
+    
+    private var startPlanButton: some View {
+            Button(action: {
+                startedPlan = true
+            }) {
+                HStack(spacing: 12) {
+                    Image(systemName: "play.fill")
+                        .font(.system(size: 20, weight: .bold))
+                    
+                    Text("Start Plan")
+                        .font(.system(size: 18, weight: .bold))
+                }
+                .foregroundColor(.white)
+                .frame(maxWidth: .infinity)
+                .frame(height: 56)
+                .background(
+                    LinearGradient(
+                        colors: [.blue, .purple],
+                        startPoint: .leading,
+                        endPoint: .trailing
+                    )
+                )
+                .cornerRadius(16)
+                .shadow(color: Color.blue.opacity(0.4), radius: 12, x: 0, y: 6)
+            }
+        }
     
     // MARK: - Activities Section
     private var activitiesSection: some View {
@@ -400,73 +384,73 @@ struct PlanElementRow: View {
 #Preview {
     NavigationStack {
         PlanDetailView(
-            plan: Plan(
-                name: "4-Week Fitness Challenge",
-                description: "Complete fitness plan to improve your overall health and strength",
-                category: "Fitness",
-                elements: [
-                    PlanElement(
-                        activity: .running(RunningActivity(
-                            name: "Morning Run",
-                            runningType: .steady,
-                            targetDistanceKm: 5.0,
-                            targetDurationMinutes: 30,
-                            estimatedCalories: 300
-                        )),
-                        day: 1,
-                        scheduledTime: Calendar.current
-                            .date(
-                                bySettingHour: 7,
-                                minute: 0,
-                                second: 0,
-                                of: Date()
-                            ),
-                        imageURL: ""
-                    ),
-                    PlanElement(
-                        activity: .gym(GymActivity(
-                            name: "Upper Body Strength",
-                            sets: [],
-                            estimatedDurationMinutes: 45,
-                            estimatedCalories: 320
-                        )),
-                        day: 1,
-                        completed: true,
-                        completedAt: Date(),
-                        actualDurationMinutes: 48,
-                        actualCalories: 340,
-                        rpe: 8,
-                        imageURL: ""
-                    ),
-                    PlanElement(
-                        activity: .rest(RestActivity(
-                            name: "Active Recovery",
-                            restType: .active
-                        )),
-                        day: 2,
-                        imageURL: ""
-                    ),
-                    PlanElement(
-                        activity: .cycling(CyclingActivity(
-                            name: "Evening Ride",
-                            targetDistanceKm: 15.0,
-                            targetDurationMinutes: 40,
-                            estimatedCalories: 280
-                        )),
-                        day: 2,
-                        scheduledTime: Calendar.current
-                            .date(
-                                bySettingHour: 18,
-                                minute: 0,
-                                second: 0,
-                                of: Date()
-                            ),
-                        imageURL: ""
-                    )
-                ],
-                goal: .general,
-                durationWeeks: 4
-            )
+plan: Plan(
+            name: "4-Week Fitness Challenge",
+            description: "Complete fitness plan to improve your overall health and strength",
+            category: "Fitness",
+            elements: [
+                PlanElement(
+                    activity: .running(RunningActivity(
+                        name: "Morning Run",
+                        runningType: .steady,
+                        targetDistanceKm: 5.0,
+                        targetDurationMinutes: 30,
+                        estimatedCalories: 300
+                    )),
+                    day: 1,
+                    scheduledTime: Calendar.current
+                        .date(
+                            bySettingHour: 7,
+                            minute: 0,
+                            second: 0,
+                            of: Date()
+                        ),
+                    imageURL: ""
+                ),
+                PlanElement(
+                    activity: .gym(GymActivity(
+                        name: "Upper Body Strength",
+                        sets: [],
+                        estimatedDurationMinutes: 45,
+                        estimatedCalories: 320
+                    )),
+                    day: 1,
+                    completed: true,
+                    completedAt: Date(),
+                    actualDurationMinutes: 48,
+                    actualCalories: 340,
+                    rpe: 8,
+                    imageURL: ""
+                ),
+                PlanElement(
+                    activity: .rest(RestActivity(
+                        name: "Active Recovery",
+                        restType: .active
+                    )),
+                    day: 2,
+                    imageURL: ""
+                ),
+                PlanElement(
+                    activity: .cycling(CyclingActivity(
+                        name: "Evening Ride",
+                        targetDistanceKm: 15.0,
+                        targetDurationMinutes: 40,
+                        estimatedCalories: 280
+                    )),
+                    day: 2,
+                    scheduledTime: Calendar.current
+                        .date(
+                            bySettingHour: 18,
+                            minute: 0,
+                            second: 0,
+                            of: Date()
+                        ),
+                    imageURL: ""
+                )
+            ],
+            goal: .general,
+            durationWeeks: 4
         )
+)
     }
 }

@@ -50,16 +50,18 @@ struct ExercisePickerView: View {
                                 .foregroundColor(.fitnessTextSecondary)
                         }
                         .padding(.vertical, 8)
+                        .padding(.horizontal , 8)
                     }
                     .listRowBackground(Color.fitnessBackgroundSecondary)
                 }
                 .listStyle(PlainListStyle())
+                .padding(.horizontal , 8)
             }
-            .navigationTitle("Choose Exercise")
+            .navigationTitle("Elige tu ejercicio")
             .navigationBarTitleDisplayMode(.large)
             .toolbar {
                 ToolbarItem(placement: .navigationBarTrailing) {
-                    Button("Cancel") {
+                    Button("Cancelar") {
                         presentationMode.wrappedValue.dismiss()
                     }
                     .foregroundColor(.primaryFitnessBlue)
@@ -70,5 +72,16 @@ struct ExercisePickerView: View {
                 print(vm.exerciseLibrary)
             }
         }
+    }
+}
+
+#Preview {
+    
+    var showingExercisePicker = true
+    let vm = GymActivityViewModel()
+    
+    ExercisePickerView { exercise in
+        showingExercisePicker = true
+        vm.addSet(with: exercise)
     }
 }

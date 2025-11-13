@@ -28,6 +28,7 @@ public final class PlansViewViewModel : ObservableObject {
     
     @MainActor
     public func prepareRoutinesToShow() async {
+        print("Trying to fetch routines ")
         self.routines = await routineService.getRoutines()
     }
     

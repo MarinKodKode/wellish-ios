@@ -83,7 +83,7 @@ struct PlansView: View {
                                     .frame(maxWidth: .infinity)
                                     .padding()
                             } else {
-                                ForEach(routines) { routine in
+                                ForEach(self.plansVM.routines) { routine in
                                     Button(action: {
                                         navigationRouter.goTo(.gymActivityDetail(routine))
                                     }, label: {

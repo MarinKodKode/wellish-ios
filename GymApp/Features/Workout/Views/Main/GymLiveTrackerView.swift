@@ -6,7 +6,7 @@ struct GymLiveTrackerView: View {
     @Environment(\.dismiss) private var dismiss
     
     @ObservedObject private var tracker = GymLiveTrackerViewModel.shared
-    
+    let planDetailViewModel = PlanDetailViewModel()
     let planElement: PlanElement
     
     var body: some View {
@@ -19,7 +19,9 @@ struct GymLiveTrackerView: View {
                     caloriesBurned: tracker.caloriesBurned,
                     onDismiss: {
                         dismiss()
-                        tracker.reset()
+//                        planDetailViewModel
+//                            .markElementAsCompleted(planElement)
+////                        tracker.reset()
                     }
                 )
             } else if let gymActivity = tracker.currentGymActivity {

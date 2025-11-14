@@ -34,7 +34,14 @@ final class RoutineService : RoutineServiceProtocol {
             let routines = try await self.activityLocalStorageService.fetchActivities(
                 byCategory: .gym
             )
-            return routines
+            let gymActivities: [GymActivity] = routines.compactMap { activityType in
+                if case .gym(let gymActivity) = activityType {
+                    return gymActivity
+                }
+                return nil
+            }
+            return gymActivities
+            
         } catch {
             return []
         }

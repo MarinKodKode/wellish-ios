@@ -1,10 +1,12 @@
 import SwiftUI
 
 struct PlanDetailView: View {
+    
     @State var plan: Plan
     @Environment(\.dismiss) private var dismiss
     @EnvironmentObject var navigationRouter: NavigationRouter
     @State var startedPlan : Bool = false
+    @ObservedObject var vm: PlanDetailViewModel
     
     var body: some View {
         ZStack {
@@ -16,10 +18,8 @@ struct PlanDetailView: View {
                 VStack(spacing: 24) {
 
                     headerSection
-                    
-//                    if plan.isBeingTracked {
                     Group {
-                        if startedPlan {
+                        if plan.isBeingTracked {
                             progressSection
                                 .transition(.asymmetric(
                                     insertion: .scale(scale: 0.95).combined(with: .opacity),
@@ -144,7 +144,9 @@ struct PlanDetailView: View {
     
     private var startPlanButton: some View {
             Button(action: {
-                startedPlan = true
+                Task {
+                    await vm.startTrackingPlan(plan)
+                }
             }) {
                 HStack(spacing: 12) {
                     Image(systemName: "play.fill")
@@ -450,7 +452,7 @@ plan: Plan(
             ],
             goal: .general,
             durationWeeks: 4
-        )
+), vm:  PlanDetailViewModel()
 )
     }
 }

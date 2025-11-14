@@ -73,6 +73,20 @@ final class PlanLocalStorageService {
         }
     }
     
+    /**
+     Actualiza un Plan existente en el almacenamiento local.
+     
+     Reutiliza la lógica de `savePlan` ya que sobrescribe el archivo JSON
+     existente y asegura que el ID del plan esté en el índice.
+     
+     - Parameter updatedPlan: La instancia de Plan con los datos actualizados.
+     */
+    
+    @MainActor
+    func updatePlan(_ updatedPlan: Plan) async throws {
+        try await savePlan(updatedPlan)
+    }
+    
     
     //MARK: - Fetch plans
     

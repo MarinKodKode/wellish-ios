@@ -46,6 +46,18 @@ final class PlanService : PlanServiceProtocol {
         return await savePlanInFirebaseStorage(plan)
     }
     
+    public func updatePlan(_ plan: Plan) async -> Bool {
+
+        var updatedPlan = plan
+        updatedPlan.updatedAt = Date()
+        
+        let remoteSuccess = await updatePlanRemote(updatedPlan)
+        
+        let localSuccess = await updatePlanLocally(updatedPlan)
+        
+        return remoteSuccess || localSuccess
+    }
+    
     //MARK: - Private methods
     
     internal func fetchPlans() async throws -> [Plan] {
@@ -111,6 +123,19 @@ final class PlanService : PlanServiceProtocol {
         }catch {
             print("Could not send plan to remote server")
             //Send analytics event
+            return false
+        }
+    }
+    
+    internal func updatePlanRemote(_ plan: Plan) async -> Bool {
+        return await savePlanInFirebaseStorage(plan)
+    }
+    
+    internal func updatePlanLocally(_ plan: Plan) async -> Bool {
+        do {
+            try await localStorageService.updatePlan(plan)
+            return true
+        } catch {
             return false
         }
     }

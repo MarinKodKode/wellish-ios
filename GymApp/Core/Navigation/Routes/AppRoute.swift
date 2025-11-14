@@ -18,7 +18,7 @@ enum AppRoute:  Hashable {
     case createRoutine
     case createPlan
     case workoutTimer
-    case todayWorkout(_ planElement : PlanElement)
+    case todayWorkout(_ planElement : PlanElement, plan : Plan)
     case adminConsole
     case gymActivityDetail(_ activity : GymActivity)
     case runningActivityDetail

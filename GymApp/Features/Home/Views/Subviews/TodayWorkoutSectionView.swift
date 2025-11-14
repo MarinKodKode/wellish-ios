@@ -42,7 +42,11 @@ struct TodayWorkoutView: View {
                             .padding(.horizontal, 16)
                             .onTapGesture {
                                 navigationRouter
-                                    .goTo(.todayWorkout(activity.element))
+                                    .goTo(
+                                        .todayWorkout(
+                                            activity.element, plan: vm.,
+                                        )
+                                    )
                             }
                     }
                 }
@@ -50,8 +54,8 @@ struct TodayWorkoutView: View {
             .scrollIndicators(.hidden)
         }
         .task {
-            self.activities = vm.buildTodayActivites()
-            vm.initView()
+            await self.activities = vm.buildTodayActivites()
+            await vm.initView()
         }
     }
 }

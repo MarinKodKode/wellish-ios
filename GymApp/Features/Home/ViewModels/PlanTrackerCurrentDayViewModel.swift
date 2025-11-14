@@ -9,38 +9,37 @@ import Foundation
 
 public class PlanTrackerCurrentDayViewModel : ObservableObject{
     
+    private let planService  : PlanService = PlanService()
+    
     @Published var activePlans : [Plan] = PlanDataset().getPlans().filter{
         $0.isBeingTracked == true
     }
     
     @Published var todayActivities : [TodayActivityModel] = []
     
-    func fecthActivePlans() -> [Plan] {
-        return PlanDataset().getPlans().filter{$0.isBeingTracked == false}
+    func fecthActivePlans() async -> [Plan] {
+        let plans = await planService.getPlans()
+        return plans.filter{$0.isBeingTracked == true}
     }
     
     
     
-    public func initView() {
-        todayActivities = buildTodayActivites()
-        activePlans = fecthActivePlans()
+    public func initView() async {
+        todayActivities = await buildTodayActivites()
+        activePlans = await fecthActivePlans()
     }
     
-    func buildTodayActivites() -> [TodayActivityModel] {
-        let planes : [Plan] = PlanDataset().getPlans().filter{
-            $0.isBeingTracked == true
-        }
-        
-        var activ : [TodayActivityModel] = []
+    func buildTodayActivites() async -> [TodayActivityModel] {
+        let planes : [Plan] = await fecthActivePlans()
+      
+        var active : [TodayActivityModel] = []
         
         for activePlan in planes {
             guard let element = activePlan.upcomingActivity() else {
                 continue
             }
-            
             let title = element.activity.displayName
-            
-            activ.append(
+            active.append(
                     TodayActivityModel(
                         title: title,
                         calories: element.activity.estimatedCalories?.asString ?? "",
@@ -50,7 +49,7 @@ public class PlanTrackerCurrentDayViewModel : ObservableObject{
                     )
                 )
         }
-        return activ
+        return active
     }
 }
 

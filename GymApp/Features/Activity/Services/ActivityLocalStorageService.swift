@@ -101,6 +101,7 @@ class ActivityLocalStorageService {
         }
         
         print("✅ \(activities.count) activities loaded from local storage")
+        print("Activities : -\(activities)")
         return activities
     }
     

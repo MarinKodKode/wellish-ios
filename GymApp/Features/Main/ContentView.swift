@@ -44,8 +44,8 @@ struct ContentView: View {
                 case .workoutTimer :
                     WorkoutTimerView(showWorkoutTimer: $showWorkoutTimer)
                         .environmentObject(navigationRouter)
-                case .todayWorkout(let element) :
-                    LiveTrackerActivity(planElement: element)
+                case .todayWorkout(let element, let plan) :
+                    LiveTrackerActivity(planElement: element, plan : plan)
                         .environmentObject(navigationRouter)
                 case .createPlan :
                     CreatePlanView()
@@ -57,7 +57,7 @@ struct ContentView: View {
                     GymActivityDetailView(activity: activity)
                         .environmentObject(navigationRouter)
                 case .planDetail(let plan) :
-                    PlanDetailView(plan: plan)
+                    PlanDetailView(plan: plan, vm: PlanDetailViewModel())
                         .environmentObject(navigationRouter)
                 case .exerciseDetail(let exercise) :
                     ExerciseDetailView(exercise: exercise)

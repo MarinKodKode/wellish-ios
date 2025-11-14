@@ -76,7 +76,7 @@ struct PlansView: View {
                             }
                             .padding(.horizontal)
 
-                            if !$plansVM.routines.isEmpty {
+                            if $plansVM.routines.isEmpty {
                                 Text("No routines saved yet.")
                                     .foregroundColor(.fitnessTextSecondary)
                                     .italic()

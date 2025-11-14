@@ -28,7 +28,6 @@ public final class PlansViewViewModel : ObservableObject {
     
     @MainActor
     public func prepareRoutinesToShow() async {
-        print("Trying to fetch routines ")
         self.routines = await routineService.getRoutines()
     }
     
@@ -36,4 +35,6 @@ public final class PlansViewViewModel : ObservableObject {
     public func preparePlansToShow() async {
         self.plans = await plansService.getPlans()
     }
+    
+    
 }

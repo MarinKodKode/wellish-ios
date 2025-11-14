@@ -11,6 +11,7 @@ import SwiftUI
 struct LiveTrackerActivity : View {
     
     let planElement : PlanElement
+    let plan : Plan
     
     var body : some View {
         Group {

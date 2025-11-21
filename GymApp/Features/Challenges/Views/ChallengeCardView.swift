@@ -1,101 +1,91 @@
 //
-//  Home+ChallengeCard.swift
+//  ChallengeCardView.swift
 //  Wellish
 //
-//  Created by Manuel Alejandro Hernandez Marín on 04/09/25.
+//  Created by Manuel Alejandro Hernandez Marín on 20/11/25.
 //
 
 import SwiftUI
 
-struct Home_ChallengeCard : View {
-    
-    
-    let challenge : BaseChallenge
+struct ChallengeCard: View {
+    let challenge: BaseChallenge
     @State private var imageLoadFailed = false
     
     var body: some View {
-        ZStack {
+        ZStack(alignment: .topLeading) {
             
             fusedBackgroundView
             
-            VStack {
-                HStack {
-                    Spacer()
-                    Circle()
-                        .fill(Color.white.opacity(0.1))
-                        .frame(width: 60, height: 60)
-                        .offset(x: 20, y: -20)
-                }
-                Spacer()
-                HStack {
-                    Circle()
-                        .fill(Color.white.opacity(0.08))
-                        .frame(width: 40, height: 40)
-                        .offset(x: -10, y: 15)
-                    Spacer()
-                }
-            }
-            
-            HStack(spacing: 16) {
-                // Left content
-                VStack(alignment: .leading, spacing: 12) {
-                    VStack(alignment: .leading, spacing: 4) {
-                        HStack {
-                            Image(systemName: challenge.icon)
-                                .foregroundColor(.white)
-                                .font(.system(size: 16, weight: .medium))
-                            Text(challenge.subtitle)
-                                .font(.system(size: 12, weight: .medium))
-                                .foregroundColor(.white.opacity(0.9))
-                        }
-                        
-                        Text(challenge.title)
-                            .font(.system(size: 18, weight: .bold))
-                            .foregroundColor(.white)
-                    }
+            // Content
+            VStack(alignment: .leading, spacing: 12) {
+                // Icon & Title
+                HStack(spacing: 8) {
+                    Image(systemName: challenge.icon)
+                        .font(.title3)
                     
-                    // Main number and progress
-                    VStack(alignment: .leading, spacing: 8) {
-                        HStack(alignment: .bottom, spacing: 6) {
-                            Text("\(challenge.goalValue)")
-                                .font(.system(size: 36, weight: .heavy))
-                                .foregroundColor(.white)
-                            Text(challenge.unit)
-                                .font(.system(size: 14, weight: .semibold))
-                                .foregroundColor(.white.opacity(0.9))
-                                .padding(.bottom, 6)
-                        }
+                    VStack(alignment: .leading, spacing: 2) {
+                        Text(challenge.period.displayName)
+                            .font(.caption)
+                            .opacity(0.9)
                         
-                        // Progress bar
-                        VStack(alignment: .leading, spacing: 4) {
-                            ZStack(alignment: .leading) {
-                                RoundedRectangle(cornerRadius: 6)
-                                    .fill(Color.white.opacity(0.2))
-                                    .frame(height: 6)
-                                
-                                RoundedRectangle(cornerRadius: 6)
-                                    .fill(Color.white)
-                                    .frame(width: 120 * challenge.progress, height: 6)
-                            }
-                            .frame(width: 120)
+                        Text(challenge.subtitle)
+                            .font(.headline)
+                            .fontWeight(.bold)
+                    }
+                }
+                
+                Spacer()
+                
+                // Value
+                HStack(alignment: .firstTextBaseline, spacing: 4) {
+                    Text("\(challenge.currentValue)")
+                        .font(.system(size: 48, weight: .bold, design: .rounded))
+                    
+                    Text(challenge.unit)
+                        .font(.title3)
+                        .opacity(0.9)
+                }
+                
+                // Progress Bar
+                VStack(spacing: 6) {
+                    GeometryReader { geometry in
+                        ZStack(alignment: .leading) {
+                            // Background
+                            RoundedRectangle(cornerRadius: 10)
+                                .fill(Color.white.opacity(0.3))
+                                .frame(height: 8)
                             
-                            Text("\(challenge.currentValue)")
-                                .font(.system(size: 11, weight: .medium))
-                                .foregroundColor(.white.opacity(0.8))
+                            // Progress
+                            RoundedRectangle(cornerRadius: 10)
+                                .fill(Color.white)
+                                .frame(
+                                    width: geometry.size.width * challenge.progress,
+                                    height: 8
+                                )
+                                .animation(.spring(), value: challenge.progress)
                         }
                     }
+                    .frame(height: 8)
                     
+                    HStack {
+                        Text("\(challenge.currentValue) / \(challenge.goalValue) \(challenge.unit.lowercased())")
+                            .font(.caption)
+                        
+                        Spacer()
+                        
+                        if challenge.isCompleted {
+                            Image(systemName: "checkmark.circle.fill")
+                                .font(.caption)
+                        }
+                    }
                 }
-                .frame(maxWidth: .infinity, alignment: .leading)
-                .zIndex(1)
-                
-                Spacer()
-                
             }
+            .foregroundColor(.white)
             .padding(20)
         }
-        .frame(width: UIScreen.main.bounds.width * 0.85, height: 180)
-        .clipShape(RoundedRectangle(cornerRadius: 20))
+        .frame(width: UIScreen.screenWidth * 0.80, height: 200)
+        .cornerRadius(20)
+        .shadow(color: challenge.color.opacity(0.4), radius: 10, x: 0, y: 5)
     }
     
     @ViewBuilder
@@ -173,7 +163,3 @@ struct Home_ChallengeCard : View {
         )
     }
 }
-
-//#Preview {
-//    Home_ChallengeCard(challenge: challenges[4])
-//}

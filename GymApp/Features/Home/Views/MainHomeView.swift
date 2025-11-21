@@ -16,17 +16,24 @@ struct MainHomeView: View {
             ZStack {
                 Color.fitnessBackgroundPrimary
                     .ignoresSafeArea()
-                ScrollView(.vertical, showsIndicators: false) {
-                    LazyVStack(spacing: 36) {
-                        HomeHeaderView()
-                        ChallengeSectionSubview(challenge: challenges)
-                        TodayWorkoutView()
-                        CategoriesSectionView()
-                        PopularWorkoutSectionView()
-                        TrySomethingNewSectionView()
-                            .padding(.bottom, 30)
-                    }
+                ScrollView(.vertical) {
+                    
+                    HomeHeaderView()
+                    
+                    ChallengesSection()
+                    
+                    TodayWorkoutView()
+                    
+                    CategoriesSectionView()
+                    
+                    
+                    PopularWorkoutSectionView()
+                    
+                    TrySomethingNewSectionView()
+                        .padding(.bottom, 30)
                 }
+                .scrollIndicators(.hidden)
+                .simultaneousGesture(DragGesture().onChanged({ _ in }))
             }
         }
         .navigationBarHidden(true)

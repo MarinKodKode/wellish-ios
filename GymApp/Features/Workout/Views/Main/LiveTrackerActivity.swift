@@ -10,12 +10,18 @@ import SwiftUI
 
 struct LiveTrackerActivity : View {
     
-    let planElement : PlanElement
     let plan : Plan
+    
+    @State private var activity : ActivityType
+    @State private var planElement : PlanElement
+    
+    init(plan: Plan) {
+        self.plan = plan
+    }
     
     var body : some View {
         Group {
-            switch planElement.activity {
+            switch self.activity {
             case .gym(let gymActivity):
                 GymLiveTrackerView(planElement: planElement)
             case .running(let runningActivity):
@@ -55,5 +61,26 @@ struct LiveTrackerActivity : View {
                 
             }
         }
+        .task {
+            getPlanActivity()
+            getUpcomingPlan()
+        }
+    }
+        
+    
+    
+    private func getPlanActivity() {
+        let currentPlanElement = plan.upcomingActivity()
+        guard let element  = currentPlanElement else {
+            return
+        }
+        activity = element.activity
+    }
+    
+    private func getUpcomingPlan() {
+        guard let element = plan.upcomingActivity() else {
+             return
+        }
+        planElement = element
     }
 }

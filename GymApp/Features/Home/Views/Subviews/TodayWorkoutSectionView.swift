@@ -16,7 +16,8 @@ struct TodayWorkoutView: View {
     var body: some View {
         VStack() {
             SectionBarTitle("La rutina de hoy 🔥")
-            ScrollView(.horizontal){
+            
+            ScrollView(.horizontal, showsIndicators: false){
                 HStack(alignment: .center){
                     ForEach(activities){ activity in
                             ZStack {
@@ -41,17 +42,12 @@ struct TodayWorkoutView: View {
                             .cornerRadius(12)
                             .padding(.horizontal, 16)
                             .onTapGesture {
-                                navigationRouter
-                                    .goTo(
-                                        .todayWorkout(
-                                            activity.element, plan: vm.,
-                                        )
-                                    )
+//                                navigationRouter.goTo(.todayWorkout())
                             }
                     }
                 }
             }
-            .scrollIndicators(.hidden)
+            .frame(height: UIScreen.screenHeight * 0.25)
         }
         .task {
             await self.activities = vm.buildTodayActivites()

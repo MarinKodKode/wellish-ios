@@ -11,7 +11,7 @@ import SwiftUI
 
 // MARK: - Challenge Protocol
 
-public protocol Challenge: Identifiable, Codable, Hashable {
+public protocol Challenge: Identifiable, Codable, Hashable, Decodable {
     var id: String { get }
     var title: String { get }
     var subtitle: String { get }
@@ -25,7 +25,8 @@ public protocol Challenge: Identifiable, Codable, Hashable {
     var lastUpdated: Date { get set }
     var isCompleted: Bool { get }
     var progress: Double { get }
-    
+    var coverBackground: ChallengeCoverBackground { get set }
+    var colors : [Color] { get }
     mutating func increment(by value: Int)
     mutating func decrement(by value: Int)
     mutating func reset()
@@ -100,6 +101,8 @@ public struct BaseChallenge: Challenge {
     public var startDate: Date
     public var lastUpdated: Date
     public var type: ChallengeType
+    public var imageUrl : String?
+    public var coverBackground : ChallengeCoverBackground
     
     public var isCompleted: Bool {
         currentValue >= goalValue
@@ -122,6 +125,10 @@ public struct BaseChallenge: Challenge {
         Color(hex: colorHex) ?? .blue
     }
     
+    public var colors: [Color] {
+        return coverBackground.colors
+    }
+    
     public init(
         id: String = UUID().uuidString,
         title: String,
@@ -134,7 +141,9 @@ public struct BaseChallenge: Challenge {
         period: ChallengePeriod,
         startDate: Date = Date(),
         lastUpdated: Date = Date(),
-        type: ChallengeType
+        type: ChallengeType,
+        imageUrl : String?,
+        coverColors : ChallengeCoverBackground
     ) {
         self.id = id
         self.title = title
@@ -148,6 +157,8 @@ public struct BaseChallenge: Challenge {
         self.startDate = startDate
         self.lastUpdated = lastUpdated
         self.type = type
+        self.imageUrl = imageUrl
+        self.coverBackground = coverColors
     }
     
     public mutating func increment(by value: Int = 1) {
@@ -216,7 +227,9 @@ extension BaseChallenge {
             goalValue: goal,
             unit: "Steps",
             period: .daily,
-            type: .steps
+            type: .steps,
+            imageUrl: "https://images.unsplash.com/photo-1571019613454-1cb2f99b2d8b?w=200&h=200&fit=crop&crop=faces",
+            coverColors: .stepsBlue
         )
     }
     
@@ -229,7 +242,9 @@ extension BaseChallenge {
             goalValue: goal,
             unit: "Glasses",
             period: .daily,
-            type: .water
+            type: .water,
+            imageUrl: "https://images.unsplash.com/photo-1520206183501-b80df61043c2?w=200&h=200&fit=crop",
+            coverColors: .coolMint
         )
     }
     
@@ -242,7 +257,9 @@ extension BaseChallenge {
             goalValue: goal,
             unit: "Days",
             period: .weekly,
-            type: .workout
+            type: .workout,
+            imageUrl: "https://images.unsplash.com/photo-1571019613454-1cb2f99b2d8b?w=200&h=200&fit=crop&crop=faces",
+            coverColors: .graphite
         )
     }
     
@@ -255,7 +272,9 @@ extension BaseChallenge {
             goalValue: goal,
             unit: "Hours",
             period: .daily,
-            type: .sleep
+            type: .sleep,
+            imageUrl: "https://images.unsplash.com/photo-1559827260-dc66d52bef19?w=200&h=200&fit=crop",
+            coverColors: .royalPurple
         )
     }
     
@@ -268,36 +287,10 @@ extension BaseChallenge {
             goalValue: goal,
             unit: "kcal",
             period: .daily,
-            type: .calories
+            type: .calories,
+            imageUrl: "https://images.unsplash.com/photo-1534258936925-c58bed479fcb?w=200&h=200&fit=crop",
+            coverColors: .forestGold
         )
     }
 }
 
-//// MARK: - Color Extension
-//
-//extension Color {
-//    init?(hex: String) {
-//        let hex = hex.trimmingCharacters(in: CharacterSet.alphanumerics.inverted)
-//        var int: UInt64 = 0
-//        Scanner(string: hex).scanHexInt64(&int)
-//        let a, r, g, b: UInt64
-//        switch hex.count {
-//        case 3: // RGB (12-bit)
-//            (a, r, g, b) = (255, (int >> 8) * 17, (int >> 4 & 0xF) * 17, (int & 0xF) * 17)
-//        case 6: // RGB (24-bit)
-//            (a, r, g, b) = (255, int >> 16, int >> 8 & 0xFF, int & 0xFF)
-//        case 8: // ARGB (32-bit)
-//            (a, r, g, b) = (int >> 24, int >> 16 & 0xFF, int >> 8 & 0xFF, int & 0xFF)
-//        default:
-//            return nil
-//        }
-//        
-//        self.init(
-//            .sRGB,
-//            red: Double(r) / 255,
-//            green: Double(g) / 255,
-//            blue:  Double(b) / 255,
-//            opacity: Double(a) / 255
-//        )
-//    }
-//}

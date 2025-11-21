@@ -1,19 +1,11 @@
-//
-//  Metrics.swift
-//  Wellish
-//
-//  Created by Manuel Alejandro Hernandez Marín on 25/07/25.
-//
 
 import SwiftUI
 
 struct MetricsView: View {
     
+    @ObservedObject var vm = MetricsHistoryViewModel()
+    
     @Binding var showWorkoutTimer: Bool
-//    @State private var selectedTimeframe = "Today"
-//    @State private var selectedCalorieTimeframe = "Weekly"
-//    @State private var isLoading : Bool = true
-//    @EnvironmentObject private var navigatorRouter : NavigationRouter
 
     let plans = PlanDataset().getPlans()
     
@@ -42,15 +34,4 @@ struct MetricsView: View {
         }
         .navigationBarHidden(true)
     }
-    
-   
-    
-
-}
-
-#Preview {
-    
-    var showTimer = true
-    
-    MetricsView(showWorkoutTimer: .constant(showTimer))
 }

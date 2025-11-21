@@ -20,30 +20,33 @@ struct TodayWorkoutView: View {
             ScrollView(.horizontal, showsIndicators: false){
                 HStack(alignment: .center){
                     ForEach(activities){ activity in
-                            ZStack {
+                        ZStack {
+                            
+                            BackgroundCardImage(image: activity.image)
+                            
+                            Color.black.opacity(0.4)
+                            VStack(spacing : 12) {
                                 
-                                BackgroundCardImage(image: activity.image)
+                                TodayWorkoutTitleCard(title: activity.title)
                                 
-                                Color.black.opacity(0.4)
-                                VStack(spacing : 12) {
-                                   
-                                    TodayWorkoutTitleCard(title: activity.title)
-                                    
-                                    RoutineStatisticsRowView(
-                                        calories: "\(activity.calories) KCAL",
-                                        time: "\(activity.time) mins",
-                                        exercises: "23 exercises"
-                                    )
-                                }
+                                RoutineStatisticsRowView(
+                                    calories: "\(activity.calories) KCAL",
+                                    time: "\(activity.time) mins",
+                                    exercises: "23 exercises"
+                                )
                             }
-                            .frame(
-                                width : UIScreen.screenWidth * 0.95,
-                                height: UIScreen.screenHeight * 0.25)
-                            .cornerRadius(12)
-                            .padding(.horizontal, 16)
-                            .onTapGesture {
-//                                navigationRouter.goTo(.todayWorkout())
-                            }
+                        }
+                        .frame(
+                            width : UIScreen.screenWidth * 0.95,
+                            height: UIScreen.screenHeight * 0.25)
+                        .cornerRadius(12)
+                        .padding(.horizontal, 16)
+                        .onTapGesture {
+                            navigationRouter
+                                .goTo(
+                                    .todayWorkout(plan: activity.parentPlan)
+                                )
+                        }
                     }
                 }
             }

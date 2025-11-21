@@ -45,7 +45,8 @@ public class PlanTrackerCurrentDayViewModel : ObservableObject{
                         calories: element.activity.estimatedCalories?.asString ?? "",
                         time: element.activity.estimatedDuration?.asString ?? "",
                         element: activePlan.upcomingActivity()!,
-                        image: element.activity.imageURL ?? ""
+                        image: element.activity.imageURL ?? "",
+                        parentPlan: activePlan
                     )
                 )
         }
@@ -60,4 +61,5 @@ struct TodayActivityModel : Identifiable, Codable {
     var time : String
     var element : PlanElement
     var image : String
+    var parentPlan : Plan
 }

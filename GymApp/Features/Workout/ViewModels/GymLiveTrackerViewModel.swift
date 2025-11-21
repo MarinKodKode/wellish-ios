@@ -27,7 +27,7 @@ class GymLiveTrackerViewModel: ObservableObject {
     @Published var showWorkoutComplete = false
     @Published var completedSets: [Int: [Int]] = [:]
     @Published var currentPlanElement: PlanElement?
-    @Published var currentGymActivity: GymActivity? = PlanDataset().gymTemplates[0]
+    @Published var currentGymActivity: GymActivity?
     
     @Published var currentPerformance: GymActivityPerformance?
     @Published var currentPerformedSet: PerformedRoutineSet?
@@ -176,10 +176,6 @@ class GymLiveTrackerViewModel: ObservableObject {
                 performanceService.addPerformedSet(to: &performance, set: performedSet)
                 currentPerformance = performance
             }
-            
-            print("✅ Set completado: \(performedSet.name)")
-            print("   Total reps: \(performedSet.totalReps)")
-            print("   Volumen: \(String(format: "%.1f", performedSet.totalVolumeKg)) kg")
         }
         
         var sets = completedSets[currentExerciseIndex] ?? []
@@ -275,12 +271,6 @@ class GymLiveTrackerViewModel: ObservableObject {
                 performance.calculateComparisons(plannedActivity: gymActivity)
                 performanceService.savePerformance(performance)
             }
-            
-            print("✅ Performance completado:")
-            print("   ID: \(performance.id)")
-            print("   Volumen total: \(String(format: "%.1f", performance.totalVolumeKg)) kg")
-            print("   Sets completados: \(performance.totalSetsCompleted)")
-            print("   Reps totales: \(performance.totalRepsCompleted)")
         }
         
         if var planElement = currentPlanElement {
@@ -289,8 +279,6 @@ class GymLiveTrackerViewModel: ObservableObject {
                 calories: calories,
                 performanceNotes: "Completado con \(completedSetsCount) sets"
             )
-            
-            print("✅ Workout completado: \(planElement.displayName)")
         }
         
         clearState()
@@ -371,7 +359,6 @@ class GymLiveTrackerViewModel: ObservableObject {
         guard let state = UserDefaults.standard.dictionary(forKey: "GymTrackerState"),
               let timestamp = state["timestamp"] as? TimeInterval else { return }
         
-        // Solo restaurar si fue hace menos de 1 hora
         let elapsed = Date().timeIntervalSince1970 - timestamp
         guard elapsed < 3600 else {
             clearState()
@@ -414,7 +401,7 @@ class GymLiveTrackerViewModel: ObservableObject {
     private func clearState() {
         UserDefaults.standard.removeObject(forKey: "GymTrackerState")
         UserDefaults.standard.removeObject(forKey: "CurrentPlanElement")
-        UserDefaults.standard.removeObject(forKey: "CurrentPerformance") // 🆕
+        UserDefaults.standard.removeObject(forKey: "CurrentPerformance")
     }
     
     func reset() {

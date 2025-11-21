@@ -61,6 +61,10 @@ extension View {
             }
     }
     
+    func shimmer(isAnimating: Bool) -> some View {
+        modifier(ShimmerModifier(isAnimating: isAnimating))
+    }
+    
 }
 
 

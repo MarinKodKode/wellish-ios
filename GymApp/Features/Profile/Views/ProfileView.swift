@@ -9,34 +9,28 @@
 import SwiftUI
 
 struct ProfileView: View {
+    
     @Binding var showWorkoutTimer: Bool
-
-    // Sample user data
-    @State private var username = "Zayn Pradipta"
-    @State private var email = "zayn.pradipta@example.com"
-    @State private var bio = "Lifting weights & chasing progress 🏋️‍♂️"
-    @State private var routinesCompleted = 42
-    @State private var currentStreak = 14
-    @State private var totalWorkoutTimeHours = 32
-
+    @StateObject private var vm = ProfileViewModel()
+    
     var body: some View {
         NavigationView {
             ZStack {
                 // Custom background
                 Color.fitnessBackgroundPrimary
                     .ignoresSafeArea()
-
+                
                 ScrollView {
                     VStack(spacing: 24) {
                         profileHeaderView
                         
                         achievementsSection
-
+                        
                         statsSection
-
+                        
                         quickActionsSection
-
-
+                        
+                        
                         Spacer(minLength: 30)
                     }
                     .padding(.horizontal, 20)
@@ -47,7 +41,7 @@ struct ProfileView: View {
             .navigationBarHidden(true)
         }
     }
-
+    
     // MARK: - Profile Header
     private var profileHeaderView: some View {
         VStack(alignment: .center, spacing: 16) {
@@ -66,31 +60,31 @@ struct ProfileView: View {
                 Circle()
                     .stroke(Color.primaryFitnessBlue, lineWidth: 2)
             )
-
+            
             // Name & Bio
             VStack(alignment: .center, spacing: 4) {
-                Text(username)
+                Text(vm.username)
                     .font(.title2.bold())
                     .foregroundColor(.fitnessTextPrimary)
-
-                if !bio.isEmpty {
-                    Text(bio)
+                
+                if !vm.bio.isEmpty {
+                    Text(vm.bio)
                         .font(.caption)
                         .foregroundColor(.fitnessTextSecondary)
                         .multilineTextAlignment(.center)
                         .fixedSize(horizontal: false, vertical: true)
                 }
             }
-
+            
             // Email
-            Text(email)
+            Text(vm.email)
                 .font(.caption)
                 .foregroundColor(.fitnessTextSecondary)
         }
         .frame(maxWidth: .infinity)
         .padding(.vertical)
     }
-
+    
     // MARK: - Stats Cards
     private var statsSection: some View {
         VStack(alignment: .leading, spacing: 16) {
@@ -98,68 +92,69 @@ struct ProfileView: View {
                 Text("Your Stats")
                     .font(.title3.bold())
                     .foregroundColor(.fitnessTextPrimary)
-
+                
                 Spacer()
-
+                
                 Text("Last 30 days")
                     .font(.caption)
                     .foregroundColor(.fitnessTextSecondary)
             }
-
+            
             HStack(spacing: 12) {
                 StatCard(
                     icon: "checkmark.circle.fill",
                     label: "Routines",
-                    value: "\(routinesCompleted)",
+                    value: "\(vm.routinesCompleted)",
                     iconColor: .fitnessSuccess
                 )
-
+                
                 StatCard(
                     icon: "flame.fill",
                     label: "Streak",
-                    value: "\(currentStreak)d",
+                    value: "\(vm.currentStreak)d",
                     iconColor: .energyFitnessOrange
                 )
-
+                
                 StatCard(
                     icon: "clock.fill",
                     label: "Workout Time",
-                    value: "\(totalWorkoutTimeHours)h",
+                    value: "\(vm.totalWorkoutTimeHours)h",
                     iconColor: .primaryFitnessBlue
                 )
             }
         }
     }
-
+    
     // MARK: - Quick Actions
     private var quickActionsSection: some View {
         VStack(alignment: .leading, spacing: 16) {
             Text("Quick Actions")
                 .font(.title3.bold())
                 .foregroundColor(.fitnessTextPrimary)
-
+            
             VStack(spacing: 12) {
                 ActionRow(icon: "person.circle", label: "Edit Profile", action: {})
                 ActionRow(icon: "gear", label: "Settings", action: {})
                 ActionRow(icon: "bell", label: "Notifications", action: {})
                 ActionRow(icon: "heart", label: "Favorites", action: {})
                 ActionRow(icon: "doc.text", label: "Saved Routines", action: {})
-                ActionRow(icon : "rectangle.portrait.and.arrow.forward", label : "Cerrar sesión", action: {
-                    Task{
-                        try await AuthenticationService().signOut()
-                    }
-                })
+                ActionRow(
+                    icon : "rectangle.portrait.and.arrow.forward",
+                    label : "Cerrar sesión",
+                    action: {
+                        vm.onTap_CloseSession()
+                    })
             }
         }
     }
-
+    
     // MARK: - Achievements
     private var achievementsSection: some View {
         VStack(alignment: .leading, spacing: 16) {
             Text("Achievements")
                 .font(.title3.bold())
                 .foregroundColor(.fitnessTextPrimary)
-
+            
             ScrollView(.horizontal, showsIndicators: false) {
                 HStack(spacing: 12) {
                     AchievementBadge(
@@ -201,7 +196,7 @@ private struct StatCard: View {
     let label: String
     let value: String
     let iconColor: Color
-
+    
     var body: some View {
         VStack(spacing: 8) {
             HStack {
@@ -210,14 +205,14 @@ private struct StatCard: View {
                     .foregroundColor(iconColor)
                 Spacer()
             }
-
+            
             Spacer()
-
+            
             VStack(alignment: .leading, spacing: 4) {
                 Text(label)
                     .font(.caption)
                     .foregroundColor(.fitnessTextSecondary)
-
+                
                 Text(value)
                     .font(.title3.bold())
                     .foregroundColor(.fitnessTextPrimary)
@@ -236,20 +231,20 @@ private struct ActionRow: View {
     let icon: String
     let label: String
     let action: () -> Void
-
+    
     var body: some View {
         Button(action: action) {
             HStack(spacing: 12) {
                 Image(systemName: icon)
                     .font(.system(size: 20))
                     .foregroundColor(.primaryFitnessBlue)
-
+                
                 Text(label)
                     .font(.body)
                     .foregroundColor(.fitnessTextPrimary)
-
+                
                 Spacer()
-
+                
                 Image(systemName: "chevron.right")
                     .font(.system(size: 16))
                     .foregroundColor(.fitnessTextSecondary)
@@ -264,13 +259,13 @@ private struct ActionRow: View {
 /// Preview row for a saved routine
 private struct RoutinePreviewRow: View {
     let routine: GymActivity
-
+    
     var body: some View {
         HStack(spacing: 12) {
             Image(systemName: "doc.text")
                 .font(.title2)
                 .foregroundColor(.primaryFitnessBlue)
-
+            
             VStack(alignment: .leading, spacing: 4) {
                 Text(routine.name)
                     .font(.headline)
@@ -287,9 +282,9 @@ private struct RoutinePreviewRow: View {
                         .foregroundColor(.fitnessTextSecondary)
                 }
             }
-
+            
             Spacer()
-
+            
             Image(systemName: "chevron.right")
                 .foregroundColor(.fitnessTextSecondary)
         }
@@ -305,7 +300,7 @@ private struct AchievementBadge: View {
     let title: String
     let subtitle: String
     let color: Color
-
+    
     var body: some View {
         VStack(spacing: 6) {
             Image(systemName: icon)
@@ -314,7 +309,7 @@ private struct AchievementBadge: View {
                 .frame(width: 50, height: 50)
                 .background(Color.fitnessBackgroundPrimary)
                 .clipShape(Circle())
-
+            
             VStack(alignment: .leading, spacing: 2) {
                 Text(title)
                     .font(.caption.bold())

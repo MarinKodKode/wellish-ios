@@ -17,7 +17,7 @@ struct ContentView: View {
     @EnvironmentObject var navigationRouter: NavigationRouter
     
     var body: some View {
-        
+        AlertManagerView()
         NavigationStack(path: $navigationRouter.path) {
             Group {
                 if onboardingService.shouldShowOnboarding {

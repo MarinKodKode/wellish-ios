@@ -12,12 +12,15 @@ import FirebaseCore
 struct GymAppApp: App {
     
     @StateObject private var navigationRouter = NavigationRouter()
+    let alertManager = AlertViewModel.shared
+    
     @UIApplicationDelegateAdaptor(AppDelegate.self) var delegate
     
     var body: some Scene {
         WindowGroup {
             ContentView()
                 .environmentObject(navigationRouter)
+                .environmentObject(alertManager)
         }
     }
 }

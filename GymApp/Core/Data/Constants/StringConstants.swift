@@ -100,4 +100,10 @@ public class StringConstants {
     
     //MARK: - HOME VIEW
     static let homeViewWelcomeTitle = "Bienvenido de nuevo"
+    
+    //MARK: - Alert constants
+    
+    static let atention = "Atención"
+    static let warningLoginOut = "Estás a punto de cerrar tu sesión"
+    static let cancel = "Cancelar"
 }

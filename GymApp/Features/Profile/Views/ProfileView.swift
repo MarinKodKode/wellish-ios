@@ -36,7 +36,6 @@ struct ProfileView: View {
 
                         quickActionsSection
 
-                        savedRoutinesSection
 
                         Spacer(minLength: 30)
                     }
@@ -145,42 +144,11 @@ struct ProfileView: View {
                 ActionRow(icon: "bell", label: "Notifications", action: {})
                 ActionRow(icon: "heart", label: "Favorites", action: {})
                 ActionRow(icon: "doc.text", label: "Saved Routines", action: {})
-            }
-        }
-    }
-
-    // MARK: - Saved Routines Preview
-    private var savedRoutinesSection: some View {
-        VStack(alignment: .leading, spacing: 16) {
-            HStack {
-                Text("Saved Routines")
-                    .font(.title3.bold())
-                    .foregroundColor(.fitnessTextPrimary)
-
-                Spacer()
-
-                Button("See All") {
-                    // Navigate to routines list
-                }
-                .font(.caption)
-                .foregroundColor(.primaryFitnessBlue)
-            }
-
-            if !routines.isEmpty {
-                ForEach(Array(routines.prefix(3).enumerated()), id: \.element.id) { index, routine in
-                    NavigationLink(destination: PlansRoutineDetailView(routine: routine)) {
-                        RoutinePreviewRow(routine: routine)
+                ActionRow(icon : "rectangle.portrait.and.arrow.forward", label : "Cerrar sesión", action: {
+                    Task{
+                        try await AuthenticationService().signOut()
                     }
-                }
-                .buttonStyle(PlainButtonStyle())
-            } else {
-                Text("No routines saved yet.")
-                    .font(.caption)
-                    .foregroundColor(.fitnessTextSecondary)
-                    .frame(maxWidth: .infinity)
-                    .padding()
-                    .background(Color.fitnessBackgroundSecondary)
-                    .cornerRadius(12)
+                })
             }
         }
     }

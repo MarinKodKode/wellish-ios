@@ -36,7 +36,7 @@ final class AuthViewModel: ObservableObject {
     @Published private(set) var currentUser: AuthUser?
     @Published private(set) var isAuthenticated = false
     
-    private let authService: AuthenticationServiceProtocol
+    let authService: AuthenticationServiceProtocol
     private var cancellables = Set<AnyCancellable>()
     
     // MARK: - Init

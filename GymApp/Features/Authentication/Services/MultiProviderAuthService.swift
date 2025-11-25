@@ -26,7 +26,6 @@ final class AuthService: AuthenticationServiceProtocol {
     }
     
     private init() {
-        // Observe authentication state
         auth.addStateDidChangeListener { [weak self] _, user in
             guard let self = self else { return }
             self.authStateSubject.send(user != nil ? AuthUser(from: user!) : nil)
@@ -60,11 +59,6 @@ final class AuthService: AuthenticationServiceProtocol {
     }
 
     // Not used: Facebook
-    /*
-    func signInWithFacebook() async throws -> AuthUser {
-        throw NSError(domain: "Wellish", code: 1002, userInfo: [NSLocalizedDescriptionKey: "Facebook sign-in not implemented"])
-    }
-    */
 
     func signInWithApple(_ authorization: ASAuthorization) async throws -> AuthUser {
         throw NSError(domain: "Wellish", code: 1003, userInfo: [NSLocalizedDescriptionKey: "Apple sign-in not implemented yet"])

@@ -197,9 +197,7 @@ struct SignInView: View {
                                 .frame(height: 1)
                         }
                         
-                        // Social login buttons
                         HStack(spacing: 12) {
-                            
                             Button(action: {
                                 signInWithGoogle()
                             }) {
@@ -216,21 +214,10 @@ struct SignInView: View {
                             }
                             
                             Button(action: {
-                                signInWithFacebook()
-                            }) {
-                                HStack(spacing: 8) {
-                                    Image("facebook_ic")
-                                        .resizable()
-                                        .foregroundColor(.blue)
-                                        .frame(width: 30.0, height: 30.0)
-                                }
-                            }
-                            
-                            Button(action: {
                                 signInWithApple()
                             }) {
                                 HStack(spacing: 8) {
-                                    Image("apple_ic")
+                                    Image(systemName: "apple.logo")
                                         .resizable()
                                         .foregroundColor(.primary)
                                         .frame(width: 30.0, height: 30.0)

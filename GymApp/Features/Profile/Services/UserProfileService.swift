@@ -72,4 +72,19 @@ final class UserService {
         }
         
     }
+    
+    func fetchUserData() {
+        guard let user = Auth.auth().currentUser else {
+            return
+        }
+        
+        let name = user.displayName ?? "Name not available"
+        let email = user.email ?? "Not available email"
+        let urlPhoto = user.photoURL
+        
+        if let url = urlPhoto {
+            print("Profile picture - \(url)")
+        }
+        
+    }
 }

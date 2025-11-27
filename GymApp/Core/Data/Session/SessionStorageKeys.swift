@@ -8,7 +8,7 @@
 import Foundation
 
 struct SessionStorageKeys {
-    static let clientFullName = "profile_clientFullName_key" // Es un String
+    static let clientFullName = "profile_clientFullName_key"
     static let clientEmail = "profile_clientEmail_key"
     static let photoURL = "profile_photoURL_key"
 }

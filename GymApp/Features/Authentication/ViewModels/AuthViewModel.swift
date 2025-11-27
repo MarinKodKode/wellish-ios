@@ -1,10 +1,3 @@
-//
-//  AuthViewModel.swift
-//  Wellish
-//
-//  Created by Manuel Alejandro Hernandez Marín on 06/08/25.
-//
-
 import Foundation
 import Combine
 import GoogleSignIn

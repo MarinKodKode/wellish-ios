@@ -11,7 +11,6 @@ import Combine
 
 @MainActor
 class ProfileViewModel: ObservableObject {
-    // Published properties update the UI automatically when changed
     @Published var user: UserProfile?
     @Published var isLoading: Bool = false
     @Published var errorMessage: String?

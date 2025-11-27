@@ -15,16 +15,15 @@ final class SessionDataManager : ObservableObject {
     private init(){}
     
     @AppStorage(SessionStorageKeys.clientFullName)
-    @Published var clientFullname : String = ""
+    var clientFullname : String = ""
     
     @AppStorage(SessionStorageKeys.clientEmail)
-    @Published var clientEmail: String = ""
+    var clientEmail: String = ""
     
     @AppStorage(SessionStorageKeys.photoURL)
-    @Published var photoURLString: String = ""
+    var photoURLString: String = ""
     
     var photoURL : URL? {
         URL(string: photoURLString)
     }
-    
 }

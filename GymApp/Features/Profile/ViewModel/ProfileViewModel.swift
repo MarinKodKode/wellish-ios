@@ -11,6 +11,7 @@ import Combine
 
 @MainActor
 class ProfileViewModel: ObservableObject {
+    
     @Published var user: UserProfile?
     @Published var isLoading: Bool = false
     @Published var errorMessage: String?

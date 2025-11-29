@@ -8,32 +8,42 @@ import SwiftUI
 import UIKit
 
 struct HomeHeaderView: View {
+    
+    @StateObject var vm = MainHomeViewModel()
+    
     var body: some View {
         HStack {
             HStack(spacing: 12) {
-                Image("happyman")
-                    .resizable()
-                    .scaledToFill()
-                    .frame(width: 50, height: 50)
-                    .clipShape(Circle())
+                AsyncImage(url: vm.profilePhotoURL){ phase in
+                    if let image = phase.image{
+                        image
+                            .resizable()
+                            .scaledToFill()
+                    }else if phase.error != nil {
+                        Image(systemName: "person.circle.fill")
+                            .resizable()
+                            .scaledToFit()
+                            .foregroundColor(.gray)
+                    } else{
+                        ProgressView()
+                    }
+                }
+                .frame(width: 50, height: 50)
+                .clipShape(Circle())
                 
                 VStack(alignment: .leading, spacing: 2) {
                     Text(StringConstants.homeViewWelcomeTitle)
                         .font(.system(size: 16, weight: .regular))
                         .foregroundColor(.gray)
-                    Text("Manuel")
+                    Text(vm.userName)
                         .font(.system(size: 20, weight: .bold))
                         .foregroundColor(.white)
                 }
             }
             Spacer()
-            Button(action: {}) {
-                Image(systemName: "bell")
-                    .font(.system(size: 28))
-                    .foregroundColor(.white)
-            }
         }
         .padding(.top, 36)
+        .padding(.bottom, 36)
         .padding(.horizontal, 16)
     }
 }

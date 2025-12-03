@@ -33,8 +33,8 @@ struct MainTabViewContainer: View {
                     Label("Plans", systemImage: "clipboard")
                 }
                 .tag(2)
-//            ProfileView(showWorkoutTimer: $showWorkoutTimer_true)
-            ProfileTestView()
+            ProfileView(showWorkoutTimer: $showWorkoutTimer_true)
+//            ProfileTestView()
                 .tabItem {
                     Label("Profile", systemImage: "person")
                 }

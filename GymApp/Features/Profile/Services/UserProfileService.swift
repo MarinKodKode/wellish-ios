@@ -45,7 +45,7 @@ final class UserService {
             email: user.email ?? "",
             bio: nil,
             photoURL: nil,
-            createdDate: Date(),
+            createdDate: currentDateTime(),
             lastActiveDate: Date(),
             fcmTokens: [],
             isPremium: false,
@@ -87,4 +87,50 @@ final class UserService {
         }
         
     }
+    
+    func createOrVerifyUserDocument(user : FirebaseAuth.User) async throws {
+        
+        let uid = user.uid
+        let userDocRef = db.collection("users").document(uid)
+        
+        do {
+            let document = try await userDocRef.getDocument()
+            
+            if document.exists {
+                print("User already logged.")
+                return
+            }
+        } catch let error as NSError where error.code == FirestoreErrorCode.notFound.rawValue {
+            print("Document not found. Creating user...")
+        } catch {
+            print("Error getting user docuemtn \(error.localizedDescription)")
+            throw error
+        }
+        
+        
+        let initialname = user.displayName ?? "User"
+        let initialEmail = user.email ?? ""
+        let defaulImageProfile = ""
+        
+        let newUser = UserProfile(
+            id : uid,
+            username: initialname,
+            email: initialEmail,
+            photoURL : "d01bfa64-6c54-43d2-9d7f-c95c65e20421",
+            createdDate: currentDateTime()
+        )
+        
+        do {
+            try userDocRef.setData(from : newUser) { error in
+                if let error = error {
+                    print("Error at creating user.")
+                } else {
+                    print("User created successfully.")
+                }
+            }
+        } catch let error  {
+            print("Error at creating user _ \(error)")
+        }
+    }
+    
 }

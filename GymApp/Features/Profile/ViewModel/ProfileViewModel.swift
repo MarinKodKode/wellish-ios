@@ -15,12 +15,20 @@ class ProfileViewModel: ObservableObject {
     @Published var user: UserProfile?
     @Published var isLoading: Bool = false
     @Published var errorMessage: String?
-    @Published var username = "Zayn Pradipta"
+    @Published var username = "Manuel Marin"
     @Published var email = "zayn.pradipta@example.com"
     @Published var bio = "Lifting weights & chasing progress 🏋️‍♂️"
     @Published var routinesCompleted = 42
     @Published var currentStreak = 14
     @Published var totalWorkoutTimeHours = 32
+    
+    //MARK: UI reactive variables
+    
+    @Published var displayAvatarPickerSheet : Bool = false
+    @Published var profileIconColor = Color.blue
+    @Published var selectedProfileIcon = "75ac4a89-6734-4b47-960d-f94fbc1dba96"
+    @Published var bio_description = "Lifting weights & chasing progress."
+    @Published var user_tags : [String] = ["Fitness", "Strength", "Cardio"]
     
     private let alertVM = AlertViewModel.shared
     private let userService = UserService.shared
@@ -82,14 +90,14 @@ class ProfileViewModel: ObservableObject {
     }
     
     var routinesCount: String {
-        "\(user?.stats.routinesCompleted ?? 0)"
+        "\(user?.stats?.routinesCompleted ?? 0)"
     }
     
     var streakCount: String {
-        "\(user?.stats.currentStreak ?? 0)d"
+        "\(user?.stats?.currentStreak ?? 0)d"
     }
     
     var hoursCount: String {
-        "\(user?.stats.formattedHours ?? 0)h"
+        "\(user?.stats?.formattedHours ?? 0)h"
     }
 }

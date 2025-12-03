@@ -1,9 +1,3 @@
-//
-//  MainHomeViewModel.swift
-//  Wellish
-//
-//  Created by Manuel Alejandro Hernandez Marín on 27/11/25.
-//
 
 import Foundation
 import Firebase

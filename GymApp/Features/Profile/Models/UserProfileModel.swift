@@ -15,19 +15,19 @@ struct UserProfile: Identifiable, Codable {
     var email: String
     var bio: String?
     var photoURL: String?
-    var createdDate: Date
-    var lastActiveDate: Date
-    var fcmTokens: [String]
+    var createdDate: String?
+    var lastActiveDate: Date?
+    var fcmTokens: [String]?
 
-    var isPremium: Bool
-    var onboardingCompleted: Bool
-    var version: String
+    var isPremium: Bool?
+    var onboardingCompleted: Bool?
+    var version: String?
     
   
-    var physicalProfile: PhysicalProfile
-    var preferences: UserPreferences
-    var goals: FitnessGoal
-    var stats: UserStats
+    var physicalProfile: PhysicalProfile?
+    var preferences: UserPreferences?
+    var goals: FitnessGoal?
+    var stats: UserStats?
 
 }
 

@@ -16,15 +16,16 @@ struct ProfileView: View {
     var body: some View {
         NavigationView {
             ZStack {
-                // Custom background
+                
                 Color.fitnessBackgroundPrimary
                     .ignoresSafeArea()
                 
-                ScrollView {
+                ScrollView(.vertical, showsIndicators: false) {
                     VStack(spacing: 24) {
-                        profileHeaderView
                         
-                        achievementsSection
+                        ProfileView_Header_Section()
+                        
+                        Profile_Achievements()
                         
                         statsSection
                         
@@ -37,9 +38,10 @@ struct ProfileView: View {
                     .padding(.top, 10)
                 }
             }
-            .navigationTitle("Profile")
-            .navigationBarHidden(true)
+            .navigationBarTitle("Perfil")
+            .toolbarTitleDisplayMode(.inline)
         }
+        .navigationBarHidden(true)
     }
     
     // MARK: - Profile Header
@@ -149,43 +151,7 @@ struct ProfileView: View {
     }
     
     // MARK: - Achievements
-    private var achievementsSection: some View {
-        VStack(alignment: .leading, spacing: 16) {
-            Text("Achievements")
-                .font(.title3.bold())
-                .foregroundColor(.fitnessTextPrimary)
-            
-            ScrollView(.horizontal, showsIndicators: false) {
-                HStack(spacing: 12) {
-                    AchievementBadge(
-                        icon: "trophy",
-                        title: "Week Warrior",
-                        subtitle: "7-day streak",
-                        color: .energyFitnessOrange
-                    )
-                    AchievementBadge(
-                        icon: "flame",
-                        title: "Fire Starter",
-                        subtitle: "10 routines",
-                        color: .errorFitnessRed
-                    )
-                    AchievementBadge(
-                        icon: "dumbbell",
-                        title: "Strength Pro",
-                        subtitle: "50 workouts",
-                        color: .primaryFitnessBlue
-                    )
-                    AchievementBadge(
-                        icon: "star",
-                        title: "Perfect Week",
-                        subtitle: "All plans done",
-                        color: .premiumFitnessPurple
-                    )
-                }
-                .padding(.horizontal)
-            }
-        }
-    }
+    
 }
 
 // MARK: - Subviews
@@ -295,36 +261,7 @@ private struct RoutinePreviewRow: View {
 }
 
 /// Achievement badge
-private struct AchievementBadge: View {
-    let icon: String
-    let title: String
-    let subtitle: String
-    let color: Color
-    
-    var body: some View {
-        VStack(spacing: 6) {
-            Image(systemName: icon)
-                .font(.title2)
-                .foregroundColor(color)
-                .frame(width: 50, height: 50)
-                .background(Color.fitnessBackgroundPrimary)
-                .clipShape(Circle())
-            
-            VStack(alignment: .leading, spacing: 2) {
-                Text(title)
-                    .font(.caption.bold())
-                    .foregroundColor(.fitnessTextPrimary)
-                Text(subtitle)
-                    .font(.caption)
-                    .foregroundColor(.fitnessTextSecondary)
-            }
-        }
-        .padding(12)
-        .frame(width: 100)
-        .background(Color.fitnessBackgroundSecondary)
-        .cornerRadius(16)
-    }
-}
+
 
 
 //MARK: - Previews

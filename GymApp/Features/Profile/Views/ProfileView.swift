@@ -1,10 +1,3 @@
-//
-//  ProfileView.swift
-//  Wellish
-//
-//  Created by Manuel Alejandro Hernandez Marín on 13/08/25.
-//
-
 
 import SwiftUI
 
@@ -24,17 +17,19 @@ struct ProfileView: View {
                     VStack(spacing: 24) {
                         
                         ProfileView_Header_Section()
+                            .padding(.horizontal, 20)
                         
                         Profile_Achievements()
                         
-                        statsSection
+                        SummarySectionView()
                         
                         quickActionsSection
+                            .padding(.horizontal, 20)
                         
                         
                         Spacer(minLength: 30)
                     }
-                    .padding(.horizontal, 20)
+//                    .padding(.horizontal, 20)
                     .padding(.top, 10)
                 }
             }
@@ -44,49 +39,7 @@ struct ProfileView: View {
         .navigationBarHidden(true)
     }
     
-    // MARK: - Profile Header
-    private var profileHeaderView: some View {
-        VStack(alignment: .center, spacing: 16) {
-            // Avatar
-            AsyncImage(url: URL(string: "https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?w=200&h=200&fit=crop&crop=faces")) { image in
-                image
-                    .resizable()
-                    .aspectRatio(contentMode: .fill)
-            } placeholder: {
-                Circle()
-                    .fill(Color.fitnessBackgroundSecondary)
-            }
-            .frame(width: 80, height: 80)
-            .clipShape(Circle())
-            .overlay(
-                Circle()
-                    .stroke(Color.primaryFitnessBlue, lineWidth: 2)
-            )
-            
-            // Name & Bio
-            VStack(alignment: .center, spacing: 4) {
-                Text(vm.username)
-                    .font(.title2.bold())
-                    .foregroundColor(.fitnessTextPrimary)
-                
-                if !vm.bio.isEmpty {
-                    Text(vm.bio)
-                        .font(.caption)
-                        .foregroundColor(.fitnessTextSecondary)
-                        .multilineTextAlignment(.center)
-                        .fixedSize(horizontal: false, vertical: true)
-                }
-            }
-            
-            // Email
-            Text(vm.email)
-                .font(.caption)
-                .foregroundColor(.fitnessTextSecondary)
-        }
-        .frame(maxWidth: .infinity)
-        .padding(.vertical)
-    }
-    
+
     // MARK: - Stats Cards
     private var statsSection: some View {
         VStack(alignment: .leading, spacing: 16) {
@@ -135,11 +88,9 @@ struct ProfileView: View {
                 .foregroundColor(.fitnessTextPrimary)
             
             VStack(spacing: 12) {
-                ActionRow(icon: "person.circle", label: "Edit Profile", action: {})
-                ActionRow(icon: "gear", label: "Settings", action: {})
-                ActionRow(icon: "bell", label: "Notifications", action: {})
-                ActionRow(icon: "heart", label: "Favorites", action: {})
-                ActionRow(icon: "doc.text", label: "Saved Routines", action: {})
+                ActionRow(icon: "person.circle", label: "Body Metrics", action: {})
+//                ActionRow(icon: "gear", label: "Settings", action: {})
+//                ActionRow(icon: "bell", label: "Notifications", action: {})
                 ActionRow(
                     icon : "rectangle.portrait.and.arrow.forward",
                     label : "Cerrar sesión",

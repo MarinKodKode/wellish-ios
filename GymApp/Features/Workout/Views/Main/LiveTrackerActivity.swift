@@ -23,7 +23,7 @@ struct LiveTrackerActivity : View {
                             plan : plan
                         )
                     case .running:
-                        Text("Running tracker")
+                        RunningTrackerView()
                     case .cycling:
                         Text("Cycling tracker")
                     // ... resto de casos

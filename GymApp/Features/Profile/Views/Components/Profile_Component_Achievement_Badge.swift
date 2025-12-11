@@ -1,51 +1,74 @@
-//
-//  Profile_Component_Achievement_Badge.swift
-//  Wellish
-//
-//  Created by Manuel Alejandro Hernandez Marín on 02/12/25.
-//
-
 import Foundation
 import SwiftUI
 
-struct AchievementBadge : View {
+struct AchievementBadge: View {
     let icon: String
     let title: String
     let subtitle: String
     let color: Color
     
     var body: some View {
-        VStack(spacing: 6) {
-            Image(systemName: icon)
-                .font(.system(size: 60))
-                .foregroundColor(color)
-                .frame(width: 80, height: 80)
-                .background(Color.fitnessBackgroundPrimary)
-                .clipShape(Circle())
-            
-            VStack(alignment: .leading, spacing: 2) {
-                Text(title)
-                    .font(.caption.bold())
-                    .foregroundColor(.fitnessTextPrimary)
-                Text(subtitle)
-                    .font(.caption)
-                    .foregroundColor(.fitnessTextSecondary)
+        GeometryReader { geometry in
+            ZStack(alignment: .leading) {
+                LinearGradient(
+                    colors: [
+                        Color(red: 0.4, green: 0.1, blue: 0.6),
+                        Color(red: 0.3, green: 0.5, blue: 1.0),
+                        Color.blue.opacity(0.35)
+                    ],
+                    startPoint: .topLeading,
+                    endPoint: .bottomTrailing
+                )
+                .cornerRadius(20)
+                ZStack(alignment: .trailing) {
+                    HStack(spacing: 0) {
+                        Image(systemName: icon)
+                            .font(.system(size: geometry.size.width * 0.9))
+                            .foregroundColor(.white.opacity(0.3))
+                            .frame(
+                                width: geometry.size.width * 0.5)
+                            .offset(x: -geometry.size.width * 0.15)
+                        
+                        Spacer()
+                        
+                    }
+                    
+                    VStack(alignment: .trailing, spacing: 2) {
+                        Text(title)
+                            .font(.system(size: 24, weight: .bold))
+                            .foregroundColor(.white)
+                            .multilineTextAlignment(.trailing)
+                            
+                        
+                        Text(subtitle)
+                            .font(.system(size: 16, weight: .semibold))
+                            .foregroundColor(.white.opacity(0.9))
+                            .multilineTextAlignment(.trailing)
+                            .padding(.top, 12)
+                    }
+                    .frame(width: UIScreen.screenWidth * 0.25)
+                    .padding(.vertical, 8)
+                }
+                .frame(width: geometry.size.width, height: geometry.size.height)
+                .clipped()
             }
         }
-        .padding(12)
-        .frame(width: 100)
-        .background(Color.fitnessBackgroundSecondary)
-        .cornerRadius(16)
+        .frame(width: UIScreen.main.bounds.width * 0.4, height: UIScreen.main.bounds.height * 0.22)
+
     }
 }
 
-
 #Preview {
-    AchievementBadge(
-        icon: "trophy",
-        title: "Week Warrior",
-        subtitle: "7-day streak",
-        color: .energyFitnessOrange
-    )
+    ZStack {
+        Color.gray.opacity(0.1).ignoresSafeArea()
+        
+        VStack(spacing: 30) {
+            AchievementBadge(
+                icon: "flame.fill",
+                title: "Streak Month",
+                subtitle: "30 días",
+                color: .orange
+            )
+        }
+    }
 }
-

@@ -15,6 +15,7 @@ struct Profile_Achievements : View {
             Text("Achievements")
                 .font(.title3.bold())
                 .foregroundColor(.fitnessTextPrimary)
+                .padding(.horizontal, 20)
             
             ScrollView(.horizontal, showsIndicators: false) {
                 HStack(spacing: 12) {
@@ -48,4 +49,8 @@ struct Profile_Achievements : View {
             }
         }
     }
+}
+
+#Preview {
+    Profile_Achievements()
 }

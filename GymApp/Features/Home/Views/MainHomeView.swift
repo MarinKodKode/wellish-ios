@@ -24,13 +24,15 @@ struct MainHomeView: View {
                     
                     TodayWorkoutView()
                     
-                    CategoriesSectionView()
+                    Spacer()
+                    
+//                    CategoriesSectionView()
                     
                     
-                    PopularWorkoutSectionView()
+//                    PopularWorkoutSectionView()
                     
-                    TrySomethingNewSectionView()
-                        .padding(.bottom, 30)
+//                    TrySomethingNewSectionView()
+                        
                 }
                 .scrollIndicators(.hidden)
                 .simultaneousGesture(DragGesture().onChanged({ _ in }))

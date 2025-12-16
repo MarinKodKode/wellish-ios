@@ -12,7 +12,7 @@ struct Profile_Achievements : View {
     
     var body : some View {
         VStack(alignment: .leading, spacing: 16) {
-            Text("Achievements")
+            Text("Tus logros")
                 .font(.title3.bold())
                 .foregroundColor(.fitnessTextPrimary)
                 .padding(.horizontal, 20)

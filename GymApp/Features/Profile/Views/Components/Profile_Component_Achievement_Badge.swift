@@ -12,9 +12,9 @@ struct AchievementBadge: View {
             ZStack(alignment: .leading) {
                 LinearGradient(
                     colors: [
-                        Color(red: 0.4, green: 0.1, blue: 0.6),
-                        Color(red: 0.3, green: 0.5, blue: 1.0),
-                        Color.blue.opacity(0.35)
+                        color,
+                        color,
+                        Color.white.opacity(0.65)
                     ],
                     startPoint: .topLeading,
                     endPoint: .bottomTrailing
@@ -24,7 +24,7 @@ struct AchievementBadge: View {
                     HStack(spacing: 0) {
                         Image(systemName: icon)
                             .font(.system(size: geometry.size.width * 0.9))
-                            .foregroundColor(.white.opacity(0.3))
+                            .foregroundColor(.white.opacity(0.2))
                             .frame(
                                 width: geometry.size.width * 0.5)
                             .offset(x: -geometry.size.width * 0.15)
@@ -50,11 +50,12 @@ struct AchievementBadge: View {
                     .padding(.vertical, 8)
                 }
                 .frame(width: geometry.size.width, height: geometry.size.height)
+                .background(Color.black.opacity(0.15))
+                .cornerRadius(20)
                 .clipped()
             }
         }
-        .frame(width: UIScreen.main.bounds.width * 0.4, height: UIScreen.main.bounds.height * 0.22)
-
+        .frame(width: UIScreen.main.bounds.width * 0.30, height: UIScreen.main.bounds.height * 0.15)
     }
 }
 

@@ -25,7 +25,7 @@ struct SummaryStatsCard: View {
                 )
                 
                 ZStack {
-                    Image(systemName: icon)
+                    Image("background_2")
                         .font(.system(size: geometry.size.height * 1.5))
                         .foregroundColor(.white.opacity(0.15))
                         .offset(x: geometry.size.width * 0.3, y: -geometry.size.height * 0.1)
@@ -73,48 +73,5 @@ struct SummaryStatsCard: View {
         Color(red: 0.95, green: 0.95, blue: 0.97).ignoresSafeArea()
         
         
-    }
-}
-
-struct SummarySectionView : View {
-    var body: some View {
-        VStack(spacing: 16) {
-            // Rutinas hechas
-            SummaryStatsCard(
-                icon: "dumbbell.fill",
-                title: "Rutinas completadas",
-                value: "42",
-                subtitle: "Este mes • +12 vs. anterior",
-                gradientColors: [
-                    Color(red: 0.4, green: 0.7, blue: 1.0),
-                    Color(red: 0.6, green: 0.8, blue: 1.0)
-                ]
-            )
-            
-            // Calorías quemadas
-            SummaryStatsCard(
-                icon: "flame.fill",
-                title: "Calorías quemadas",
-                value: "12,450",
-                subtitle: "Total • Promedio 415/día",
-                gradientColors: [
-                    Color(red: 1.0, green: 0.5, blue: 0.3),
-                    Color(red: 1.0, green: 0.7, blue: 0.4)
-                ]
-            )
-            
-            // Tiempo total
-            SummaryStatsCard(
-                icon: "clock.fill",
-                title: "Tiempo entrenando",
-                value: "28h 30m",
-                subtitle: "Este mes • 54 min/sesión",
-                gradientColors: [
-                    Color(red: 0.5, green: 0.8, blue: 0.6),
-                    Color(red: 0.6, green: 0.9, blue: 0.7)
-                ]
-            )
-        }
-        .padding(.horizontal, 20)
     }
 }

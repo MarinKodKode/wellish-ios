@@ -13,7 +13,7 @@ struct ProfileView_Header_Section : View {
     @StateObject private var vm = ProfileViewModel()
     
     var body: some View {
-        HStack(alignment: .top, spacing: 20) {
+        HStack(alignment: .top) {
             Button(action: {
                 vm.displayAvatarPickerSheet = true
             }) {
@@ -54,8 +54,8 @@ struct ProfileView_Header_Section : View {
                         )
                 }
             }
+            .padding(.trailing, 16)
             
-            // Bio and Tags Section
             VStack(alignment: .leading, spacing: 12) {
                 HStack {
                     Text(vm.username)
@@ -63,20 +63,6 @@ struct ProfileView_Header_Section : View {
                         .foregroundColor(.fitnessTextPrimary)
                     
                     Spacer()
-                    
-                    Button(action: {
-//                        showEditSheet = true
-                    }) {
-                        ZStack {
-                            RoundedRectangle(cornerRadius: 45)
-                                .fill(Color.fitnessTextSecondary.opacity(0.2))
-                                .frame(width: 36, height: 36)
-                            
-                            Image(systemName: "pencil")
-                                .font(.system(size: 14, weight: .semibold))
-                                .foregroundColor(.fitnessTextPrimary)
-                        }
-                    }
                 }
                 
                 Text(vm.bio_description)
@@ -91,7 +77,6 @@ struct ProfileView_Header_Section : View {
                 }
             }
         }
-        .padding(.horizontal, 20)
         .padding(.top, 40)
     }
 }

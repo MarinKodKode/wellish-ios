@@ -34,14 +34,12 @@ struct MainTabViewContainer: View {
                 }
                 .tag(2)
             ProfileView(showWorkoutTimer: $showWorkoutTimer_true)
-//            ProfileTestView()
                 .tabItem {
                     Label("Profile", systemImage: "person")
                 }
                 .tag(3)
         }
         .accentColor(.blue)
-        .preferredColorScheme(.dark)
     }
 }
 

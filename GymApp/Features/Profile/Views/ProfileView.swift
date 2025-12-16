@@ -9,10 +9,8 @@ struct ProfileView: View {
     var body: some View {
         NavigationView {
             ZStack {
-                
                 Color.fitnessBackgroundPrimary
                     .ignoresSafeArea()
-                
                 ScrollView(.vertical, showsIndicators: false) {
                     VStack(spacing: 24) {
                         
@@ -20,6 +18,7 @@ struct ProfileView: View {
                             .padding(.horizontal, 20)
                         
                         Profile_Achievements()
+                            .padding(.top, 24)
                         
                         SummarySectionView()
                         
@@ -29,17 +28,28 @@ struct ProfileView: View {
                         
                         Spacer(minLength: 30)
                     }
-//                    .padding(.horizontal, 20)
                     .padding(.top, 10)
                 }
             }
             .navigationBarTitle("Perfil")
             .toolbarTitleDisplayMode(.inline)
+            .toolbar{
+                ToolbarItem(placement: .topBarTrailing){
+                    
+                    Menu("", systemImage: "ellipsis"){
+                        Button("Editar", systemImage: "pencil"){
+                            
+                        }
+                        Button("Compartir", systemImage: "square.and.arrow.up"){
+                            
+                        }
+                    }
+                }
+            }
         }
         .navigationBarHidden(true)
     }
     
-
     // MARK: - Stats Cards
     private var statsSection: some View {
         VStack(alignment: .leading, spacing: 16) {

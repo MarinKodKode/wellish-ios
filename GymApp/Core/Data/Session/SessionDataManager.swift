@@ -23,6 +23,9 @@ final class SessionDataManager : ObservableObject {
     @AppStorage(SessionStorageKeys.photoURL)
     var photoURLString: String = ""
     
+    @AppStorage(SessionStorageKeys.photoIdentifier)
+    var photoIdentifier: String = "ffc4eef2-8db1-4a6f-a7fe-7bb02c36589b"
+    
     var photoURL : URL? {
         URL(string: photoURLString)
     }

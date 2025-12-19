@@ -10,7 +10,6 @@ struct GymLiveTrackerView: View {
     let planElement: PlanElement
     let plan : Plan
     
-    
     var body: some View {
         ZStack {
             Color.fitnessBackgroundPrimary.ignoresSafeArea()

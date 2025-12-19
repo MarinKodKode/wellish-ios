@@ -44,7 +44,7 @@ struct PlansView: View {
                             .padding(.horizontal)
 
                             if $plansVM.plans.isEmpty {
-                                Text("No plans saved yet.")
+                                Text("Aún no tienes planes")
                                     .foregroundColor(.fitnessTextSecondary)
                                     .italic()
                                     .frame(maxWidth: .infinity)
@@ -77,7 +77,7 @@ struct PlansView: View {
                             .padding(.horizontal)
 
                             if $plansVM.routines.isEmpty {
-                                Text("No routines saved yet.")
+                                Text("Aún no tienes rutinas")
                                     .foregroundColor(.fitnessTextSecondary)
                                     .italic()
                                     .frame(maxWidth: .infinity)

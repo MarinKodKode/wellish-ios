@@ -34,6 +34,9 @@ struct MainHomeView: View {
 //                    TrySomethingNewSectionView()
                         
                 }
+                .onAppear{
+                    print("\(SessionDataManager.shared.photoIdentifier)")
+                }
                 .scrollIndicators(.hidden)
                 .simultaneousGesture(DragGesture().onChanged({ _ in }))
             }

@@ -1,21 +1,15 @@
-//
-//  ProfileView_Section_Header.swift
-//  Wellish
-//
-//  Created by Manuel Alejandro Hernandez Marín on 01/12/25.
-//
-
 import Foundation
 import SwiftUI
 
 struct ProfileView_Header_Section : View {
     
     @StateObject private var vm = ProfileViewModel()
+    @Binding var showAvatarPickerSheet : Bool
     
     var body: some View {
         HStack(alignment: .top) {
             Button(action: {
-                vm.displayAvatarPickerSheet = true
+                showAvatarPickerSheet = true
             }) {
                 ZStack(alignment: .bottomTrailing) {
                     Circle()
@@ -79,9 +73,4 @@ struct ProfileView_Header_Section : View {
         }
         .padding(.top, 40)
     }
-}
-
-
-#Preview {
-    ProfileView_Header_Section()
 }

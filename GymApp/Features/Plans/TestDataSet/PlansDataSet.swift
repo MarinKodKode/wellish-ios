@@ -42,8 +42,8 @@ class PlanDataset {
                 tags: ["Pérdida de peso", "HIIT", "Cardio"],
                 thumbnailURL: "https://example.com/images/fatloss.jpg",
                 elements: [
-                    createPlanElement(day: 1, activity: gymTemplates[3]), // Full Body Express
-                    createPlanElement(day: 2, activity: runningTemplates[1]), // Intervalos Cortos (HIIT)
+                    createPlanElement(day: 1, activity: gymTemplates[3]),
+                    createPlanElement(day: 2, activity: runningTemplates[1]),
                     createPlanElement(day: 3, activity: restTemplates[0]), // Descanso Total
                     createPlanElement(day: 4, activity: gymTemplates[2]), // Resistencia E/B (Alta rep)
                     createPlanElement(day: 5, activity: runningTemplates[0], isCompleted: true), // Carrera 5K Lenta

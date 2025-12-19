@@ -15,6 +15,7 @@ struct ProfilePhotoSheet: View {
     @State private var showImagePicker = false
     
     let avatars = SystemImages.avatars
+    @StateObject private var vm = ProfileViewModel()
     
     var body: some View {
         NavigationView {
@@ -30,6 +31,7 @@ struct ProfilePhotoSheet: View {
                             Button(action: {
                                 selectedIcon = option.imageID
                                 selectedColor = option.color
+                                vm.updateProfilePicture(picture: option.imageID)
                                 dismiss()
                             }) {
                                 VStack(spacing: 8) {

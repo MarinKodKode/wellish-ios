@@ -25,7 +25,7 @@ struct SummaryStatsCard: View {
                 )
                 
                 ZStack {
-                    Image("background_2")
+                    Image(systemName: icon)
                         .font(.system(size: geometry.size.height * 1.5))
                         .foregroundColor(.white.opacity(0.15))
                         .offset(x: geometry.size.width * 0.3, y: -geometry.size.height * 0.1)
@@ -64,7 +64,7 @@ struct SummaryStatsCard: View {
             .frame(width: geometry.size.width, height: geometry.size.height)
             .cornerRadius(20)
         }
-        .frame(height: UIScreen.main.bounds.height * 0.12)
+        .frame(height: UIScreen.main.bounds.height * 0.11)
     }
 }
 

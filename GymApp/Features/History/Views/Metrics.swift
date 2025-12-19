@@ -17,10 +17,10 @@ struct MetricsView: View {
                 ScrollView {
                     VStack(spacing: 24) {
                         
-                        HeaderWidgetView()
-                            .padding(.top, 20)
+//                        HeaderWidgetView()
+//                            .padding(.top, 20)
                         
-                        Metrics_StatisticsCard(title: "Resumen")
+                        Metrics_StatisticsCard(title: "")
                             .padding(.top, 20)
                         
                         Metrics_CaloriesChartView(tapped: false , title: "Estadisticas")

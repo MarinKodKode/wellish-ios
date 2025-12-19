@@ -26,14 +26,19 @@ class ProfileViewModel: ObservableObject {
     
     @Published var displayAvatarPickerSheet : Bool = false
     @Published var profileIconColor = Color.blue
-    @Published var selectedProfileIcon = "75ac4a89-6734-4b47-960d-f94fbc1dba96"
+    @Published var selectedProfileIcon : String
     @Published var bio_description = "Lifting weights & chasing progress."
     @Published var user_tags : [String] = ["Fitness", "Strength", "Cardio"]
+    @Published var showEditSheet : Bool = false
+    @Published var showPhotoSheet : Bool = false
+
     
     private let alertVM = AlertViewModel.shared
     private let userService = UserService.shared
+    private let sessionData = SessionDataManager.shared
     
     init() {
+        selectedProfileIcon = sessionData.photoIdentifier
         Task {
             await loadData()
         }
@@ -72,6 +77,12 @@ class ProfileViewModel: ObservableObject {
                         try await AuthenticationService().signOut()
                     }
                 })
+    }
+    
+    func updateProfilePicture(picture : String) {
+        selectedProfileIcon = picture
+        sessionData.photoIdentifier = selectedProfileIcon
+        
     }
     
     // MARK: - Computed Helpers for UI

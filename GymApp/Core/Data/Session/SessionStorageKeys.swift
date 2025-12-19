@@ -11,4 +11,5 @@ struct SessionStorageKeys {
     static let clientFullName = "profile_clientFullName_key"
     static let clientEmail = "profile_clientEmail_key"
     static let photoURL = "profile_photoURL_key"
+    static let photoIdentifier = "profile_photo_identifier"
 }

@@ -14,20 +14,10 @@ struct HomeHeaderView: View {
     var body: some View {
         HStack {
             HStack(spacing: 12) {
-                AsyncImage(url: vm.profilePhotoURL){ phase in
-                    if let image = phase.image{
-                        image
-                            .resizable()
-                            .scaledToFill()
-                    }else if phase.error != nil {
-                        Image(systemName: "person.circle.fill")
-                            .resizable()
-                            .scaledToFit()
-                            .foregroundColor(.gray)
-                    } else{
-                        ProgressView()
-                    }
-                }
+                Image(SessionDataManager.shared.photoIdentifier)
+                    .resizable()
+                    .scaledToFit()
+                    .foregroundColor(.gray)
                 .frame(width: 50, height: 50)
                 .clipShape(Circle())
                 

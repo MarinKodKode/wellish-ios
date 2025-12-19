@@ -14,18 +14,17 @@ struct RunningTrackerView: View {
     @State private var isPaused = false
     @State private var isTreadmill = false
     @State private var elapsedTime: TimeInterval = 0
-    @State private var distance: Double = 0 // en km
+    @State private var distance: Double = 0
     @State private var calories: Int = 0
     @State private var showDetails = false
     
-    // Detalles adicionales
     @State private var comments = ""
     @State private var weather = "Soleado"
     @State private var terrain = "Asfalto"
     @State private var difficulty = "Moderado"
     
     @State private var region = MKCoordinateRegion(
-        center: CLLocationCoordinate2D(latitude: 19.0414, longitude: -98.2063), // Puebla
+        center: CLLocationCoordinate2D(latitude: 19.0414, longitude: -98.2063),
         span: MKCoordinateSpan(latitudeDelta: 0.01, longitudeDelta: 0.01)
     )
     
@@ -43,12 +42,10 @@ struct RunningTrackerView: View {
     
     var body: some View {
         ZStack {
-            Color(red: 0.95, green: 0.95, blue: 0.97)
-                .ignoresSafeArea()
+            Color(.backgroundPrimary)
             
             ScrollView {
                 VStack(spacing: 20) {
-                    // Header
                     HStack {
                         Text("Seguimiento de Carrera")
                             .font(.system(size: 28, weight: .bold))
@@ -92,7 +89,6 @@ struct RunningTrackerView: View {
                             .padding(.horizontal, 20)
                     }
                     
-                    // Estadísticas en tiempo real
                     VStack(spacing: 16) {
                         HStack(spacing: 12) {
                             StatCardex(
@@ -346,11 +342,11 @@ struct ModeButton: View {
                         startPoint: .leading,
                         endPoint: .trailing
                     )
-                    : LinearGradient(
-                        colors: [Color.white, Color.white],
-                        startPoint: .leading,
-                        endPoint: .trailing
-                    )
+                : LinearGradient(
+                    colors: [Color.backgroundPrimary, Color.backgroundPrimary.opacity(0.4)],
+                    startPoint: .leading,
+                    endPoint: .trailing
+                )
             )
             .cornerRadius(14)
             .shadow(color: Color.black.opacity(isSelected ? 0.1 : 0.05), radius: 4, x: 0, y: 2)
@@ -385,7 +381,7 @@ struct StatCardex: View {
         }
         .padding(16)
         .frame(maxWidth: .infinity)
-        .background(Color.white)
+        .background(Color.backgroundSecondary)
         .cornerRadius(16)
         .shadow(color: Color.black.opacity(0.05), radius: 8, x: 0, y: 4)
     }

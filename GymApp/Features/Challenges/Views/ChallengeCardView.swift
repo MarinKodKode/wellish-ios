@@ -113,7 +113,7 @@ struct ChallengeCard: View {
                                 image
                                     .resizable()
                                     .aspectRatio(contentMode: .fill)
-                                    .frame(width: geometry.size.width * 0.75) // Extended to 70% for better blending
+                                    .frame(width: geometry.size.width * 0.75)
                                     .overlay(Color.black.opacity(0.6))
                                     .clipped()
                                     .mask(

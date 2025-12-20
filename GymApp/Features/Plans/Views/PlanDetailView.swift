@@ -1,6 +1,6 @@
 import SwiftUI
 
-struct PlanDetailView: View {
+public struct PlanDetailView: View {
     
     @State var plan: Plan
     @Environment(\.dismiss) private var dismiss
@@ -8,16 +8,57 @@ struct PlanDetailView: View {
     @State var startedPlan : Bool = false
     @ObservedObject var vm: PlanDetailViewModel
     
-    var body: some View {
+    public var bodys: some View {
         ZStack {
-            // Background
-            Color(red: 0.09, green: 0.11, blue: 0.16)
+            Color.backgroundPrimary
+                .ignoresSafeArea()
+            
+            ScrollView(.vertical, showsIndicators: false) {
+                
+                headerSection
+                
+                Group {
+                    if plan.isBeingTracked {
+                        progressSection
+                            .transition(.asymmetric(
+                                insertion: .scale(scale: 0.95).combined(with: .opacity),
+                                removal: .opacity
+                            ))
+                    } else {
+                        startPlanButton
+                            .transition(.asymmetric(
+                                insertion: .scale(scale: 0.95).combined(with: .opacity),
+                                removal: .opacity
+                            ))
+                    }
+                }
+                
+                activitiesSection
+                //                    }
+                
+            }
+            .padding(.horizontal, 16)
+            .animation(.easeInOut(duration: 0.3), value: startedPlan)
+        }
+        .navigationTitle("Crear plan")
+        .navigationBarTitleDisplayMode(.large)
+        .navigationBarBackButtonHidden(true)
+        .enableNativeSwipeBack()
+        .hideKeyboardOnTap()
+    }
+    
+    public var body : some View {
+        ZStack{
+            Color.backgroundPrimary
                 .ignoresSafeArea()
             
             ScrollView {
                 VStack(spacing: 24) {
-
+                    
                     headerSection
+                        .padding(.top, 24)
+                        .padding(.horizontal, 16)
+                    
                     Group {
                         if plan.isBeingTracked {
                             progressSection
@@ -33,23 +74,19 @@ struct PlanDetailView: View {
                                 ))
                         }
                     }
+                    .padding(.horizontal, 16)
                     
                     activitiesSection
+                        .padding(.horizontal, 16)
+                    
                 }
-                .padding(.horizontal, 16)
-                .padding(.top, 20)
-                .padding(.bottom, 100)
             }
-            .animation(.easeInOut(duration: 0.3), value: startedPlan)
         }
-        .navigationTitle(plan.name)
+        .navigationTitle("activity.name")
         .navigationBarTitleDisplayMode(.large)
-        .navigationBarBackButtonHidden(true)
-        .enableNativeSwipeBack()
-        .hideKeyboardOnTap()
+        .preferredColorScheme(.dark)
     }
     
-    // MARK: - Header Section
     private var headerSection: some View {
         VStack(alignment: .leading, spacing: 12) {
             if let description = plan.description {
@@ -342,7 +379,6 @@ struct PlanElementRow: View {
                 }
             }
             
-            // Action Button
             Button(action: onToggleComplete) {
                 ZStack {
                     Circle()
@@ -356,7 +392,7 @@ struct PlanElementRow: View {
             }
         }
         .padding(12)
-        .background(Color(red: 0.12, green: 0.14, blue: 0.19))
+        .background(Color.backgroundSecondary)
         .cornerRadius(16)
     }
     

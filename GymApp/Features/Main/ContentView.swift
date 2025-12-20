@@ -73,17 +73,15 @@ struct ContentView: View {
 
         switch authenticationService.authenticationState {
         case .loading:
-            LoadingView()
-                .frame(maxWidth: .infinity, maxHeight: .infinity)
-                .background(Color(.systemBackground))
+            MainTabViewContainer(navigationPath: $navigationPath)
+                .environmentObject(authenticationService)
             
         case .authenticated:
             MainTabViewContainer(navigationPath: $navigationPath)
                 .environmentObject(authenticationService)
             
         case .unauthenticated:
-            WelcomeView()
-                .environmentObject(navigationRouter)
+            MainTabViewContainer(navigationPath: $navigationPath)
                 .environmentObject(authenticationService)
                 
         }

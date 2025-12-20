@@ -4,7 +4,6 @@ import SwiftUI
 struct Metrics_StatisticsCard : View {
     
     @ObservedObject var vm = MetricsHistoryViewModel()
-    
     let title : String
     
     init(title: String) {
@@ -22,10 +21,10 @@ struct Metrics_StatisticsCard : View {
             }
             .padding(.horizontal, 16)
             
-            if vm.statisticsSummaryLoaded {
-                statistics
-            }else{
+            if vm.completedActivitiesLoaded {
                 Metrics_StatisticsCardSkeleton()
+            }else{
+                statistics
             }
         }
     }
@@ -34,9 +33,9 @@ struct Metrics_StatisticsCard : View {
         HStack {
             StatisticCardWidget(
                 icon: "flame",
-                label: "Calorias",
-                unit: "Kcal",
-                statisticValue: "1200",
+                label: "Rutinas",
+                unit: "completadas",
+                statisticValue: "\(vm.completedSessions)",
                 color: .energyFitnessOrange
             )
             
@@ -46,7 +45,7 @@ struct Metrics_StatisticsCard : View {
                 icon: "clock",
                 label: "Tiempo",
                 unit: "Horas",
-                statisticValue: "52.5",
+                statisticValue: "\(vm.totalTimeTraining)",
                 color: .primaryBlue
             )
         }

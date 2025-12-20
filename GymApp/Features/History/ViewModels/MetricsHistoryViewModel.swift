@@ -13,7 +13,18 @@ class MetricsHistoryViewModel : ObservableObject {
     @Published var statisticsSummaryLoaded : Bool = false
     @Published var completedActivities :  [PlanElement] = []
     
+    private let performanceService : PerformanceLogService = PerformanceLogService.shared
+    
     private let planService = PlanService()
+    
+    //Metrics view variables
+    
+    @Published var completedSessions : Int = 0
+    @Published var totalTimeTraining : Int = 0
+    
+    init() {
+        loadMainSummary()
+    }
     
     func initView() async {
         await loadCompletedActivities()
@@ -34,4 +45,10 @@ class MetricsHistoryViewModel : ObservableObject {
         completedActivitiesLoaded = true
         
     }
+    
+    func loadMainSummary() {
+        completedSessions = performanceService.totalCompletedSessions
+        totalTimeTraining = performanceService.totalTrainingMinutes
+    }
+    
 }

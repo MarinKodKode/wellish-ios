@@ -47,8 +47,8 @@ struct Metrics_CompletedActivitiesView : View {
                         Spacer()
                     }
                     VStack(spacing: 16) {
-                        ForEach(vm.completedActivities) {  _ in
-                            CompletedActivityCard()
+                        ForEach(vm.completedActivities) { activity  in
+                            CompletedActivityCard(activity: activity)
                                 .onTapGesture {
                                     navigatorRouter.goTo(.summaryDay)
                                 }

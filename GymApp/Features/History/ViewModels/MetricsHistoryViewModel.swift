@@ -21,6 +21,8 @@ class MetricsHistoryViewModel : ObservableObject {
     
     @Published var completedSessions : Int = 0
     @Published var totalTimeTraining : Int = 0
+    @Published var totalCaloriesBurned : Int = 0
+    @Published var monthData: [GymActivityPerformance] = []
     
     init() {
         loadMainSummary()
@@ -49,6 +51,7 @@ class MetricsHistoryViewModel : ObservableObject {
     func loadMainSummary() {
         completedSessions = performanceService.totalCompletedSessions
         totalTimeTraining = performanceService.totalTrainingMinutes
+        totalCaloriesBurned = performanceService.totalCaloriesBurned
     }
-    
+
 }

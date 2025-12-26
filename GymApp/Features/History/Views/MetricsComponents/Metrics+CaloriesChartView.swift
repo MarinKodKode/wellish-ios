@@ -39,7 +39,7 @@ struct Metrics_CaloriesChartView: View {
 //                                value: 450,
 //                                highlighted: $tapped
 //                            )
-                            MonthCaloriesCard_Widget()
+//                            MonthCaloriesCard_Widget()
                         }
                     }
                     HStack {

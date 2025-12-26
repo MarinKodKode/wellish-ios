@@ -8,45 +8,6 @@ public struct PlanDetailView: View {
     @State var startedPlan : Bool = false
     @ObservedObject var vm: PlanDetailViewModel
     
-    public var bodys: some View {
-        ZStack {
-            Color.backgroundPrimary
-                .ignoresSafeArea()
-            
-            ScrollView(.vertical, showsIndicators: false) {
-                
-                headerSection
-                
-                Group {
-                    if plan.isBeingTracked {
-                        progressSection
-                            .transition(.asymmetric(
-                                insertion: .scale(scale: 0.95).combined(with: .opacity),
-                                removal: .opacity
-                            ))
-                    } else {
-                        startPlanButton
-                            .transition(.asymmetric(
-                                insertion: .scale(scale: 0.95).combined(with: .opacity),
-                                removal: .opacity
-                            ))
-                    }
-                }
-                
-                activitiesSection
-                //                    }
-                
-            }
-            .padding(.horizontal, 16)
-            .animation(.easeInOut(duration: 0.3), value: startedPlan)
-        }
-        .navigationTitle("Crear plan")
-        .navigationBarTitleDisplayMode(.large)
-        .navigationBarBackButtonHidden(true)
-        .enableNativeSwipeBack()
-        .hideKeyboardOnTap()
-    }
-    
     public var body : some View {
         ZStack{
             Color.backgroundPrimary
@@ -82,9 +43,19 @@ public struct PlanDetailView: View {
                 }
             }
         }
-        .navigationTitle("activity.name")
+        .navigationTitle(plan.name)
         .navigationBarTitleDisplayMode(.large)
-        .preferredColorScheme(.dark)
+        .toolbarTitleDisplayMode(.inline)
+        .toolbar{
+            ToolbarItem(placement: .topBarTrailing){
+                Menu("", systemImage: "ellipsis"){
+                    Button("Pausar", systemImage: "pause.circle"){
+                    }
+                    Button("Compartir", systemImage: "square.and.arrow.up"){
+                    }
+                }
+            }
+        }
     }
     
     private var headerSection: some View {
@@ -92,37 +63,35 @@ public struct PlanDetailView: View {
             if let description = plan.description {
                 Text(description)
                     .font(.system(size: 15))
-                    .foregroundColor(Color(white: 0.7))
+                    .foregroundColor(Color(.fitnessTextSecondary))
                     .multilineTextAlignment(.leading)
             }
             
             HStack(spacing: 16) {
-                // Duration Badge
                 HStack(spacing: 6) {
                     Image(systemName: "calendar")
                         .font(.system(size: 14))
-                        .foregroundColor(.blue)
+                        .foregroundColor(.fitnessInfo)
                     Text(plan.formattedDuration)
                         .font(.system(size: 14, weight: .medium))
-                        .foregroundColor(.white)
+                        .foregroundColor(.fitnessTextSecondary)
                 }
                 .padding(.horizontal, 12)
                 .padding(.vertical, 8)
-                .background(Color(white: 0.15))
+                .background(Color.fitnessBackgroundSecondary)
                 .cornerRadius(8)
                 
-                // Activities Badge
                 HStack(spacing: 6) {
                     Image(systemName: "figure.run")
                         .font(.system(size: 14))
                         .foregroundColor(.green)
                     Text("\(plan.totalActivities) activities")
                         .font(.system(size: 14, weight: .medium))
-                        .foregroundColor(.white)
+                        .foregroundColor(.fitnessTextSecondary)
                 }
                 .padding(.horizontal, 12)
                 .padding(.vertical, 8)
-                .background(Color(white: 0.15))
+                .background(Color.fitnessBackgroundSecondary)
                 .cornerRadius(8)
             }
         }
@@ -135,35 +104,34 @@ public struct PlanDetailView: View {
             HStack {
                 Image(systemName: "chart.bar.fill")
                     .font(.system(size: 18))
-                    .foregroundColor(.orange)
+                    .foregroundColor(.energyFitnessOrange)
                 Text("Progress Overview")
                     .font(.system(size: 20, weight: .bold))
-                    .foregroundColor(.white)
+                    .foregroundColor(.fitnessTextPrimary)
                 Spacer()
             }
             
             VStack(spacing: 12) {
-                // Progress Bar
                 HStack {
                     Text(plan.progressText)
                         .font(.system(size: 15, weight: .medium))
-                        .foregroundColor(.white)
+                        .foregroundColor(.fitnessTextPrimary)
                     Spacer()
                     Text("\(Int(plan.completionPercentage))%")
                         .font(.system(size: 15, weight: .bold))
-                        .foregroundColor(.orange)
+                        .foregroundColor(.energyFitnessOrange)
                 }
                 
                 GeometryReader { geometry in
                     ZStack(alignment: .leading) {
                         RoundedRectangle(cornerRadius: 8)
-                            .fill(Color(white: 0.15))
+                            .fill(Color.fitnessInfo)
                             .frame(height: 12)
                         
                         RoundedRectangle(cornerRadius: 8)
                             .fill(
                                 LinearGradient(
-                                    colors: [.orange, .yellow],
+                                    colors: [.energyFitnessOrange, .yellow],
                                     startPoint: .leading,
                                     endPoint: .trailing
                                 )
@@ -174,8 +142,10 @@ public struct PlanDetailView: View {
                 .frame(height: 12)
             }
             .padding(16)
-            .background(Color(red: 0.12, green: 0.14, blue: 0.19))
+            .background(Color.fitnessBackgroundSecondary)
             .cornerRadius(16)
+            .clipped()
+            .shadow(color: Color.black.opacity(0.15), radius: 2, x: 0, y: 0)
         }
     }
     
@@ -216,7 +186,7 @@ public struct PlanDetailView: View {
                     .foregroundColor(.blue)
                 Text("Plan Activities")
                     .font(.system(size: 20, weight: .bold))
-                    .foregroundColor(.white)
+                    .foregroundColor(.fitnessTextPrimary)
                 Spacer()
             }
             
@@ -290,7 +260,7 @@ struct PlanElementRow: View {
                 HStack(spacing: 8) {
                     Text(element.displayName)
                         .font(.system(size: 17, weight: .semibold))
-                        .foregroundColor(.white)
+                        .foregroundColor(.fitnessTextPrimary)
                         .lineLimit(1)
                     
                     Spacer()
@@ -394,6 +364,8 @@ struct PlanElementRow: View {
         .padding(12)
         .background(Color.backgroundSecondary)
         .cornerRadius(16)
+        .clipped()
+        .shadow(color: Color.black.opacity(0.15), radius: 2, x: 0, y: 0)
     }
     
     private var activityIcon: some View {

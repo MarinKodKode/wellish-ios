@@ -12,6 +12,9 @@ struct Metrics_CompletedActivitiesView : View {
     @EnvironmentObject  var navigatorRouter : NavigationRouter
     @ObservedObject var vm = MetricsHistoryViewModel()
     
+    @State private var selectedFilter = "Semana"
+    let options = ["Semana", "Mes", "Año"]
+    
     let title : String
     
     init(title: String) {
@@ -30,6 +33,7 @@ struct Metrics_CompletedActivitiesView : View {
                         }
                         Spacer()
                     }
+                    .padding(.top, 16)
                     
                     ForEach(0..<3 , id : \.self){ _ in
                         CompletedActivityCardSkeleton()
@@ -43,6 +47,24 @@ struct Metrics_CompletedActivitiesView : View {
                             Text(title)
                                 .font(.system(size: 22, weight: .bold))
                                 .foregroundColor(.fitnessTextPrimary)
+                            Spacer()
+                            Menu {
+                                Picker("Periodo",selection : $selectedFilter){
+                                    ForEach(options, id : \.self){ option in
+                                        Text(option).tag(option)
+                                    }
+                                }
+                            } label: {
+                                Label("\(selectedFilter)", systemImage: "calendar")
+                                    .frame(
+                                        width: UIScreen.screenWidth * 0.24,
+                                        alignment: .trailing
+                                    )
+                            }
+                            .frame(
+                                width: UIScreen.screenWidth * 0.20 ,
+                                alignment: .trailing
+                            )
                         }
                         Spacer()
                     }
@@ -54,6 +76,7 @@ struct Metrics_CompletedActivitiesView : View {
                                 }
                         }
                     }
+                    .padding(.top, 12)
                 }
                 .padding(.horizontal, 16)
             }

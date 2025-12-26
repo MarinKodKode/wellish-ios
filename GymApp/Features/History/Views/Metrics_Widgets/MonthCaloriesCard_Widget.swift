@@ -25,7 +25,7 @@ struct MonthCaloriesCard_Widget : View {
                             VStack(spacing: 0) {
                                 ForEach(0..<3) { i in
                                     HStack {
-                                        Text("\(22000 - (i * 11000))")
+                                        Text("\(220 - (i * 110))")
                                             .font(.system(size: 12, weight: .regular))
                                             .foregroundColor(.white.opacity(0.3))
                                             .frame(width: 60, alignment: .trailing)
@@ -45,8 +45,7 @@ struct MonthCaloriesCard_Widget : View {
                             
                             // Bars
                             HStack(alignment: .bottom, spacing: 2) {
-                                ForEach($
-                                        vm.monthData) { day in
+                                ForEach(1..<10) { day in
                                     VStack(spacing: 4) {
                                         Spacer()
                                         
@@ -54,14 +53,13 @@ struct MonthCaloriesCard_Widget : View {
                                             .fill(Color(hex: "A8B5E8"))
                                             .frame(
                                                 height: barHeight(
-                                                    for: day.actualCalories ?? 0,
+                                                    for: 300,
                                                     maxHeight: geometry.size.height - 50
                                                 )
                                             )
                                         
-                                        // Day label (show specific days)
-                                        if shouldShowLabel(day: day.day) {
-                                            Text(day.day)
+                                        if shouldShowLabel(day: "day") {
+                                            Text("day")
                                                 .font(.system(size: 11, weight: .medium))
                                                 .foregroundColor(.white.opacity(0.5))
                                         } else {
@@ -76,7 +74,7 @@ struct MonthCaloriesCard_Widget : View {
                             .padding(.bottom, 10)
                         }
                     }
-                    .frame(height: 300)
+                    .frame(height: 100)
                 }
                 .padding(.vertical, 30)
             }
@@ -86,7 +84,7 @@ struct MonthCaloriesCard_Widget : View {
     }
     
     private func barHeight(for calories: Int, maxHeight: CGFloat) -> CGFloat {
-        let ratio = CGFloat(calories) / CGFloat(maxCalories)
+        let ratio = CGFloat(calories) / CGFloat(100)
         return max(ratio * maxHeight, 8)
     }
     
@@ -99,12 +97,6 @@ struct MonthCaloriesCard_Widget : View {
 
 #Preview {
     MonthCaloriesCard_Widget(
-        monthData: Array(1...30).map { day in
-            DayCalories(
-                day: "\(day)",
-                calories: Int.random(in: 300...600)
-            )
-        },
         totalCalories: 12000,
         monthName: "Diciembre"
     )

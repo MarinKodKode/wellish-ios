@@ -20,12 +20,13 @@ struct MetricsView: View {
 //                        HeaderWidgetView()
 //                            .padding(.top, 20)
                         
-                        Metrics_StatisticsCard(title: "")
+                        Metrics_StatisticsCard(title: "Resumen")
                             .padding(.top, 20)
                         
-                        Metrics_CaloriesChartView(tapped: false , title: "Estadisticas")
+//                        Metrics_CaloriesChartView(tapped: false , title: "Estadisticas")
                         
                         Metrics_CompletedActivitiesView(title : "Actividades completadas")
+                            .padding(.top, 24)
                     }
                     .padding(.horizontal, 20)
                 }

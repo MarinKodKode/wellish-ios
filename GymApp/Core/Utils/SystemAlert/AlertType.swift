@@ -11,4 +11,5 @@ enum AlertType : Equatable {
     
     case none 
     case confirmLogout
+    case stopTrackingPlan
 }

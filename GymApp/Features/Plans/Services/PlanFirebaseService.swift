@@ -36,6 +36,18 @@ final class PlanFirebaseService {
     }
     
     @MainActor
+    func fetchPlans(for userId: String) async throws -> [Plan] {
+        let snapshot = try await db.collection(plansCollection)
+            .whereField("userId", isEqualTo: userId)
+            .getDocuments()
+        
+        let plans = snapshot.documents.compactMap { doc -> Plan? in
+            try? doc.data(as: Plan.self)
+        }
+        return plans
+    }
+    
+    @MainActor
     func fetchPlan(with id : String) async throws -> Plan {
         let document = try await db.collection(plansCollection)
             .document(id)

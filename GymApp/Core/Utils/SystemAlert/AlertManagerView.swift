@@ -32,6 +32,18 @@ struct AlertManagerView: View {
                                     alertVM.alertAction = nil
                                 })
                                 )
+                        case .stopTrackingPlan :
+                            Alert(
+                                title: Text(StringConstants.atention),
+                                message: Text(StringConstants.warningStopTrackingPlan),
+                                primaryButton:
+                                        .cancel(Text(StringConstants.cancel), action: {
+                                }),
+                                secondaryButton: .default(Text("Dejar plan"), action: {
+                                    alertVM.alertAction?()
+                                    alertVM.alertAction = nil
+                                })
+                                )
                         case .none:
                             Alert(
                                 title: Text("Atención"),

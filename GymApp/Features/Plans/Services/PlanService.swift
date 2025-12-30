@@ -38,6 +38,15 @@ final class PlanService : PlanServiceProtocol {
         }
     }
     
+    public func getPlans(for userId : String) async -> [Plan] {
+        do {
+            let plans = try await self.fetchPlans(for: userId)
+            return plans
+        }catch{
+            return []
+        }
+    }
+    
     public func savePlanLocally(_ plan: Plan) async -> Bool {
         return await savePlanInLocalStorage(plan)
     }
@@ -102,6 +111,33 @@ final class PlanService : PlanServiceProtocol {
             return loadedPlan
         } catch {
             return nil
+        }
+    }
+
+    internal func fetchPlans(for userId: String) async throws -> [Plan] {
+        errorMessage = nil
+        do {
+            let firebasePlans = try await firestoreService.fetchPlans(for: userId)
+            lastSyncDate = Date()
+            Task {
+                do {
+                    try await localStorageService.savePlans(firebasePlans)
+                } catch {
+                    print("Error syncing in local storage \(error)")
+                }
+            }
+            return firebasePlans
+        } catch {
+            do {
+                let localPlans = try await localStorageService.fetchPlans()
+                if !localPlans.isEmpty {
+                    errorMessage = "Showing local plans."
+                }
+                return localPlans
+            } catch {
+                errorMessage = "Could not load plans \(error.localizedDescription)"
+                return []
+            }
         }
     }
     

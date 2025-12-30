@@ -17,27 +17,26 @@ struct CreatePlanView: View {
         ZStack {
             Color.fitnessBackgroundPrimary
                 .ignoresSafeArea()
-            
             ScrollView {
-                VStack(spacing: 24) {
-                    
-                    PlanCreator_Header
-                    
-                    PlanCreator_DetailsSection
-                    
-                    PlanCreator_GoalSection
-                    
-                    PlanCreator_ConfigurationSection
-                    
-                    PlanCreator_ActivitiesSection
-                    
-                    PlanCreator_TagsSection
-                    
-                    PlanCreatorButtonsSection
-                    
-                }
-                .padding(.vertical)
+            VStack(spacing: 24) {
+                
+                PlanCreator_Header
+                
+                PlanCreator_DetailsSection
+                
+                PlanCreator_GoalSection
+                
+                PlanCreator_ConfigurationSection
+                
+                PlanCreator_ActivitiesSection
+                
+                PlanCreator_TagsSection
+                
+                PlanCreatorButtonsSection
+                
             }
+            .padding(.vertical)
+        }
             .scrollIndicators(.hidden)
             if vm.savedPlanSuccess {
                 LiveAnimationView(animationName: "saved_animation"){
@@ -60,9 +59,17 @@ struct CreatePlanView: View {
         }
         .navigationTitle("Crear plan")
         .navigationBarTitleDisplayMode(.large)
-        .navigationBarBackButtonHidden(true)
-        .enableNativeSwipeBack()
         .hideKeyboardOnTap()
         .showLoadingView(when: vm.isLoading)
+        .toolbar{
+            ToolbarItem(placement: .topBarTrailing){
+                Menu("", systemImage: "ellipsis"){
+                    Button("Pausar", systemImage: "pause.circle"){
+                    }
+                    Button("Compartir", systemImage: "square.and.arrow.up"){
+                    }
+                }
+            }
+        }
     }
 }

@@ -105,5 +105,6 @@ public class StringConstants {
     
     static let atention = "Atención"
     static let warningLoginOut = "Estás a punto de cerrar tu sesión"
+    static let warningStopTrackingPlan = "¿Deseas dejar de seguir este plan? Tu progreso se guardará."
     static let cancel = "Cancelar"
 }

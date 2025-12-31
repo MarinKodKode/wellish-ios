@@ -32,6 +32,7 @@ class AuthenticationService: ObservableObject {
     var currentUserId : String? {
         if case .authenticated(let user) = authenticationState {
             sessionManager.userId = user.uid
+            print("user ID - \(user.uid)")
             return user.uid
         }
         return nil

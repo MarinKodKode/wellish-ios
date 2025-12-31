@@ -9,6 +9,9 @@ import SwiftUI
 
 
 struct  Profile_Section_QuickActions :  View {
+    
+    @StateObject private var vm = ProfileViewModel()
+    
     var body: some View {
         VStack(alignment: .leading, spacing: 16) {
             Text("Quick Actions")
@@ -21,7 +24,7 @@ struct  Profile_Section_QuickActions :  View {
                     icon : "rectangle.portrait.and.arrow.forward",
                     label : "Cerrar sesión",
                     action: {
-//                        vm.onTap_CloseSession()
+                        vm.onTap_CloseSession()
                     })
             }
         }

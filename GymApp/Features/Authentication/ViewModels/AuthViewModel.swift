@@ -76,7 +76,14 @@ final class AuthViewModel: ObservableObject {
 
     // MARK: - Auth Methods
     func register() async {
-        guard isFormValid else { return }
+        guard isFormValid else {
+            
+            print("Emai- \(email.isValidEmail)")
+            print("Emai- \(password == confirmPassword)")
+            print("Emai- \(agreeToTerms)")
+            print("Form is not valid")
+            return
+        }
         
         await performAuthOperation {
             let user = UserRegistrationModel(

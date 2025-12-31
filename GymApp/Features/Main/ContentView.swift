@@ -71,21 +71,23 @@ struct ContentView: View {
     @ViewBuilder
     private var authenticationFlow: some View {
 
-        switch authenticationService.authenticationState {
-        case .loading:
-            MainTabViewContainer(navigationPath: $navigationPath)
-                .environmentObject(authenticationService)
-            
-        case .authenticated:
-            MainTabViewContainer(navigationPath: $navigationPath)
-                .environmentObject(authenticationService)
-            
-        case .unauthenticated:
-            MainTabViewContainer(navigationPath: $navigationPath)
-                .environmentObject(authenticationService)
+            switch authenticationService.authenticationState {
+            case .loading:
+                LoadingView()
+                    .frame(maxWidth: .infinity, maxHeight: .infinity)
+                    .background(Color(.systemBackground))
                 
+            case .authenticated:
+                MainTabViewContainer(navigationPath: $navigationPath)
+                    .environmentObject(authenticationService)
+                
+            case .unauthenticated:
+                WelcomeView()
+                    .environmentObject(navigationRouter)
+                    .environmentObject(authenticationService)
+                    
+            }
         }
-    }
 }
 
 struct ContentView_Previews: PreviewProvider {

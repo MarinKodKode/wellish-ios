@@ -7,6 +7,9 @@
 
 import SwiftUI
 import GoogleSignInSwift
+import AuthenticationServices
+import CryptoKit
+//https://wellish-ce0ed.firebaseapp.com/__/auth/handler
 
 struct SignUpView: View {
     
@@ -263,6 +266,16 @@ struct SignUpView: View {
                             }
                             .disabled(viewModel.isLoading || !viewModel.isFormValid)
                             .opacity(viewModel.isFormValid ? 1.0 : 0.6)
+                            
+                            Button {
+                                                    print("Tapped apple sign in")
+//                                                    authService.startSignInWithAppleFlow()
+                            } label: {
+                                Image("AppleButton")
+                                    .resizable()
+                                    .aspectRatio(contentMode: .fit)
+                                    .frame(width: 300)
+                            }
                             
                             if viewModel.showError, let error = viewModel.errorMessage {
                                 Text(error)

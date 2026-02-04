@@ -268,8 +268,7 @@ struct SignUpView: View {
                             .opacity(viewModel.isFormValid ? 1.0 : 0.6)
                             
                             Button {
-                                                    print("Tapped apple sign in")
-//                                                    authService.startSignInWithAppleFlow()
+                                //authService.startSignInWithAppleFlow()
                             } label: {
                                 Image("AppleButton")
                                     .resizable()

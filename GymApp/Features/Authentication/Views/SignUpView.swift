@@ -1,15 +1,7 @@
-//
-//  SignUpView.swift
-//  Wellish
-//
-//  Created by Manuel Alejandro Hernandez Marín on 28/07/25.
-//
-
 import SwiftUI
 import GoogleSignInSwift
 import AuthenticationServices
 import CryptoKit
-//https://wellish-ce0ed.firebaseapp.com/__/auth/handler
 
 struct SignUpView: View {
     

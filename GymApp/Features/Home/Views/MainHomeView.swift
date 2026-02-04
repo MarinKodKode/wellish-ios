@@ -20,7 +20,9 @@ struct MainHomeView: View {
                     
                     HomeHeaderView()
                     
-                    ChallengesSection()
+//                    ChallengesSection()
+                    
+                    AddNewChallenge()
                     
                     TodayWorkoutView()
                     

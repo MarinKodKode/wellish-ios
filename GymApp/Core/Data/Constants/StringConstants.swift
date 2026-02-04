@@ -95,8 +95,16 @@ public class StringConstants {
     static let plansAddNewPlan = "Añadir un plan"
     static let plansCustomYourOwnPlan = "Elige planes, crea rutinas, personaliza y comparte"
     static let challengesOfTheWeek = "Retos de la semana"
+    static let savePlan = "Guardar plan"
     
     
     //MARK: - HOME VIEW
     static let homeViewWelcomeTitle = "Bienvenido de nuevo"
+    
+    //MARK: - Alert constants
+    
+    static let atention = "Atención"
+    static let warningLoginOut = "Estás a punto de cerrar tu sesión"
+    static let warningStopTrackingPlan = "¿Deseas dejar de seguir este plan? Tu progreso se guardará."
+    static let cancel = "Cancelar"
 }

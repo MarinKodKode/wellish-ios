@@ -1,5 +1,6 @@
 
 import Foundation
+import SwiftUI
 
 // MARK: - Activity Protocol
 
@@ -76,10 +77,10 @@ public protocol Activity: Identifiable, Codable, Hashable {
 
 /// Categorías principales de actividades
 public enum ActivityCategory: String, Codable, CaseIterable {
-    case gym = "Gym"
+    case gym = "Workout"
     case exercise = "Ejercicio"
-    case running = "Correr"
-    case cycling = "Ciclismo"
+    case running = "Running"
+    case cycling = "Cycling"
     case swimming = "Natación"
     case walking = "Caminar"
     case hiking = "Senderismo"
@@ -143,6 +144,10 @@ public enum ActivityCategory: String, Codable, CaseIterable {
         default:
             return false
         }
+    }
+    
+    public var defaultColor: Color {
+        return Color(hex: self.defaultColorHex) ?? .primaryFitnessBlue
     }
     
     /// Indica si es una actividad de fuerza

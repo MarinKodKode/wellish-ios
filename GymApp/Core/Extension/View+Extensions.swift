@@ -61,6 +61,18 @@ extension View {
             }
     }
     
+    func shimmer(isAnimating: Bool) -> some View {
+        modifier(ShimmerModifier(isAnimating: isAnimating))
+    }
+    
+    @ViewBuilder
+    func `if`<Content: View>(_ condition: @autoclosure () -> Bool, transform: (Self) -> Content) -> some View {
+        if condition() {
+            transform(self)
+        } else {
+            self
+        }
+    }
 }
 
 

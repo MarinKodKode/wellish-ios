@@ -35,4 +35,6 @@ public final class PlansViewViewModel : ObservableObject {
     public func preparePlansToShow() async {
         self.plans = await plansService.getPlans()
     }
+    
+    
 }

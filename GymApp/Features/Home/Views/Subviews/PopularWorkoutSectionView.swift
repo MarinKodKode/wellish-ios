@@ -12,12 +12,12 @@ struct PopularWorkoutSectionView: View {
         VStack(alignment: .leading) {
             
             SectionBarTitle(title: "Rutinas Populares 🏆", icon: "arrow.right")
+            
             ZStack {
                 
                 Image("background_2")
                     .resizable()
                     .aspectRatio(contentMode: .fill)
-                    .clipped()
                 
                 Color.fitnessBackgroundPrimary.opacity(0.8)
                 
@@ -46,14 +46,13 @@ struct PopularWorkoutSectionView: View {
                 }
             }
             .frame(height: 150)
+            .clipped()                  // ✅ AÑADE ESTO
+            .contentShape(Rectangle())  // ✅ Y ESTO
             .cornerRadius(16)
-            .padding(.horizontal , 14)
-                
-            
+            .padding(.horizontal, 14)
         }
     }
 }
-
 #Preview {
     PopularWorkoutSectionView()
 }

@@ -40,7 +40,6 @@ struct MainTabViewContainer: View {
                 .tag(3)
         }
         .accentColor(.blue)
-        .preferredColorScheme(.dark)
     }
 }
 

@@ -16,6 +16,7 @@ class AuthenticationService: ObservableObject {
     @Published var authenticationState_test: AuthenticationState = .loading
     
     private var authStateHandle: AuthStateDidChangeListenerHandle?
+    private var sessionManager = SessionDataManager.shared
     
     init() {
         configureAuthStateListener()
@@ -25,6 +26,16 @@ class AuthenticationService: ObservableObject {
         if let handle = authStateHandle {
             Auth.auth().removeStateDidChangeListener(handle)
         }
+    }
+    
+    
+    var currentUserId : String? {
+        if case .authenticated(let user) = authenticationState {
+            sessionManager.userId = user.uid
+            print("user ID - \(user.uid)")
+            return user.uid
+        }
+        return nil
     }
     
     private func configureAuthStateListener() {

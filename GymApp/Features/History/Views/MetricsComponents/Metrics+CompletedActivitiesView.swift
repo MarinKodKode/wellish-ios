@@ -7,130 +7,84 @@
 
 import SwiftUI
 
-struct Metrics_CompletedActivitiesView: View {
+struct Metrics_CompletedActivitiesView : View {
     
     @EnvironmentObject  var navigatorRouter : NavigationRouter
+    @ObservedObject var vm = MetricsHistoryViewModel()
+    
+    @State private var selectedFilter = "Semana"
+    let options = ["Semana", "Mes", "Año"]
     
     let title : String
-
+    
     init(title: String) {
         self.title = title
     }
     
     var body: some View {
-        VStack(alignment: .leading, spacing: 16) {
-            HStack {
-                HStack(spacing: 8) {
-                    Text(title)
-                        .font(.system(size: 22, weight: .bold))
-                        .foregroundColor(.fitnessTextPrimary)
-                }
-                Spacer()
-            }
-            VStack(spacing: 16) {
-                ForEach(1..<5) {  _ in
-                    CompletedActivityCard()
-                        .onTapGesture {
-                            navigatorRouter.goTo(.summaryDay)
+        Group {
+            if !vm.completedActivitiesLoaded {
+                VStack(alignment: .leading, spacing: 16) {
+                    HStack {
+                        HStack(spacing: 8) {
+                            Text(title)
+                                .font(.system(size: 22, weight: .bold))
+                                .foregroundColor(.fitnessTextPrimary)
                         }
+                        Spacer()
+                    }
+                    .padding(.top, 16)
+                    
+                    ForEach(0..<3 , id : \.self){ _ in
+                        CompletedActivityCardSkeleton()
+                    }
                 }
+                .padding(.horizontal, 16)
+            }else {
+                VStack(alignment: .leading, spacing: 16) {
+                    HStack {
+                        HStack(spacing: 8) {
+                            Text(title)
+                                .font(.system(size: 22, weight: .bold))
+                                .foregroundColor(.fitnessTextPrimary)
+                            Spacer()
+                            Menu {
+                                Picker("Periodo",selection : $selectedFilter){
+                                    ForEach(options, id : \.self){ option in
+                                        Text(option).tag(option)
+                                    }
+                                }
+                            } label: {
+                                Label("\(selectedFilter)", systemImage: "calendar")
+                                    .frame(
+                                        width: UIScreen.screenWidth * 0.24,
+                                        alignment: .trailing
+                                    )
+                            }
+                            .frame(
+                                width: UIScreen.screenWidth * 0.20 ,
+                                alignment: .trailing
+                            )
+                        }
+                        Spacer()
+                    }
+                    VStack(spacing: 16) {
+                        ForEach(vm.completedActivities) { activity  in
+                            CompletedActivityCard(activity: activity)
+                                .onTapGesture {
+                                    navigatorRouter.goTo(.summaryDay)
+                                }
+                        }
+                    }
+                    .padding(.top, 12)
+                }
+                .padding(.horizontal, 16)
             }
         }
-        .padding(.horizontal, 16)
+        .task {
+            await vm.initView()
+        }
     }
+    
 }
 
-struct CompletedActivityCard : View {
-    var body: some View {
-        
-        HStack(spacing: 12) {
-            AsyncImage(url: URL(string: "https://www.menzig.fit/images/a/0000/52-h1.jpg")) { image in
-                image
-                    .resizable()
-                    .aspectRatio(contentMode: .fill)
-            } placeholder: {
-                Rectangle()
-                    .fill(Color.fitnessTextSecondary.opacity(0.2))
-                    .overlay(
-                        Image(systemName: "dumbbell.fill")
-                            .foregroundColor(.fitnessTextSecondary)
-                            .font(.title2)
-                    )
-            }
-            .frame(width: 60, height: 60)
-            .cornerRadius(12)
-            .clipped()
-            
-            VStack(alignment: .leading, spacing: 4) {
-                HStack {
-                    Text("Rutina de pecho")
-                        .font(.system(size: 16, weight: .semibold))
-                        .foregroundColor(.fitnessTextPrimary)
-                    
-                    Spacer()
-                    
-                    Text("Intermedio")
-                        .font(.system(size: 12, weight: .medium))
-                        .foregroundColor(Color.energyOrange)
-                        .padding(.horizontal, 8)
-                        .padding(.vertical, 4)
-                        .background(Color.fitnessSuccess.opacity(0.2))
-                        .cornerRadius(8)
-                }
-                
-                HStack(spacing: 16) {
-                   
-                    HStack(spacing: 4) {
-                        Image(systemName: "clock")
-                            .font(.system(size: 12))
-                            .foregroundColor(.fitnessTextSecondary)
-                        Text("59 mins.")
-                            .font(.system(size: 12, weight: .medium))
-                            .foregroundColor(.fitnessTextSecondary)
-                    }
-                    
-                    HStack(spacing: 4) {
-                        Image(systemName: "flame.fill")
-                            .font(.system(size: 12))
-                            .foregroundColor(.fitnessTextSecondary)
-                        Text("350 cal.")
-                            .font(.system(size: 12, weight: .medium))
-                            .foregroundColor(.fitnessTextSecondary)
-                    }
-                }
-                
-                HStack(spacing: 8) {
-                    ProgressView(value: 46)
-                        .progressViewStyle(
-                            LinearProgressViewStyle(
-                                tint: progressColor(for: 45)
-                            )
-                        )
-                        .scaleEffect(x: 1, y: 2)
-                    
-                    Text("\(Int(0.3 * 100))%")
-                        .font(.system(size: 12, weight: .medium))
-                        .foregroundColor(.fitnessTextSecondary)
-                }
-            }
-        }
-        .padding(16)
-        .background(
-            LinearGradient(
-                colors: [
-                    .backgroundPrimary.opacity(0.4),
-                    .fitnessInfo.opacity(0.3),
-                    .backgroundPrimary.opacity(0.4),
-                ],
-                startPoint: .topTrailing,
-                endPoint: .bottomLeading
-            )
-        )
-        .cornerRadius(16)
-        .overlay(
-            RoundedRectangle(cornerRadius: 16)
-                .stroke(Color.fitnessTextSecondary.opacity(0.1), lineWidth: 1)
-        )
-        
-    }
-}

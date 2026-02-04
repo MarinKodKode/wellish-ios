@@ -61,9 +61,17 @@ public struct RoutineCreatorView: View {
             RoutineCreatorSheet(isPresented: $showRoutineCreator)
         }
         .navigationBarTitle(StringConstants.createRoutine, displayMode: .large)
-        .navigationBarBackButtonHidden(true)
-        .enableNativeSwipeBack()
         .hideKeyboardOnTap()
         .showLoadingView(when: vm.isLoading)
+        .toolbar{
+            ToolbarItem(placement: .topBarTrailing){
+                Menu("", systemImage: "ellipsis"){
+                    Button("Pausar", systemImage: "pause.circle"){
+                    }
+                    Button("Compartir", systemImage: "square.and.arrow.up"){
+                    }
+                }
+            }
+        }
     }
 }

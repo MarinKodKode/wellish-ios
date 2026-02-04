@@ -17,16 +17,14 @@ struct ContentView: View {
     @EnvironmentObject var navigationRouter: NavigationRouter
     
     var body: some View {
-        
+        AlertManagerView()
         NavigationStack(path: $navigationRouter.path) {
             Group {
                 if onboardingService.shouldShowOnboarding {
                     OnboardingView()
                         .environmentObject(onboardingService)
                 } else {
-//                    authenticationFlow
-                    MainTabViewContainer(navigationPath: $navigationPath)
-                        .environmentObject(authenticationService)
+                    authenticationFlow
                 }
             }
             .animation(.easeInOut(duration: 0.3), value: onboardingService.shouldShowOnboarding)
@@ -44,8 +42,8 @@ struct ContentView: View {
                 case .workoutTimer :
                     WorkoutTimerView(showWorkoutTimer: $showWorkoutTimer)
                         .environmentObject(navigationRouter)
-                case .todayWorkout(let element) :
-                    LiveTrackerActivity(planElement: element)
+                case .todayWorkout(let plan) :
+                    LiveTrackerActivity(plan : plan)
                         .environmentObject(navigationRouter)
                 case .createPlan :
                     CreatePlanView()
@@ -57,7 +55,7 @@ struct ContentView: View {
                     GymActivityDetailView(activity: activity)
                         .environmentObject(navigationRouter)
                 case .planDetail(let plan) :
-                    PlanDetailView(plan: plan)
+                    PlanDetailView(plan: plan, vm: PlanDetailViewModel())
                         .environmentObject(navigationRouter)
                 case .exerciseDetail(let exercise) :
                     ExerciseDetailView(exercise: exercise)
@@ -73,23 +71,23 @@ struct ContentView: View {
     @ViewBuilder
     private var authenticationFlow: some View {
 
-        switch authenticationService.authenticationState {
-        case .loading:
-            LoadingView()
-                .frame(maxWidth: .infinity, maxHeight: .infinity)
-                .background(Color(.systemBackground))
-            
-        case .authenticated:
-            MainTabViewContainer(navigationPath: $navigationPath)
-                .environmentObject(authenticationService)
-            
-        case .unauthenticated:
-            WelcomeView()
-                .environmentObject(navigationRouter)
-                .environmentObject(authenticationService)
+            switch authenticationService.authenticationState {
+            case .loading:
+                LoadingView()
+                    .frame(maxWidth: .infinity, maxHeight: .infinity)
+                    .background(Color(.systemBackground))
                 
+            case .authenticated:
+                MainTabViewContainer(navigationPath: $navigationPath)
+                    .environmentObject(authenticationService)
+                
+            case .unauthenticated:
+                WelcomeView()
+                    .environmentObject(navigationRouter)
+                    .environmentObject(authenticationService)
+                    
+            }
         }
-    }
 }
 
 struct ContentView_Previews: PreviewProvider {

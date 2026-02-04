@@ -14,6 +14,7 @@ struct GymLiveTracker_WorkoutCompleteView: View {
     let onDismiss: () -> Void
     
     @State private var bounce = false
+    @ObservedObject private var vm = GymLiveTrackerViewModel.shared
     
     var body: some View {
         VStack(spacing: 32) {
@@ -54,7 +55,10 @@ struct GymLiveTracker_WorkoutCompleteView: View {
             }
             .padding(.horizontal, 20)
             
-            Button(action: onDismiss) {
+            
+            Button(action: {
+                onDismiss()
+            }, label: {
                 Text("Finalizar")
                     .font(.system(size: 18, weight: .semibold))
                     .foregroundColor(.white)
@@ -62,8 +66,10 @@ struct GymLiveTracker_WorkoutCompleteView: View {
                     .padding(.vertical, 16)
                     .background(Color(red: 0.6, green: 0.4, blue: 0.9))
                     .cornerRadius(16)
-            }
+            })
             .padding(.horizontal, 32)
+           
+            
         }
     }
     

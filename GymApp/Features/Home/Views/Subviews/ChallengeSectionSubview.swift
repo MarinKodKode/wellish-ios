@@ -2,7 +2,7 @@ import SwiftUI
 
 struct ChallengeSectionSubview: View {
     
-    let challenge: [ChallengeCardModel]
+//    let challenge: [ChallengeCardModel]
     
     @StateObject private var viewModel = ChallengesViewModel()
     @State private var selectedChallenge: BaseChallenge?
@@ -14,17 +14,17 @@ struct ChallengeSectionSubview: View {
             SectionBarTitle(StringConstants.challengesOfTheWeek)
             
             ScrollView(.horizontal, showsIndicators: false) {
-                HStack(spacing: 8) {
-                    ForEach(challenge.indices, id: \.self) { index in
-                        Home_ChallengeCard(challenge: challenge[index])
-                            .padding(.leading, index == 0 ? 12 : 8)
-                            .padding(.trailing, index == challenge.count - 1 ? 16 : 8)
-//                            .onTapGesture {
-//                                selectedChallenge = challenge[index]
-//                                showLogSheet = true
-//                            }
-                    }
-                }
+//                HStack(spacing: 8) {
+//                    ForEach(challenge.indices, id: \.self) { index in
+//                        Home_ChallengeCard(challenge: challenge[index])
+//                            .padding(.leading, index == 0 ? 12 : 8)
+//                            .padding(.trailing, index == challenge.count - 1 ? 16 : 8)
+////                            .onTapGesture {
+////                                selectedChallenge = challenge[index]
+////                                showLogSheet = true
+////                            }
+//                    }
+//                }
             }
             .padding(.top, 16)
         }
@@ -37,9 +37,4 @@ struct ChallengeSectionSubview: View {
             }
         }
     }
-}
-
-
-#Preview {
-    ChallengeSectionSubview(challenge: challenges)
 }

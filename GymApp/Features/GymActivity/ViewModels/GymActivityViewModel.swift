@@ -14,7 +14,7 @@ public final class GymActivityViewModel : ObservableObject {
     @Published public var errorMessage : String?
     @Published var error : ErrorWrapper?
     @Published var savedRoutines : [GymActivity] = []
-    @Published var exerciseLibrary : [Exercise] = []
+    @Published var exerciseLibrary : [Exercise] = ExerciseDataset.gymExercises
     @Published var tagsInput : String = ""
     @Published var savedSuccess : Bool = false
     
@@ -41,6 +41,7 @@ public final class GymActivityViewModel : ObservableObject {
 
     func fetchGymExercise() async{
         do {
+            print("Fetching Exercises")
             self.exerciseLibrary =  try await exerciseService
                 .fetchExercises(byCategory: .strength)
             

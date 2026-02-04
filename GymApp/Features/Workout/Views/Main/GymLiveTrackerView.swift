@@ -6,8 +6,9 @@ struct GymLiveTrackerView: View {
     @Environment(\.dismiss) private var dismiss
     
     @ObservedObject private var tracker = GymLiveTrackerViewModel.shared
-    
+    let planDetailViewModel = PlanDetailViewModel()
     let planElement: PlanElement
+    let plan : Plan
     
     var body: some View {
         ZStack {
@@ -19,7 +20,14 @@ struct GymLiveTrackerView: View {
                     caloriesBurned: tracker.caloriesBurned,
                     onDismiss: {
                         dismiss()
-                        tracker.reset()
+                        Task {
+                            await planDetailViewModel
+                                .markElementAsCompleted(
+                                    plan,
+                                    planElement
+                                )
+                        }
+//                        tracker.reset()
                     }
                 )
             } else if let gymActivity = tracker.currentGymActivity {

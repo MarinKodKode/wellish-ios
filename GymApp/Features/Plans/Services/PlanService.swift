@@ -38,12 +38,33 @@ final class PlanService : PlanServiceProtocol {
         }
     }
     
+    public func getPlans(for userId : String) async -> [Plan] {
+        do {
+            let plans = try await self.fetchPlans(for: userId)
+            return plans
+        }catch{
+            return []
+        }
+    }
+    
     public func savePlanLocally(_ plan: Plan) async -> Bool {
         return await savePlanInLocalStorage(plan)
     }
     
     public func savePlanRemote(_ plan: Plan) async -> Bool {
         return await savePlanInFirebaseStorage(plan)
+    }
+    
+    public func updatePlan(_ plan: Plan) async -> Bool {
+
+        var updatedPlan = plan
+        updatedPlan.updatedAt = Date()
+        
+        let remoteSuccess = await updatePlanRemote(updatedPlan)
+        
+        let localSuccess = await updatePlanLocally(updatedPlan)
+        
+        return remoteSuccess || localSuccess
     }
     
     //MARK: - Private methods
@@ -92,6 +113,33 @@ final class PlanService : PlanServiceProtocol {
             return nil
         }
     }
+
+    internal func fetchPlans(for userId: String) async throws -> [Plan] {
+        errorMessage = nil
+        do {
+            let firebasePlans = try await firestoreService.fetchPlans(for: userId)
+            lastSyncDate = Date()
+            Task {
+                do {
+                    try await localStorageService.savePlans(firebasePlans)
+                } catch {
+                    print("Error syncing in local storage \(error)")
+                }
+            }
+            return firebasePlans
+        } catch {
+            do {
+                let localPlans = try await localStorageService.fetchPlans()
+                if !localPlans.isEmpty {
+                    errorMessage = "Showing local plans."
+                }
+                return localPlans
+            } catch {
+                errorMessage = "Could not load plans \(error.localizedDescription)"
+                return []
+            }
+        }
+    }
     
     internal func savePlanInLocalStorage(_ plan: Plan) async -> Bool {
         do {
@@ -111,6 +159,19 @@ final class PlanService : PlanServiceProtocol {
         }catch {
             print("Could not send plan to remote server")
             //Send analytics event
+            return false
+        }
+    }
+    
+    internal func updatePlanRemote(_ plan: Plan) async -> Bool {
+        return await savePlanInFirebaseStorage(plan)
+    }
+    
+    internal func updatePlanLocally(_ plan: Plan) async -> Bool {
+        do {
+            try await localStorageService.updatePlan(plan)
+            return true
+        } catch {
             return false
         }
     }

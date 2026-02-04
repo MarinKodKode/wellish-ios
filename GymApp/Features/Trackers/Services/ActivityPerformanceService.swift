@@ -173,6 +173,14 @@ public class PerformanceLogService: ObservableObject {
     public var totalCaloriesBurned: Int {
         performanceLogs.compactMap { $0.actualCalories }.reduce(0, +)
     }
+
+    public var totalCaloriesBurnedThisMonth : Int {
+        getPerformancesThisMonth().compactMap { $0.actualCalories }.reduce(0, +)
+    }
+    
+    public var totalCaloriesBurnedThiwWeek : Int {
+        getPerformancesThisWeek().compactMap { $0.actualCalories }.reduce(0, +)
+    }
     
     /// Tiempo total de entrenamiento (en minutos)
     public var totalTrainingMinutes: Int {

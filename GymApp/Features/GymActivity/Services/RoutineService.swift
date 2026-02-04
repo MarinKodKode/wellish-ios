@@ -17,6 +17,7 @@ final class RoutineService : RoutineServiceProtocol {
     
     let firestoreService = RoutineFirestoreService()
     let localStorageService = RoutineLocalStorageService()
+    let activityLocalStorageService = ActivityLocalStorageService()
     
     
     
@@ -30,8 +31,17 @@ final class RoutineService : RoutineServiceProtocol {
     /// - Returns: An array of `Routine` objects. Returns an empty array if the fetch operation fails.
     public func getRoutines() async -> [GymActivity] {
         do {
-            let routines = try await self.fetchRoutines()
-            return routines
+            let routines = try await self.activityLocalStorageService.fetchActivities(
+                byCategory: .gym
+            )
+            let gymActivities: [GymActivity] = routines.compactMap { activityType in
+                if case .gym(let gymActivity) = activityType {
+                    return gymActivity
+                }
+                return nil
+            }
+            return gymActivities
+            
         } catch {
             return []
         }

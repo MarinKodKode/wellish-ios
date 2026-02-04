@@ -6,16 +6,23 @@
 //
 
 import SwiftUI
+import GoogleSignInSwift
+import AuthenticationServices
+import CryptoKit
+//https://wellish-ce0ed.firebaseapp.com/__/auth/handler
 
 struct SignUpView: View {
     
     @EnvironmentObject var navigationRouter: NavigationRouter
     
     @StateObject private var viewModel = AuthViewModel()
+    @StateObject private var authManager = AuthenticationManager()
     
     @State private var isPasswordVisible: Bool = false
     @State private var isConfirmPasswordVisible: Bool = false
     @State private var showPasswordMismatch: Bool = false
+    @State private var showError = false
+    @State private var errorMessage = ""
     
     var body: some View {
         GeometryReader { geometry in
@@ -260,6 +267,15 @@ struct SignUpView: View {
                             .disabled(viewModel.isLoading || !viewModel.isFormValid)
                             .opacity(viewModel.isFormValid ? 1.0 : 0.6)
                             
+                            Button {
+                                //authService.startSignInWithAppleFlow()
+                            } label: {
+                                Image("AppleButton")
+                                    .resizable()
+                                    .aspectRatio(contentMode: .fit)
+                                    .frame(width: 300)
+                            }
+                            
                             if viewModel.showError, let error = viewModel.errorMessage {
                                 Text(error)
                                     .foregroundColor(.red)
@@ -285,13 +301,9 @@ struct SignUpView: View {
                             
                             HStack(spacing: 12) {
                                 Button(action: {
-//                                    Task {
-//                                        do {
-//                                            _ = try await viewModel.authService.signInWithGoogle()
-//                                        } catch {
-//                                            print("Google sign-in failed: \(error.localizedDescription)")
-//                                        }
-//                                    }
+                                    Task {
+                                        await signUpWithGoogle()
+                                    }
                                 }) {
                                     Image("google_ic")
                                         .resizable()
@@ -302,20 +314,9 @@ struct SignUpView: View {
                                 }
                                 
                                 Button(action: {
-                                    print("Sign up with Facebook tapped")
-                                    // Implement Facebook sign-up if desired
-                                }) {
-                                    Image("facebook_ic")
-                                        .resizable()
-                                        .frame(width: 30, height: 30)
-                                        .foregroundColor(.blue)
-                                }
-                                
-                                Button(action: {
                                     print("Sign up with Apple tapped")
-                                    // Implement Apple sign-up if desired
                                 }) {
-                                    Image("apple_ic")
+                                    Image(systemName: "apple.logo")
                                         .resizable()
                                         .frame(width: 30, height: 30)
                                         .foregroundColor(.primary)
@@ -351,6 +352,15 @@ struct SignUpView: View {
     
     private func checkPasswordMatch() {
         showPasswordMismatch = !viewModel.confirmPassword.isEmpty && viewModel.password != viewModel.confirmPassword
+    }
+    
+    private func signUpWithGoogle() async {
+        do  {
+            try await authManager.signInWithGoogle()
+        }catch {
+            errorMessage = error.localizedDescription
+            showError = true
+        }
     }
 }
 

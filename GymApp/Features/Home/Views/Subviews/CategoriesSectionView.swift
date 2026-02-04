@@ -8,65 +8,69 @@
 import SwiftUI
 
 public struct  CategoriesSectionView :  View {
-        
-    public var body : some View {
-        VStack(alignment: .leading, spacing: 16) {
-          
-            SectionBarTitle(title: "Categorias 💪🏻")
+    
+    let categories : [ActivityCategory] = ActivityCategory.allCases
             
-            ScrollView(.horizontal, showsIndicators: false){
-                HStack(spacing : 12){
-                    CategorieCard()
-                    CategorieCard()
-                    CategorieCard()
-                    CategorieCard()
-                    CategorieCard()
+        public var body : some View {
+            VStack(alignment: .leading) {
+               
+                SectionBarTitle(title: "Categorias 💪🏻")
+                    .padding(.horizontal)
+               
+                ScrollView(.horizontal, showsIndicators: false) {
+                    HStack(alignment: .center, spacing: 16){
+                        ForEach(categories , id: \.self){ category in
+                            CategorieCard(category: category)
+                        }
+                    }
+                    .padding(.horizontal)
                 }
-                .padding(.horizontal, 16)
+                
             }
-            .padding(.top, 16)
         }
-
-    }
 }
 
 public struct CategorieCard : View {
+    
+    let category : ActivityCategory
         
     public var body  : some View {
-        ZStack {
+        VStack(spacing: 8){
+            HStack(alignment: .center){
+                Text(category.rawValue) // title
+                    .font(.system(size: 28))
+                    .fontWeight(.heavy)
+                    .frame(maxWidth: .infinity, alignment: .leading)
+            }
+            .padding(.leading, 16)
             
-            VStack(spacing: 8){
-                HStack(alignment: .center){
-                    Text("Home\nWorkout") // title
-                        .font(.system(size: 28))
-                        .fontWeight(.heavy)
-                        .frame(maxWidth: .infinity, alignment: .leading)
-                }
-                .padding(.leading, 16)
-                
-                HStack(alignment: .center, spacing: 20){
-                    VStack(alignment: .leading) {
-                        HStack{
-                            Text("4.9") // rating metric
-                                .font(.system(size: 14))
-                            Image(systemName: "heart.fill")
-                                .resizable()
-                                .frame(width: 14, height: 14)
-                        }
-                        Text("12 routines") // routines / exercises
-                            .font(.system(size: 12))
+            HStack(alignment: .center, spacing: 20){
+                VStack(alignment: .leading) {
+                    HStack{
+                        Text("4.9") // rating metric
+                            .font(.system(size: 14))
+                        Image(systemName: "heart.fill")
+                            .resizable()
+                            .frame(width: 14, height: 14)
                     }
-                    Image(systemName: "house.fill") // icon
-                        .resizable()
-                        .frame(width: 52, height: 52)
+                    Text("12 routines") // routines / exercises
+                        .font(.system(size: 12))
                 }
-                .padding(.leading, 16)
-                .frame(width: 160, alignment: .leading)
+                Image(systemName: category.defaultIcon) // icon
+                    .resizable()
+                    .frame(width: 52, height: 52)
             }
         }
-        .frame(width: 160, height: 160)
-        .background(LinearGradient.outdoorRunning) // gradient
+        .frame(width: UIScreen.screenWidth * 0.45, height: 160)
+        .background(
+            LinearGradient
+                .customGradient(
+                    baseColor: category.defaultColor,
+                    direction: .bottomLeadingToTopTrailing
+                )
+        )
         .cornerRadius(16)
+        .contentShape(Rectangle()) // AÑADE ESTO
     }
 }
 

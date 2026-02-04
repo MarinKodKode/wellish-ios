@@ -1,15 +1,10 @@
-//
-//  PopularPlansSection.swift
-//  Wellish
-//
-//  Created by Manuel Alejandro Hernandez Marín on 07/11/25.
-//
 
 import SwiftUI
 
 struct PopularPlansSection: View {
     
     @State var plans : [Plan] = []
+    @EnvironmentObject var navigationRouter: NavigationRouter
     
     var body: some View {
         VStack(alignment: .leading, spacing: 12) {
@@ -25,7 +20,7 @@ struct PopularPlansSection: View {
                         TemplateCard(
                             plan: plan
                         ) {
-                            print("Applied: \(plan.name)")
+                            navigationRouter.goTo(.planDetail(plan))
                         }
                         .padding(.leading, index == 0 ? 20 : 8)
                         .padding(.trailing, index == plans.count - 1 ? 20 : 8)

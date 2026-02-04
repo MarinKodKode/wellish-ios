@@ -10,7 +10,7 @@ import SwiftUI
 struct Home_ChallengeCard : View {
     
     
-    let challenge : ChallengeCardModel
+    let challenge : BaseChallenge
     @State private var imageLoadFailed = false
     
     var body: some View {
@@ -57,7 +57,7 @@ struct Home_ChallengeCard : View {
                     // Main number and progress
                     VStack(alignment: .leading, spacing: 8) {
                         HStack(alignment: .bottom, spacing: 6) {
-                            Text(challenge.mainNumber)
+                            Text("\(challenge.goalValue)")
                                 .font(.system(size: 36, weight: .heavy))
                                 .foregroundColor(.white)
                             Text(challenge.unit)
@@ -79,7 +79,7 @@ struct Home_ChallengeCard : View {
                             }
                             .frame(width: 120)
                             
-                            Text(challenge.progressText)
+                            Text("\(challenge.currentValue)")
                                 .font(.system(size: 11, weight: .medium))
                                 .foregroundColor(.white.opacity(0.8))
                         }
@@ -174,6 +174,6 @@ struct Home_ChallengeCard : View {
     }
 }
 
-#Preview {
-    Home_ChallengeCard(challenge: challenges[4])
-}
+//#Preview {
+//    Home_ChallengeCard(challenge: challenges[4])
+//}

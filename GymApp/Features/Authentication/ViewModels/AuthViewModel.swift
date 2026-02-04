@@ -1,10 +1,3 @@
-//
-//  AuthViewModel.swift
-//  Wellish
-//
-//  Created by Manuel Alejandro Hernandez Marín on 06/08/25.
-//
-
 import Foundation
 import Combine
 import GoogleSignIn
@@ -12,11 +5,11 @@ import GoogleSignInSwift
 import FirebaseAuth
 import FirebaseCore
 import Firebase
+import CryptoKit
+import AuthenticationServices
 
 @MainActor
 final class AuthViewModel: ObservableObject {
-    
-    
     
     @Published var user: User? = nil
     
@@ -26,7 +19,7 @@ final class AuthViewModel: ObservableObject {
     @Published var confirmPassword = ""
     @Published var fullName = ""
     @Published var agreeToTerms = false
-
+    
     // MARK: - UI State
     @Published var isLoading = false
     @Published var errorMessage: String?
@@ -35,10 +28,9 @@ final class AuthViewModel: ObservableObject {
     // MARK: - Auth State
     @Published private(set) var currentUser: AuthUser?
     @Published private(set) var isAuthenticated = false
-    
-    private let authService: AuthenticationServiceProtocol
+    let authService: AuthenticationServiceProtocol
     private var cancellables = Set<AnyCancellable>()
-    
+
     // MARK: - Init
     init(authService: AuthenticationServiceProtocol = AuthService.shared) {
         self.authService = authService
@@ -83,8 +75,9 @@ final class AuthViewModel: ObservableObject {
 
     // MARK: - Auth Methods
     func register() async {
-        guard isFormValid else { return }
-        
+        guard isFormValid else {
+            return
+        }
         await performAuthOperation {
             let user = UserRegistrationModel(
                 fullName: self.fullName.trimmed,
@@ -111,31 +104,33 @@ final class AuthViewModel: ObservableObject {
             try authService.signOut()
             resetForm()
         } catch {
-            Task { await handleError(AuthenticationError.unknownError(error.localizedDescription)) }
+            Task {
+                await handleError(
+                    AuthenticationError.unknownError(error.localizedDescription)
+                )
+            }
         }
     }
 
-    // MARK: - Helpers
-    private func performAuthOperation(_ operation: @escaping () async throws -> Void) async {
+    private func performAuthOperation(
+        _ operation: @escaping () async throws -> Void) async {
         isLoading = true
         errorMessage = nil
         showError = false
-
         do {
             try await operation()
         } catch let error as AuthenticationError {
             await handleError(error)
         } catch {
-            await handleError(AuthenticationError.unknownError(error.localizedDescription))
+            await handleError(AuthenticationError
+                .unknownError(error.localizedDescription))
         }
-
         isLoading = false
     }
 
     private func handleError(_ error: AuthenticationError) async {
         errorMessage = error.localizedDescription
         showError = true
-        print("Auth Error: \(error.localizedDescription)")
     }
 
     private func resetForm() {
@@ -146,4 +141,42 @@ final class AuthViewModel: ObservableObject {
         agreeToTerms = false
     }
     
+    private func randomNonceString(length: Int = 32) -> String {
+      precondition(length > 0)
+      
+        var randomBytes = [UInt8](repeating: 0, count: length)
+        
+      let errorCode = SecRandomCopyBytes(kSecRandomDefault,
+                                         randomBytes.count,
+                                         &randomBytes)
+      if errorCode != errSecSuccess {
+        fatalError(
+          """
+          Unable to generate nonce. 
+          SecRandomCopyBytes failed with OSStatus \(errorCode).
+          """
+        )
+      }
+      let charset: [Character] =
+        Array(
+            "0123456789ABCDEFGHIJKLMNOPQRSTUVXYZabcdefghijklmnopqrstuvwxyz-._"
+        )
+      let nonce = randomBytes.map { byte in
+        charset[Int(byte) % charset.count]
+      }
+
+      return String(nonce)
+    }
+    
+    @available(iOS 13, *)
+    private func sha256(_ input: String) -> String {
+      let inputData = Data(input.utf8)
+      let hashedData = SHA256.hash(data: inputData)
+      let hashString = hashedData.compactMap {
+        String(format: "%02x", $0)
+      }.joined()
+
+      return hashString
+    }
 }
+

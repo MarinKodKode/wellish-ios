@@ -9,6 +9,7 @@ import SwiftUI
 
 struct Metrics_CaloriesChartView: View {
     
+    @ObservedObject var vm = MetricsHistoryViewModel()
     @State var tapped : Bool = false
     let title : String
     
@@ -33,11 +34,12 @@ struct Metrics_CaloriesChartView: View {
                     HStack(alignment: .bottom, spacing: 8) {
                         //                        ForEach(Array(activityData.caloriesData.enumerated()), id: \.offset) { index, data in
                         ForEach(1..<8){_ in
-                            MetricBarWidgetView(
-                                label: "Mon",
-                                value: 450,
-                                highlighted: $tapped
-                            )
+//                            MetricBarWidgetView(
+//                                label: "Mon",
+//                                value: 450,
+//                                highlighted: $tapped
+//                            )
+//                            MonthCaloriesCard_Widget()
                         }
                     }
                     HStack {
@@ -46,7 +48,7 @@ struct Metrics_CaloriesChartView: View {
                             Image(systemName: "flame.fill")
                                 .font(.system(size: 14))
                                 .foregroundColor(.white)
-                            Text("6890 Kcal")
+                            Text("\(vm.totalCaloriesBurned)")
                                 .font(.system(size: 16, weight: .bold))
                                 .foregroundColor(.white)
                         }

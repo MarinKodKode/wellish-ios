@@ -1,64 +1,70 @@
-# **Wellish** 
+## **Wellish**
 
-**Rutinas de bienestar y entrenamiento, diseñadas para crear hábitos sostenibles**
+**Wellness and training routines designed to build sustainable habits**
 
-Wellish es una aplicación enfocada en el bienestar físico y la creación de rutinas saludables de forma simple, visual y flexible. El objetivo principal del proyecto es ayudar a las personas a organizar, descubrir y mantener rutinas de entrenamiento o autocuidado sin fricción ni complejidad innecesaria.
+Wellish is an application focused on physical well-being and the creation of healthy routines in a simple, visual, and flexible way.  
+ The main goal of the project is to help people organize, discover, and maintain training or self-care routines without friction or unnecessary complexity.
 
-Este proyecto nace como una iniciativa personal para explorar diseño de producto, experiencia de usuario y arquitectura limpia en una aplicación moderna, manteniendo siempre el foco en la claridad y la usabilidad.
-
----
-
-## **¿Qué problema busca resolver?**
-
-Muchas aplicaciones de fitness son:
-
-* Demasiado complejas para principiantes
-
-* Saturadas de información técnica
-
-* Poco flexibles para adaptarse a distintos estilos de vida
-
-**Wellish** propone una alternativa más humana:  
- rutinas claras, personalizables y visualmente atractivas, pensadas para acompañar al usuario en la creación de hábitos reales y sostenibles.
+This project was born as a personal initiative to explore product design, user experience, and clean architecture in a modern application, always keeping clarity and usability at the core.
 
 ---
 
-## **¿Qué ofrece Wellish?**
+## **What problem does it aim to solve?**
 
-* **Rutinas personalizadas**  
-   Creación y gestión de rutinas propias, adaptadas a objetivos y preferencias.
+Many fitness applications are:
 
-* **Plantillas predefinidas**  
-   Rutinas sugeridas para distintos niveles, ideales para empezar sin fricción.
+* Too complex for beginners
 
-* **Organización clara**  
-   Uso de categorías, etiquetas y métricas simples para entender cada rutina de un vistazo.
+* Overloaded with technical information
 
-* **Diseño limpio y moderno**  
-   Interfaz cuidada, accesible y coherente tanto en modo claro como oscuro.
+* Not flexible enough to adapt to different lifestyles
 
-* **Pensado para crecer**  
-   El proyecto está estructurado para poder escalar con nuevas funciones en el futuro.
+**Wellish offers a more human alternative:**  
+ clear, customizable, and visually appealing routines designed to support users in building real, sustainable habits.
 
 ---
 
-## **Enfoque del proyecto**
+## **What does Wellish offer?**
 
-Más allá del resultado visual, Wellish se centra en:
+### **Personalized routines**
 
-* Buenas prácticas de arquitectura
+Creation and management of custom routines tailored to individual goals and preferences.
 
-* Separación clara de responsabilidades
+### **Predefined templates**
 
-* Código legible y mantenible
+Suggested routines for different levels, ideal for getting started with minimal friction.
 
-* Atención al detalle en la experiencia de usuario
+### **Clear organization**
 
-Es un proyecto que refleja tanto **habilidades técnicas** como **criterio de producto** y **sensibilidad por el usuario final**.
+Use of categories, tags, and simple metrics to understand each routine at a glance.
+
+### **Clean and modern design**
+
+A carefully crafted interface, accessible and consistent in both light and dark modes.
+
+### **Built to grow**
+
+The project is structured to scale and support new features in the future.
 
 ---
 
-## **Estado actual**
+## **Project focus**
 
-Wellish se encuentra en desarrollo activo y se utiliza como base para experimentar, iterar y mejorar tanto el diseño como la lógica de la aplicación.
+Beyond visual results, Wellish emphasizes:
+
+* Good architectural practices
+
+* Clear separation of responsibilities
+
+* Readable and maintainable code
+
+* Attention to detail in user experience
+
+It is a project that reflects both technical skills and strong product judgment, with a clear sensitivity toward the end user.
+
+---
+
+## **Current status**
+
+Wellish is under active development and serves as a foundation to experiment, iterate, and continuously improve both the design and application logic.
 

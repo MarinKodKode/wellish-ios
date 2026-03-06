@@ -53,6 +53,7 @@ extension Color {
     // MARK: - Background Colors
     static let fitnessBackgroundPrimary = Color("BackgroundPrimary")
     static let fitnessBackgroundSecondary = Color("BackgroundSecondary")
+    static let fitnessBackgroundDark = Color("BackgroundDark")
     
     // MARK: - Semantic Colors
     static let fitnessProgress = Color.successGreen

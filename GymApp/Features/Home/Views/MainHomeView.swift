@@ -1,10 +1,3 @@
-//
-//  MainTestHomeView.swift
-//  Wellish
-//
-//  Created by Manuel Alejandro Hernandez Marín on 25/07/25.
-//
-
 import SwiftUI
 
 struct MainHomeView: View {
@@ -20,20 +13,17 @@ struct MainHomeView: View {
                     
                     HomeHeaderView()
                     
-//                    ChallengesSection()
-                    
-                    AddNewChallenge()
+                    ChallengesSection()
                     
                     TodayWorkoutView()
                     
                     Spacer()
                     
-//                    CategoriesSectionView()
+                    CategoriesSectionView()                    
                     
+                    PopularWorkoutSectionView()
                     
-//                    PopularWorkoutSectionView()
-                    
-//                    TrySomethingNewSectionView()
+                    TrySomethingNewSectionView()
                         
                 }
                 .onAppear{

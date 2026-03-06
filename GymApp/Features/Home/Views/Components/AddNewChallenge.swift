@@ -1,20 +1,10 @@
-//
-//  AddnewChallenge.swift
-//  Wellish
-//
-//  Created by Manuel Alejandro Hernandez Marín on 03/02/26.
-//
-
 import Foundation
 import SwiftUI
-
 
 struct AddNewChallenge : View {
     
     var body : some View {
-        
         VStack {
-            
             Image("strong_arm")
                 .resizable()
                 .scaledToFit()
@@ -30,6 +20,7 @@ struct AddNewChallenge : View {
         }
         .background(Color.backgroundPrimary.opacity(0.9))
         .cornerRadius(16)
+        Spacer()
     }
 }
 

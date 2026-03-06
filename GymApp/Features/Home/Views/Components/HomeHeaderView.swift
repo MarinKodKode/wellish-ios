@@ -1,16 +1,7 @@
-//
-//  HomeHeaderView.swift
-//  Wellish
-//
-//  Created by Manuel Alejandro Hernandez Marin on 20/09/25.
-//
 import SwiftUI
 import UIKit
-
 struct HomeHeaderView: View {
-    
     @StateObject var vm = MainHomeViewModel()
-    
     var body: some View {
         HStack {
             HStack(spacing: 12) {

@@ -14,6 +14,7 @@ struct MainTabViewContainer: View {
     @State private var showWorkoutTimer = false
     @State private var showWorkoutTimer_true = true
     @EnvironmentObject var navigationRouter: NavigationRouter
+    @StateObject var vm = MainHomeViewModel()
     
     var body: some View {
         TabView(selection: $selectedTab) {
@@ -21,23 +22,24 @@ struct MainTabViewContainer: View {
                 .tabItem {
                     Label("Home", systemImage: "house")
                 }
-                .tag(0)
+                .tag(vm.pageTagIndex)
             
             MetricsView(showWorkoutTimer: $showWorkoutTimer)
                 .tabItem {
                     Label("Activity", systemImage: "figure.walk")
                 }
-                .tag(1)
+                .tag(vm.pageTagIndex)
             PlansView(vm: GymActivityViewModel(), plansVM: PlansViewViewModel())
                 .tabItem {
                     Label("Plans", systemImage: "clipboard")
                 }
-                .tag(2)
+                .tag(vm.pageTagIndex)
+                .environmentObject(vm)
             ProfileView(showWorkoutTimer: $showWorkoutTimer_true)
                 .tabItem {
                     Label("Profile", systemImage: "person")
                 }
-                .tag(3)
+                .tag(vm.pageTagIndex)
         }
         .accentColor(.blue)
     }

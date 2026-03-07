@@ -12,6 +12,7 @@ import FirebaseCore
 struct GymAppApp: App {
     
     @StateObject private var navigationRouter = NavigationRouter()
+    @StateObject private var mainHomeView = MainHomeViewModel()
     let alertManager = AlertViewModel.shared
     
     @UIApplicationDelegateAdaptor(AppDelegate.self) var delegate
@@ -21,6 +22,7 @@ struct GymAppApp: App {
             ContentView()
                 .environmentObject(navigationRouter)
                 .environmentObject(alertManager)
+                .environmentObject(mainHomeView)
         }
     }
 }

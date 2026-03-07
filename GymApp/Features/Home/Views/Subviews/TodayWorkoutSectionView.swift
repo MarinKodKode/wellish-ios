@@ -15,7 +15,9 @@ struct TodayWorkoutView: View {
     
     var body: some View {
         VStack() {
+            
             SectionBarTitle("La rutina de hoy 🔥")
+                .padding(.top, 16)
             
             ScrollView(.horizontal, showsIndicators: false){
                 HStack(alignment: .center){

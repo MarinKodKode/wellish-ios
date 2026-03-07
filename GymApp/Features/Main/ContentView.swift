@@ -14,8 +14,8 @@ struct ContentView: View {
         NavigationStack(path: $navigationRouter.path) {
             Group {
                 if onboardingService.shouldShowOnboarding {
-//                    OnboardingView()
-//                        .environmentObject(onboardingService)
+                    OnboardingView()
+                        .environmentObject(onboardingService)
                     authenticationFlow
                 } else {
                     authenticationFlow
@@ -67,23 +67,17 @@ struct ContentView: View {
 
             switch authenticationService.authenticationState {
             case .loading:
-//                LoadingView()
-//                    .frame(maxWidth: .infinity, maxHeight: .infinity)
-//                    .background(Color(.systemBackground))
-                MainTabViewContainer(navigationPath: $navigationPath)
-                    .environmentObject(authenticationService)
-                
+                LoadingView()
+                    .frame(maxWidth: .infinity, maxHeight: .infinity)
+                    .background(Color(.systemBackground))
             case .authenticated:
                 MainTabViewContainer(navigationPath: $navigationPath)
                     .environmentObject(authenticationService)
                 
             case .unauthenticated:
-//                WelcomeView()
-//                    .environmentObject(navigationRouter)
-//                    .environmentObject(authenticationService)
-                MainTabViewContainer(navigationPath: $navigationPath)
+                WelcomeView()
+                    .environmentObject(navigationRouter)
                     .environmentObject(authenticationService)
-                    
             }
         }
 }

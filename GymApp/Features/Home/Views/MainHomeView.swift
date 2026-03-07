@@ -7,15 +7,18 @@ struct MainHomeView: View {
     var body: some View {
         NavigationView {
             ZStack {
-                Color.fitnessBackgroundPrimary
-                    .ignoresSafeArea()
+                
+                Color.backgroundDark.ignoresSafeArea()
+                
                 ScrollView(.vertical) {
                     
                     HomeHeaderView()
                     
                     ChallengesSection()
                     
-                    TodayWorkoutView()
+//                    TodayWorkoutView()
+                    
+                    EmptyRoutineView()
                     
                     Spacer()
                     
@@ -25,9 +28,6 @@ struct MainHomeView: View {
                     
                     TrySomethingNewSectionView()
                         
-                }
-                .onAppear{
-                    print("\(SessionDataManager.shared.photoIdentifier)")
                 }
                 .scrollIndicators(.hidden)
                 .simultaneousGesture(DragGesture().onChanged({ _ in }))

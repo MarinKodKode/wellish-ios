@@ -17,7 +17,7 @@ struct ExerciseSetCard: View {
             HStack {
                 Button(action: {
                     navigationRouter
-                        .goTo(.exerciseDetail(Exercise.dumbbellCurlExample))
+                        .goTo(.exerciseDetail(Exercise.example))
                 }, label: {
                     Text(set.exercise.name)
                         .font(.system(size: 17, weight: .semibold))

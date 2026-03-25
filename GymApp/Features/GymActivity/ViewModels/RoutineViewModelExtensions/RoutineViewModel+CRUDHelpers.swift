@@ -35,8 +35,10 @@ extension GymActivityViewModel {
         gymActivity.updatedAt = Date()
         
         if gymActivity.musclesWorked?.isEmpty ?? true {
-            let allMuscles = Set(gymActivity.sets.flatMap{ $0.exercise.muscles })
-            gymActivity.musclesWorked = Array(allMuscles).sorted()
+            let allMuscles = Set(
+                gymActivity.sets.flatMap{ $0.exercise.allMusclesDisplay
+                })
+            gymActivity.musclesWorked = Array(allMuscles).sorted() as! [String]
         }
         
         //Calculate stimated duration if empty
@@ -51,7 +53,7 @@ extension GymActivityViewModel {
         
         // Si no hay categoría, tomar del primer ejercicio
         if gymActivity.category == nil || gymActivity.category?.isEmpty ?? true {
-            gymActivity.category = gymActivity.sets.first?.exercise.category?.rawValue
+            gymActivity.category = gymActivity.sets.first?.exercise.category.rawValue
         }
         
         // Grupo muscular afectado (tomar el más común)

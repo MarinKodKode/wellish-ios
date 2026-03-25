@@ -36,11 +36,11 @@ struct EnhancedRoutineSetRowView: View {
                             .fontWeight(.semibold)
                             .foregroundColor(.fitnessTextPrimary)
                         
-                        if let equipment = set.exercise.equipment, !equipment.isEmpty {
-                            Text(equipment)
-                                .font(.caption)
-                                .foregroundColor(.fitnessTextSecondary)
-                        }
+//                        if let equipment = set.exercise.equipment, !equipment.isEmpty {
+//                            Text(equipment)
+//                                .font(.caption)
+//                                .foregroundColor(.fitnessTextSecondary)
+//                        }
                     }
                     
                     Spacer()

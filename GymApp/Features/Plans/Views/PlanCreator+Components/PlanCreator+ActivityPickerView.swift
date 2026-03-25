@@ -38,13 +38,13 @@ struct ActivityPickerView: View {
         
     private var activitiesList: some View {
         List {
-            ForEach(ActivityDataset.activities(for: category)) { activityType in
-                Button {
-                    handleActivitySelection(activityType)
-                } label: {
-                    ActivityRowView(activityType: activityType)
-                }
-            }
+//            ForEach(ActivityDataset.activities(for: category)) { activityType in
+//                Button {
+//                    handleActivitySelection(activityType)
+//                } label: {
+//                    ActivityRowView(activityType: activityType)
+//                }
+//            }
         }
     }
     

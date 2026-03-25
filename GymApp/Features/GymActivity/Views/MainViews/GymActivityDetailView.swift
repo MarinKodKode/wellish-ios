@@ -352,9 +352,3 @@ struct FlowLayout: Layout {
         }
     }
 }
-
-#Preview {
-    NavigationStack {
-        GymActivityDetailView(activity: routines[0])
-    }
-}

@@ -50,8 +50,8 @@ struct GymLiveTracker_ExerciseRow: View {
         .cornerRadius(12)
     }
 }
-
-#Preview {
-    let set = ActivityDataset.gymActivities[0].sets[0]
-    GymLiveTracker_ExerciseRow(set: set, isCurrent: true, isCompleted: false)
-}
+//
+//#Preview {
+//    let set = ActivityDataset.gymActivities[0].sets[0]
+//    GymLiveTracker_ExerciseRow(set: set, isCurrent: true, isCompleted: false)
+//}

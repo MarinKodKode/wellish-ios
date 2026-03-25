@@ -14,7 +14,7 @@ public final class GymActivityViewModel : ObservableObject {
     @Published public var errorMessage : String?
     @Published var error : ErrorWrapper?
     @Published var savedRoutines : [GymActivity] = []
-    @Published var exerciseLibrary : [Exercise] = ExerciseDataset.gymExercises
+    @Published var exerciseLibrary : [Exercise] = []
     @Published var tagsInput : String = ""
     @Published var savedSuccess : Bool = false
     
@@ -43,7 +43,7 @@ public final class GymActivityViewModel : ObservableObject {
         do {
             print("Fetching Exercises")
             self.exerciseLibrary =  try await exerciseService
-                .fetchExercises(byCategory: .strength)
+                .fetchExercises(byCategory: .calistenia)
             
         }catch{
             print("Error")

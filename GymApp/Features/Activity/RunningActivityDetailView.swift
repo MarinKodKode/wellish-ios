@@ -414,8 +414,8 @@ public struct Timestamp: Codable {
         self.date = date
     }
 }
-
-
-#Preview {
-    RunningActivityDetailView(activity: ActivityDataset.runningActivities[0])
-}
+//
+//
+//#Preview {
+//    RunningActivityDetailView(activity: ActivityDataset.runningActivities[0])
+//}

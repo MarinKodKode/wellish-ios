@@ -35,8 +35,8 @@ struct GymLiveTracker_ExerciseListView: View {
         .cornerRadius(20)
     }
 }
-
-#Preview {
-    let routineSet = ActivityDataset.gymActivities[0].sets
-    GymLiveTracker_ExerciseListView(sets: routineSet, currentIndex: 1)
-}
+//
+//#Preview {
+//    let routineSet = ActivityDataset.gymActivities[0].sets
+//    GymLiveTracker_ExerciseListView(sets: routineSet, currentIndex: 1)
+//}

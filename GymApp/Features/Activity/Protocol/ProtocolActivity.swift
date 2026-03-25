@@ -174,18 +174,52 @@ public enum ActivityCategory: String, Codable, CaseIterable {
 // MARK: - Activity Source Enum
 
 /// Fuente de origen de la actividad
-public enum ActivitySource: String, Codable {
-    /// Actividad creada por el usuario desde cero
-    case created = "created"
-    
-    /// Actividad copiada de un template de globalActivities
-    case template = "template"
-    
-    /// Actividad importada de otro usuario (via código de compartir)
+public enum ActivitySource: String, Codable, CaseIterable {
+ 
+    /// Creada manualmente por el usuario desde la app
+    case created   = "created"
+ 
+    /// Parte del catálogo global de base data — semilla de Wellish
+    case global    = "global"
+ 
+    /// Plantilla pública disponible para todos los usuarios
+    case template  = "template"
+ 
+    /// Importada desde la comunidad mediante código de compartir
     case community = "community"
-    
-    /// Actividad de contenido exclusivo de club
-    case club = "club"
+ 
+    /// Contenido exclusivo de un club o gimnasio
+    case club      = "club"
+ 
+    public var displayName: String {
+        switch self {
+        case .created:   return "Creada por ti"
+        case .global:    return "Wellish"
+        case .template:  return "Plantilla"
+        case .community: return "Comunidad"
+        case .club:      return "Club"
+        }
+    }
+ 
+    public var icon: String {
+        switch self {
+        case .created:   return "pencil.circle.fill"
+        case .global:    return "globe.americas.fill"
+        case .template:  return "doc.fill"
+        case .community: return "person.2.fill"
+        case .club:      return "building.2.fill"
+        }
+    }
+ 
+    /// Indica si el contenido es de solo lectura para el usuario
+    public var isReadOnly: Bool {
+        switch self {
+        case .global, .template:
+            return true
+        case .created, .community, .club:
+            return false
+        }
+    }
 }
 
 // MARK: - Default Implementation Helpers

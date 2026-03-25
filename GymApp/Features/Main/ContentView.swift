@@ -16,7 +16,7 @@ struct ContentView: View {
                 if onboardingService.shouldShowOnboarding {
                     OnboardingView()
                         .environmentObject(onboardingService)
-                    authenticationFlow
+                    //authenticationFlow
                 } else {
                     authenticationFlow
                 }

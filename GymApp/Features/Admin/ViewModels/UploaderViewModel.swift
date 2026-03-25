@@ -11,7 +11,7 @@ final class UploaderViewModel : ObservableObject {
     
     
     let exerciseService = ExerciseFirebaseService()
-    let exercise_ds = ExerciseDataset()
+    let exercise_ds : [Exercise] = []
     
     func uploadExercise(_ exercise : Exercise ) async {
         do {
@@ -25,15 +25,18 @@ final class UploaderViewModel : ObservableObject {
     
     func uploadGymExercises() async {
         
-        let plyometricExercises = ExerciseDataset.plyometricExercises
-        do {
-            for exercise in plyometricExercises {
-                try await exerciseService.updateExercise(exercise)
-            }
-            print("Succeded saving exercise")
-        }catch{
-            print("Failed saving exercise")
-        }
+//        let plyometricExercises = ExerciseDataset.plyometricExercises
+//        do {
+//            for exercise in plyometricExercises {
+//                try await exerciseService.updateExercise(exercise)
+//            }
+//            print("Succeded saving exercise")
+//        }catch{
+//            print("Failed saving exercise")
+//        }
+        
+        
+        
     }
 }
 

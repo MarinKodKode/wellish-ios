@@ -20,8 +20,8 @@ extension PlanDetailView {
 
                 List {
                         Button(action: {
-                            navigationRouter
-                                .goTo(.gymActivityDetail(routines[0]))
+//                            navigationRouter
+//                                .goTo(.gymActivityDetail(routines[0]))
                         }, label: {
                             PlanElementRow(
                                 element: element,

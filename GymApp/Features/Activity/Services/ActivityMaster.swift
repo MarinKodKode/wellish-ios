@@ -42,26 +42,26 @@ class AdminActivityManager {
     /// Sube TODAS las activities del dataset al master
     @MainActor
     func uploadDatasetToMaster() async throws {
-        let activities = ActivityDataset.allActivitiesAsTypes
-        
-        print("🚀 Uploading \(activities.count) activities to MASTER...")
-        
-        var successCount = 0
-        var errorCount = 0
-        
-        for activity in activities {
-            do {
-                try await uploadToMasterWithID(activity)
-                successCount += 1
-            } catch {
-                print("❌ Failed to upload \(activity.displayName): \(error.localizedDescription)")
-                errorCount += 1
-            }
-        }
-        
-        print("✅ Upload complete!")
-        print("   Success: \(successCount)")
-        print("   Failed: \(errorCount)")
+//        let activities = "ActivityDataset.allActivitiesAsTypes"
+//
+//        print("🚀 Uploading \(activities.count) activities to MASTER...")
+//        
+//        var successCount = 0
+//        var errorCount = 0
+//        
+//        for activity in activities {
+//            do {
+//                try await uploadToMasterWithID(activity)
+//                successCount += 1
+//            } catch {
+//                print("❌ Failed to upload \(activity.displayName): \(error.localizedDescription)")
+//                errorCount += 1
+//            }
+//        }
+//        
+//        print("✅ Upload complete!")
+//        print("   Success: \(successCount)")
+//        print("   Failed: \(errorCount)")
     }
     
     /// Sube solo GYM activities del dataset
@@ -81,48 +81,48 @@ class AdminActivityManager {
     /// Sube solo RUNNING activities del dataset
     @MainActor
     func uploadRunningActivitiesToMaster() async throws {
-        let runningActivities = ActivityDataset.runningActivities
-        
-        print("🚀 Uploading \(runningActivities.count) RUNNING activities to MASTER...")
-        
-        for runningActivity in runningActivities {
-            try await uploadToMasterWithID(.running(runningActivity))
-        }
-        
-        print("✅ All RUNNING activities uploaded!")
+//        let runningActivities = ActivityDataset.runningActivities
+//        
+//        print("🚀 Uploading \(runningActivities.count) RUNNING activities to MASTER...")
+//        
+//        for runningActivity in runningActivities {
+//            try await uploadToMasterWithID(.running(runningActivity))
+//        }
+//        
+//        print("✅ All RUNNING activities uploaded!")
     }
     
     /// Sube solo REST activities del dataset
     @MainActor
     func uploadRestActivitiesToMaster() async throws {
-        let restActivities = ActivityDataset.restActivities
-        
-        print("🚀 Uploading \(restActivities.count) REST activities to MASTER...")
-        
-        for restActivity in restActivities {
-            try await uploadToMasterWithID(.rest(restActivity))
-        }
-        
-        print("✅ All REST activities uploaded!")
+//        let restActivities = ActivityDataset.restActivities
+//        
+//        print("🚀 Uploading \(restActivities.count) REST activities to MASTER...")
+//        
+//        for restActivity in restActivities {
+//            try await uploadToMasterWithID(.rest(restActivity))
+//        }
+//        
+//        print("✅ All REST activities uploaded!")
     }
     
     /// Sube activities por categoría
     @MainActor
     func uploadToMaster(category: ActivityCategory) async throws {
-        let activities = ActivityDataset.activities(for: category)
-        
-        guard !activities.isEmpty else {
-            print("⚠️ No activities found for \(category.rawValue)")
-            return
-        }
-        
-        print("🚀 Uploading \(activities.count) \(category.rawValue) activities to MASTER...")
-        
-        for activity in activities {
-            try await uploadToMasterWithID(activity)
-        }
-        
-        print("✅ All \(category.rawValue) activities uploaded!")
+//        let activities = ActivityDataset.activities(for: category)
+//        
+//        guard !activities.isEmpty else {
+//            print("⚠️ No activities found for \(category.rawValue)")
+//            return
+//        }
+//        
+//        print("🚀 Uploading \(activities.count) \(category.rawValue) activities to MASTER...")
+//        
+//        for activity in activities {
+//            try await uploadToMasterWithID(activity)
+//        }
+//        
+//        print("✅ All \(category.rawValue) activities uploaded!")
     }
     
     // MARK: - Read from Master

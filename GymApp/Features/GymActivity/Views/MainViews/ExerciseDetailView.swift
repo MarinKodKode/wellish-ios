@@ -10,28 +10,6 @@ import SwiftUI
 import SwiftUI
 import AVKit // Necesario para VideoPlayer
 
-// --- Datos de Ejemplo Actualizados para el Preview ---
-extension Exercise {
-    static let dumbbellCurlExample = Exercise(
-        name: "Dumbbell Curl",
-        category: .arms,
-        equipment: "Mancuernas",
-        muscles: ["Bíceps", "Antebrazo"],
-        thumbnailURL : URL(string : "https://static.strengthlevel.com/images/exercises/seated-dumbbell-curl/seated-dumbbell-curl-800.jpg"),
-        // Usamos un video de ejemplo de Apple (Big Buck Bunny trailer)
-        // Sustituye por exercise.videoUrl! en producción
-        videoUrl: URL(string: "http://commondatastorage.googleapis.com/gtv-videos-bucket/sample/BigBuckBunny.mp4"),
-        instructions: """
-        1. **Preparación:** Colócate de pie con los pies separados a la altura de los hombros. Sostén una mancuerna en cada mano, con las palmas mirando hacia adelante.
-        2. **Ejecución:** Mantén los codos pegados a los costados y levanta las mancuernas doblando los codos. Contrae los bíceps en la parte superior del movimiento.
-        3. **Fase negativa:** Baja las mancuernas lentamente a la posición inicial, controlando el peso.
-        4. **Respiración:** Exhala al subir, inhala al bajar.
-        """
-        
-    )
-}
-// ----------------------------------------------------
-
 struct ExerciseDetailView: View {
     let exercise: Exercise
     @Environment(\.dismiss) private var dismiss
@@ -42,7 +20,7 @@ struct ExerciseDetailView: View {
         ScrollView {
             VStack(alignment: .leading, spacing: 0) {
                 // Header con imagen/video
-                if exercise.videoUrl != nil {
+                if exercise.videoURL != nil {
                     videoSection
                 }
               
@@ -58,11 +36,11 @@ struct ExerciseDetailView: View {
 //                    if exercise.videoUrl != nil {
 //                        videoSection
 //                    }
-                    
-                    // Instrucciones escritas
-                    if let instructions = exercise.instructions {
-                        instructionsSection(instructions)
-                    }
+//                    
+//                    // Instrucciones escritas
+//                    if let instructions = exercise.instructions {
+//                        instructionsSection(instructions.first ?? "")
+//                    }
                 }
                 .padding(.horizontal, 20)
                 .padding(.bottom, 40)
@@ -95,23 +73,30 @@ struct ExerciseDetailView: View {
     // MARK: - Header Section
     private var headerSection: some View {
         ZStack(alignment: .bottom) {
-            if let thumbnailURL = exercise.thumbnailURL {
-                AsyncImage(url: thumbnailURL) { phase in
+            if let thumbnailString = exercise.thumbnailURL,
+               let url = URL(string: thumbnailString) {
+
+                AsyncImage(url: url) { phase in
                     switch phase {
+
                     case .success(let image):
                         image
                             .resizable()
                             .aspectRatio(contentMode: .fill)
                             .frame(height: 300)
                             .clipped()
+
                     case .failure(_):
                         placeholderImage
+
                     case .empty:
                         placeholderImage
+
                     @unknown default:
                         placeholderImage
                     }
                 }
+
             } else {
                 placeholderImage
             }
@@ -145,13 +130,15 @@ struct ExerciseDetailView: View {
                 .foregroundColor(.white)
             
             HStack(spacing: 12) {
-                CategoryBadge(category: exercise.categoryName)
+                CategoryBadge(
+                    category: .fuerza
+                )
                 
-                if let equipment = exercise.equipment {
-                    Text("• \(equipment)")
-                        .font(.system(size: 14))
-                        .foregroundColor(.gray)
-                }
+//                if let equipment = exercise.equipment {
+//                    Text("• \(equipment)")
+//                        .font(.system(size: 14))
+//                        .foregroundColor(.gray)
+//                }
             }
         }
         .padding(.top, 20)
@@ -164,14 +151,14 @@ struct ExerciseDetailView: View {
                 .font(.system(size: 18, weight: .semibold))
                 .foregroundColor(.white)
             
-            if exercise.muscles.isEmpty {
+            if exercise.primaryMuscles.isEmpty {
                 Text("No especificado")
                     .font(.system(size: 15))
                     .foregroundColor(.gray)
             } else {
                 FlowLayout(spacing: 8) {
-                    ForEach(exercise.muscles, id: \.self) { muscle in
-                        MuscleTag(muscle: muscle)
+                    ForEach(exercise.primaryMuscles, id: \.self) { muscle in
+                        MuscleTag(muscle: muscle.rawValue)
                     }
                 }
             }
@@ -248,8 +235,8 @@ struct ExerciseDetailView: View {
     
     // MARK: - Helper Functions
     private func setupPlayer() {
-        guard let videoUrl = exercise.videoUrl else { return }
-        player = AVPlayer(url: videoUrl)
+        guard let videoUrl = exercise.thumbnailURL else { return }
+//        player = AVPlayer(url: videoUrl)
     }
 }
 
@@ -270,12 +257,14 @@ struct CategoryBadge: View {
     
     private var categoryColor: Color {
         switch category {
-        case .strength, .chest, .back, .legs, .shoulders, .arms, .core:
+        case .fuerza:
             return Color.blue.opacity(0.8)
-        case .hiit, .plyometric:
+        case .hiit:
             return Color.orange.opacity(0.8)
         case .cardio:
             return Color.green.opacity(0.8)
+        default :
+            return Color.blue.opacity(0.6)
         }
     }
 }
@@ -295,14 +284,6 @@ struct MuscleTag: View {
                 RoundedRectangle(cornerRadius: 20)
                     .stroke(Color.white.opacity(0.2), lineWidth: 1)
             )
-    }
-}
-
-// MARK: - Preview
-#Preview {
-    NavigationStack {
-        ExerciseDetailView(exercise: Exercise.dumbbellCurlExample)
-        .preferredColorScheme(.dark)
     }
 }
 

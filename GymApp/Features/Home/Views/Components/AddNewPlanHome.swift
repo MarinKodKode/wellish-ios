@@ -4,6 +4,8 @@ import SwiftUI
 struct EmptyRoutineView: View {
     
     @EnvironmentObject var vm : MainHomeViewModel
+    @EnvironmentObject var navigationRouter: NavigationRouter 
+    
     
     var body: some View {
         VStack(spacing: 16) {
@@ -61,7 +63,7 @@ struct EmptyRoutineView: View {
 
                     // Botón CTA
                     Button(action: {
-                        vm.pageTagIndex = 2
+                        vm.selectedTab = 2
                     }) {
                         HStack(spacing: 8) {
                             Image(systemName: "plus.circle.fill")

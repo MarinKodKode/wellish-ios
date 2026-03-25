@@ -24,9 +24,9 @@ struct MainHomeView: View {
                     
                     CategoriesSectionView()                    
                     
-                    PopularWorkoutSectionView()
+//                    PopularWorkoutSectionView()
                     
-                    TrySomethingNewSectionView()
+//                    TrySomethingNewSectionView()
                         
                 }
                 .scrollIndicators(.hidden)

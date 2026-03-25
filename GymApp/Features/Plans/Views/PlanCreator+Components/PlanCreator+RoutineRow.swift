@@ -58,7 +58,3 @@ struct RoutineRow: View {
         }
     }
 }
-
-#Preview {
-    RoutineRow(routine: routines[0])
-}

@@ -1089,11 +1089,11 @@ private struct RoutineSetRowView: View {
                 VStack(alignment: .leading) {
                     Text(set.exercise.name)
                         .font(.headline)
-                    if let equipment = set.exercise.equipment, !equipment.isEmpty {
-                        Text(equipment)
-                            .font(.caption)
-                            .foregroundColor(.secondary)
-                    }
+//                    if let equipment = set.exercise.equipment, !equipment.isEmpty {
+//                        Text(equipment)
+//                            .font(.caption)
+//                            .foregroundColor(.secondary)
+//                    }
                 }
                 Spacer()
                 VStack(alignment: .trailing) {

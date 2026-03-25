@@ -208,11 +208,11 @@ private struct ExerciseCard: View {
             }
 
             // Equipment
-            if let equipment = set.exercise.equipment, !equipment.isEmpty {
-                Text(equipment)
-                    .font(.caption)
-                    .foregroundColor(.secondary)
-            }
+//            if let equipment = set.exercise.equipment, !equipment.isEmpty {
+//                Text(equipment)
+//                    .font(.caption)
+//                    .foregroundColor(.secondary)
+//            }
 
             // Series Preview
             HStack {

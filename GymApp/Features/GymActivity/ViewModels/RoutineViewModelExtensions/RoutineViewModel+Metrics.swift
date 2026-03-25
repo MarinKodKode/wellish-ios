@@ -34,15 +34,14 @@ extension GymActivityViewModel {
     // Determine main muscular group
     
     public  func determinePrimaryMuscularGroup() -> String {
-        let muscles = gymActivity.sets.flatMap{ $0.exercise.muscles}
+        let muscles = gymActivity.sets.flatMap{ $0.exercise.primaryMuscles}
         guard !muscles.isEmpty else { return "General" }
         
         var muscleCount : [String : Int] = [:]
         muscles.forEach { muscle in
-            muscleCount[muscle, default: 0] += 1
+            muscleCount[muscle.displayName, default: 0] += 1
         }
         
-        return muscleCount.max(by: { $0.value < $1.value})?.key ??
-        muscles.first ?? "General"
+        return muscleCount.max(by: { $0.value < $1.value})?.key ?? "General"
     }
 }

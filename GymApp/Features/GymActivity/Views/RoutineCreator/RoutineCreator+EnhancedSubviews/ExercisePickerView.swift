@@ -37,11 +37,11 @@ struct ExercisePickerView: View {
                                     .font(.headline)
                                     .foregroundColor(.fitnessTextPrimary)
                                 
-                                if let category = ex.category {
-                                    Text(category.rawValue)
-                                        .font(.caption)
-                                        .foregroundColor(.fitnessTextSecondary)
-                                }
+//                                if let category = ex.category {
+//                                    Text(category.rawValue)
+//                                        .font(.caption)
+//                                        .foregroundColor(.fitnessTextSecondary)
+//                                }
                             }
                             
                             Spacer()

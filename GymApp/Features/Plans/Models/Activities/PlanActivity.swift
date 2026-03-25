@@ -42,7 +42,7 @@ public enum PlanActivity: Codable, Hashable, Identifiable {
         case .routine(let routine):
             return routine.category ?? "Rutina"
         case .exercise(let exercise):
-            return exercise.category?.rawValue ?? "Ejercicio"
+            return "Ejercicio"
         case .cardio:
             return "Cardio"
         case .rest:
@@ -84,7 +84,7 @@ public enum PlanActivity: Codable, Hashable, Identifiable {
         case .routine(let routine):
             return routine.musclesWorked ?? []
         case .exercise(let exercise):
-            return exercise.muscles
+            return []
         case .cardio:
             return [] // Cardio es más sistémico
         case .rest:
@@ -111,11 +111,7 @@ public enum PlanActivity: Codable, Hashable, Identifiable {
         case .routine:
             return "dumbbell.fill"
         case .exercise(let exercise):
-            return exercise.category?.rawValue
-                .lowercased()
-                .contains("cardio") ?? false
-                ? "figure.run"
-                : "dumbbell.fill"
+            return exercise.name
         case .cardio(let cardio):
             switch cardio.type {
             case .running: return "figure.run"

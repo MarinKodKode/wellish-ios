@@ -10,6 +10,7 @@ class MainHomeViewModel : ObservableObject {
     @Published var profilePhotoURL : URL?
     @Published var randomProfilePicture : String
     @Published var pageTagIndex = 0
+    @Published var selectedTab : Int = 0
     
     
     private var authHandle : AuthStateDidChangeListenerHandle?

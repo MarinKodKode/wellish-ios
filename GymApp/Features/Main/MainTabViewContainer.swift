@@ -17,30 +17,32 @@ struct MainTabViewContainer: View {
     @StateObject var vm = MainHomeViewModel()
     
     var body: some View {
-        TabView(selection: $selectedTab) {
+        TabView(selection: $vm.selectedTab) {
             MainHomeView()
                 .tabItem {
                     Label("Home", systemImage: "house")
                 }
-                .tag(vm.pageTagIndex)
-            
+                .tag(0)
+
             MetricsView(showWorkoutTimer: $showWorkoutTimer)
                 .tabItem {
                     Label("Activity", systemImage: "figure.walk")
                 }
-                .tag(vm.pageTagIndex)
+                .tag(1)
+
             PlansView(vm: GymActivityViewModel(), plansVM: PlansViewViewModel())
                 .tabItem {
                     Label("Plans", systemImage: "clipboard")
                 }
-                .tag(vm.pageTagIndex)
-                .environmentObject(vm)
+                .tag(2)
+
             ProfileView(showWorkoutTimer: $showWorkoutTimer_true)
                 .tabItem {
                     Label("Profile", systemImage: "person")
                 }
-                .tag(vm.pageTagIndex)
+                .tag(3)
         }
+        .environmentObject(vm)
         .accentColor(.blue)
     }
 }

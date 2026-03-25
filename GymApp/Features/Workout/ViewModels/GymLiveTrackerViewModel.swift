@@ -98,7 +98,7 @@ class GymLiveTrackerViewModel: ObservableObject {
         if let firstRoutineSet = gymActivity.sets.first {
             self.currentPerformedSet = PerformedRoutineSet(
                 routineSetId: firstRoutineSet.id,
-                name: firstRoutineSet.exercise.name
+                name: firstRoutineSet.exerciseName
             )
         }
         
@@ -150,10 +150,9 @@ class GymLiveTrackerViewModel: ObservableObject {
     
     func recordSeries(weightKg: Double, reps: Int, notes: String? = nil) {
         guard let routineSet = currentRoutineSet else { return }
-        let exercise = routineSet.exercise
         let series = PerformedSeries(
-            exerciseId: exercise.id,
-            exerciseName: exercise.name,
+            exerciseId: routineSet.exerciseId,
+            exerciseName: routineSet.exerciseName,
             weightKg: weightKg,
             reps: reps,
             completedAt: Date(),
@@ -163,7 +162,9 @@ class GymLiveTrackerViewModel: ObservableObject {
         
         currentSeriesInSet.append(series)
         
-        print("✅ Serie registrada: \(exercise.name) - \(weightKg)kg x \(reps) reps")
+        print(
+            "✅ Serie registrada: \(routineSet.exerciseName) - \(weightKg)kg x \(reps) reps"
+        )
     }
     
     func completeSet() {
@@ -213,7 +214,7 @@ class GymLiveTrackerViewModel: ObservableObject {
             if let nextRoutineSet = gymActivity.sets[safe: currentExerciseIndex] {
                 currentPerformedSet = PerformedRoutineSet(
                     routineSetId: nextRoutineSet.id,
-                    name: nextRoutineSet.exercise.name
+                    name: nextRoutineSet.exerciseName
                 )
                 currentSeriesInSet = []
             }
@@ -237,7 +238,7 @@ class GymLiveTrackerViewModel: ObservableObject {
         if let nextRoutineSet = gymActivity.sets[safe: currentExerciseIndex] {
             currentPerformedSet = PerformedRoutineSet(
                 routineSetId: nextRoutineSet.id,
-                name: nextRoutineSet.exercise.name
+                name: nextRoutineSet.exerciseName
             )
             currentSeriesInSet = []
         }
@@ -517,7 +518,7 @@ class GymLiveTrackerViewModel: ObservableObject {
         
         if let currentSet = currentRoutineSet {
             content.userInfo = [
-                "exercise": currentSet.exercise.name,
+                "exercise": currentSet.exerciseName,
                 "set": currentSet.id,
                 "restComplete": true
             ]

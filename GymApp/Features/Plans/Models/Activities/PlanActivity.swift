@@ -40,7 +40,7 @@ public enum PlanActivity: Codable, Hashable, Identifiable {
     public var category: String {
         switch self {
         case .routine(let routine):
-            return routine.category ?? "Rutina"
+            return routine.category?.rawValue ?? "Rutina"
         case .exercise(let exercise):
             return "Ejercicio"
         case .cardio:
@@ -82,7 +82,7 @@ public enum PlanActivity: Codable, Hashable, Identifiable {
     public var musclesWorked: [String] {
         switch self {
         case .routine(let routine):
-            return routine.musclesWorked ?? []
+            return  []
         case .exercise(let exercise):
             return []
         case .cardio:

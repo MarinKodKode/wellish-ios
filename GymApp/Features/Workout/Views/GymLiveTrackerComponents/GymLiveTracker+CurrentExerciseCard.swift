@@ -25,7 +25,7 @@ struct GymLiveTracker_CurrentExerciseCard: View {
     var body: some View {
         VStack(spacing: 20) {
             HStack {
-                Text(routineSet.exercise.name)
+                Text(routineSet.exerciseName)
                     .font(.system(size: 22, weight: .bold))
                     .foregroundColor(.white)
                 Spacer()

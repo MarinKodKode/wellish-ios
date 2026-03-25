@@ -47,7 +47,7 @@ public struct RoutineCreatorSheet: View {
                     if let index = exercisePickerTargetSetIndex {
                         guard vm.gymActivity.sets.indices.contains(index) else { return }
                         // Actualizar el nombre del ejercicio en el set existente
-                        vm.gymActivity.sets[index].exercise.name = exercise.name
+                        vm.gymActivity.sets[index].exerciseName = exercise.name
                     } else {
                         // Crear nuevo set con el ejercicio seleccionado
                         vm.addSet(with: exercise)
@@ -94,10 +94,7 @@ public struct RoutineCreatorSheet: View {
             inputCard(title: "Category") {
                 TextField(
                     "e.g., Strength",
-                    text: Binding(
-                        get: { vm.gymActivity.category ?? "" },
-                        set: { vm.gymActivity.category = $0.isEmpty ? nil : $0 }
-                    )
+                    text: .constant("")
                 )
                 .foregroundColor(.white)
             }

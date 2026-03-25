@@ -44,7 +44,7 @@ extension RoutineCreatorView {
 
                 widget.customTextField(
                     placeholder: StringConstants.routineCategories,
-                    text: $vm.gymActivity.category.replacingNilWith(""),
+                    text: .constant("some some some"),
                     icon: "square.grid.2x2",
                     iconColor: .fitnessTextSecondary
                 )

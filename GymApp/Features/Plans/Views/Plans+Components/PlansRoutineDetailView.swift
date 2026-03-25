@@ -11,7 +11,7 @@ struct PlansRoutineDetailView: View {
                     .font(.title.bold())
                     .foregroundColor(.fitnessTextPrimary)
 
-                if let category = routine.category, !category.isEmpty {
+                if let category = routine.category?.displayName, !category.isEmpty {
                     Text(category)
                         .font(.headline)
                         .foregroundColor(.primaryFitnessBlue)
@@ -78,7 +78,7 @@ struct PlansRoutineDetailView: View {
 
                 ForEach(routine.sets) { set in
                     VStack(alignment: .leading) {
-                        Text(set.exercise.name)
+                        Text(set.exerciseName)
                             .font(.headline)
                             .foregroundColor(.fitnessTextPrimary)
                         Text("\(set.series.count) series")

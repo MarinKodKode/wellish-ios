@@ -1,4 +1,3 @@
-
 import SwiftUI
 
 extension RoutineCreatorView {
@@ -16,10 +15,10 @@ extension RoutineCreatorView {
                     icon: "pencil",
                     iconColor: .primaryFitnessBlue
                 )
-                
+#warning("Replace constant value asap")
                 widget.customTextField(
                     placeholder: StringConstants.routineDescription,
-                    text: $vm.gymActivity.category.replacingNilWith(""),
+                    text: .constant("Test Value"),
                     icon: "text.alignleft",
                     iconColor: .fitnessTextSecondary
                 )

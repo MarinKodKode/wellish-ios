@@ -18,7 +18,7 @@ struct RoutineRow: View {
                     .font(.headline)
                     .foregroundColor(.primary)
                 
-                Text(routine.category ?? "Sin categoría")
+                Text(routine.category?.displayName ?? "Sin categoría")
                     .font(.subheadline)
                     .foregroundColor(.secondary)
                 

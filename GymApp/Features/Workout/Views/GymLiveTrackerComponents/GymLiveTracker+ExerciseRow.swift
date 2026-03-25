@@ -21,7 +21,7 @@ struct GymLiveTracker_ExerciseRow: View {
             }
             
             VStack(alignment: .leading, spacing: 4) {
-                Text(set.exercise.name)
+                Text(set.exerciseName)
                     .font(.system(size: 15, weight: .semibold))
                     .foregroundColor(.white)
                 Text("\(set.series.count) sets")

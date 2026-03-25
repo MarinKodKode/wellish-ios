@@ -19,7 +19,7 @@ struct ExerciseSetCard: View {
                     navigationRouter
                         .goTo(.exerciseDetail(Exercise.example))
                 }, label: {
-                    Text(set.exercise.name)
+                    Text(set.exerciseName)
                         .font(.system(size: 17, weight: .semibold))
                         .foregroundColor(.white)
                 })

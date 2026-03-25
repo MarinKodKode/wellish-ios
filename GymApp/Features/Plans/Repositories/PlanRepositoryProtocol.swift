@@ -8,13 +8,13 @@
 import Foundation
 
 public protocol PlanServiceProtocol {
-    
-    func savePlanLocally(_ plan : Plan) async -> Bool
-    
-    func savePlanRemote(_ plan : Plan) async -> Bool
-    
-    func fetchPlans() async throws -> [Plan]
-    
-    func fetchPlan(by id : String) async throws -> Plan?
-    
+    var errorMessage: String? { get set }
+    var lastSyncDate: Date? { get }
+
+    func getPlans() async -> [Plan]
+    func getPlan(by id: String) async -> Plan?
+    func getPlans(for userId: String) async -> [Plan]
+    func savePlanLocally(_ plan: Plan) async -> Bool
+    func savePlanRemote(_ plan: Plan) async -> Bool
+    func updatePlan(_ plan: Plan) async -> Bool
 }

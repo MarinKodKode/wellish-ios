@@ -15,7 +15,7 @@ extension GymActivityViewModel {
             return false
         }
         
-        let validation = validategymActivity()
+        let validation = validateGymActivity()
         
         if !validation.isValid {
             errorMessage = validation.errors.joined(separator: "\n")
@@ -25,7 +25,7 @@ extension GymActivityViewModel {
         isSaving = true
         errorMessage = nil
         
-        preparegymActivityForSave()
+        prepareGymActivityForSave()
         
         do {
             try await firestoreService.updateRoutine(gymActivity)

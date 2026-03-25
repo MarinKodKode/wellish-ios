@@ -902,8 +902,8 @@ public struct RoutineCreatorTestView: View {
                                 TextField("Routine name", text: $vm.gymActivity.name)
                                     .inputFieldStyle()
 
-                                TextField("Description (optional)", text: $vm.gymActivity.category.replacingNilWith(""))
-                                    .inputFieldStyle()
+                                TextField("Description (optional)", text:.constant(
+                                    "Some logical description"))
                             }
                         }
 
@@ -958,8 +958,9 @@ public struct RoutineCreatorTestView: View {
                                     }
                                 }
 
-                                TextField("Category (e.g., Strength)", text: $vm.gymActivity.category.replacingNilWith(""))
-                                    .inputFieldStyle()
+                                TextField("Category (e.g., Strength)", text: .constant(
+                                    "some some "
+                                ))
                             }
                         }
 
@@ -1087,7 +1088,7 @@ private struct RoutineSetRowView: View {
         VStack(spacing: 8) {
             HStack {
                 VStack(alignment: .leading) {
-                    Text(set.exercise.name)
+                    Text(set.exerciseName)
                         .font(.headline)
 //                    if let equipment = set.exercise.equipment, !equipment.isEmpty {
 //                        Text(equipment)

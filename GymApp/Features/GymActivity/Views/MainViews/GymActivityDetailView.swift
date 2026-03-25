@@ -27,7 +27,7 @@ struct GymActivityDetailView: View {
                     statsOverviewSection
                     
                     // Muscle Groups
-                    if activity.musclesWorked?.isEmpty == false {
+                    if activity.primaryMusclesDisplay.isEmpty == false {
                         muscleGroupsSection
                     }
                     
@@ -52,7 +52,7 @@ struct GymActivityDetailView: View {
                 Image(systemName: activity.icon)
                     .font(.system(size: 14))
                     .foregroundColor(.blue)
-                Text(activity.category ?? "Gym Workout")
+                Text(activity.category?.rawValue ?? "Gym Workout")
                     .font(.system(size: 14, weight: .semibold))
                     .foregroundColor(.white)
             }
@@ -164,7 +164,7 @@ struct GymActivityDetailView: View {
             
             VStack(spacing: 12) {
                 // Primary Muscle
-                if let primaryMuscle = activity.muscularGroupAffected {
+                if !activity.primaryMusclesDisplay.isEmpty {
                     HStack {
                         Circle()
                             .fill(Color.red)
@@ -172,7 +172,7 @@ struct GymActivityDetailView: View {
                         Text("Primary:")
                             .font(.system(size: 14, weight: .medium))
                             .foregroundColor(Color(white: 0.6))
-                        Text(primaryMuscle)
+                        Text(activity.primaryMusclesDisplay)
                             .font(.system(size: 14, weight: .semibold))
                             .foregroundColor(.white)
                         Spacer()
@@ -183,7 +183,7 @@ struct GymActivityDetailView: View {
                 }
                 
                 // Secondary Muscles
-                if let muscles = activity.musclesWorked, !muscles.isEmpty {
+                if !activity.primaryMuscles.isEmpty {
                     VStack(alignment: .leading, spacing: 8) {
                         HStack {
                             Circle()
@@ -195,8 +195,8 @@ struct GymActivityDetailView: View {
                         }
                         
                         FlowLayout(spacing: 8) {
-                            ForEach(muscles, id: \.self) { muscle in
-                                Text(muscle)
+                            ForEach(activity.primaryMuscles, id: \.self) { muscle in
+                                Text("muscle")
                                     .font(.system(size: 13, weight: .medium))
                                     .foregroundColor(.white)
                                     .padding(.horizontal, 12)

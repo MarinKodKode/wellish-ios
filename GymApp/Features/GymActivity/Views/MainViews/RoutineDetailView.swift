@@ -43,8 +43,8 @@ struct RoutineDetailView_Stack: View {
                                 }
                             }
 
-                            if let category = routine.category, !category.isEmpty {
-                                Text(category)
+                            if ((routine.category?.rawValue.isEmpty) == nil) {
+                                Text(routine.category?.rawValue ?? "Some category")
                                     .font(.headline)
                                     .foregroundColor(.blue)
                             }
@@ -197,7 +197,7 @@ private struct ExerciseCard: View {
                 Image(systemName: "figure.strengthtraining.functional")
                     .foregroundColor(.blue)
 
-                Text(set.exercise.name)
+                Text(set.exerciseName)
                     .font(.headline)
 
                 Spacer()
@@ -278,10 +278,12 @@ struct ActivityViewController: UIViewControllerRepresentable {
 
 extension GymActivity {
     func shareText() -> String {
-        let exercises = sets.map { "\($0.exercise.name): \($0.series.count) sets" }.joined(separator: ", ")
+        let exercises = sets.map { "\($0.exerciseName): \($0.series.count) sets" }.joined(
+            separator: ", "
+        )
         return """
         Workout Routine: \(name)
-        Category: \(category ?? "—")
+        Category: \(category?.rawValue ?? "—")
         Exercises: \(exercises)
         Total Volume: \(String(format: "%.0f", estimatedVolumeKg)) kg
         Generated with Wellish 🏋️‍♂️

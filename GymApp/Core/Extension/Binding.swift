@@ -9,4 +9,11 @@ extension Binding where Value == String? {
             set: { self.wrappedValue = $0 }
         )
     }
+    
+    var withDefault: Binding<String> {
+            Binding<String>(
+                get: { self.wrappedValue ?? "" },
+                set: { self.wrappedValue = $0.isEmpty ? nil : $0 }
+            )
+        }
 }

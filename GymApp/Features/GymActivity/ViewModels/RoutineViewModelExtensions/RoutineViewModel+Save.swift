@@ -18,7 +18,7 @@ extension GymActivityViewModel {
             return false
         }
         
-        let validation = validategymActivity()
+        let validation = validateGymActivity()
         
         if !validation.isValid {
             //Throw alert
@@ -27,7 +27,7 @@ extension GymActivityViewModel {
         
         isSaving = true
         
-        preparegymActivityForSave()
+        prepareGymActivityForSave()
         
         let saveActivity = await activityService.saveActivity(.gym(gymActivity))
         

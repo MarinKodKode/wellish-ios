@@ -1,11 +1,15 @@
+//
+//  CardioActivities.swift
+//  Wellish
+//
 
 import Foundation
 import FirebaseFirestore
 
+// MARK: - RunningActivity
+
 public struct RunningActivity: Activity {
-    
-    // MARK: - Activity Protocol Properties
-    
+
     public let id: String
     public var name: String
     public var description: String?
@@ -18,47 +22,24 @@ public struct RunningActivity: Activity {
     public var clubId: String?
     public var creator: String?
     public var imageURL: String?
-    
-    // MARK: - Activity Type
-    
-    public var activityType: ActivityCategory {
-        .running
-    }
-    
-    // MARK: - UI Properties
-    
-    public var icon: String {
-        "figure.run"
-    }
-    
-    public var colorHex: String {
-        "EF4444" // Rojo
-    }
-    
-    // MARK: - Running-Specific Properties
-    
+
+    public var activityType: ActivityCategory { .running }
+    public var icon: String { "figure.run" }
+    public var colorHex: String { "EF4444" }
+
     public var runningType: RunningType
     public var targetDistanceKm: Double?
     public var targetDurationMinutes: Int?
-    public var targetPaceMinPerKm: String? // Formato: "5:30" (min:seg)
+    public var targetPaceMinPerKm: String?
     public var intensity: CardioIntensity?
     public var terrain: RunningTerrain?
     public var intervals: [RunningInterval]?
     public var elevationGainMeters: Int?
     public var estimatedCaloriesValue: Int?
-    
-    // MARK: - Activity Protocol Computed Properties
-    
-    public var estimatedDuration: Int? {
-        targetDurationMinutes
-    }
-    
-    public var estimatedCalories: Int? {
-        estimatedCaloriesValue
-    }
-    
-    // MARK: - Init
-    
+
+    public var estimatedDuration: Int? { targetDurationMinutes }
+    public var estimatedCalories: Int? { estimatedCaloriesValue }
+
     public init(
         id: String = UUID().uuidString,
         name: String,
@@ -102,14 +83,13 @@ public struct RunningActivity: Activity {
         self.clubId = clubId
         self.creator = creator
     }
-    
-    // MARK: - Firestore Serialization
-    
+
     public func toDictionary() -> [String: Any] {
         var dict: [String: Any] = [
             "id": id,
             "name": name,
             "activityType": activityType.rawValue,
+            "activityTypeKey": "running",
             "createdAt": Timestamp(date: createdAt),
             "updatedAt": Timestamp(date: updatedAt),
             "tags": tags,
@@ -117,54 +97,38 @@ public struct RunningActivity: Activity {
             "source": source.rawValue,
             "shareable": shareable
         ]
-        
-        if let description = description {
-            dict["description"] = description
-        }
-        if let targetDistanceKm = targetDistanceKm {
-            dict["targetDistanceKm"] = targetDistanceKm
-        }
-        if let targetDurationMinutes = targetDurationMinutes {
-            dict["targetDurationMinutes"] = targetDurationMinutes
-        }
-        if let targetPaceMinPerKm = targetPaceMinPerKm {
-            dict["targetPaceMinPerKm"] = targetPaceMinPerKm
-        }
-        if let intensity = intensity {
-            dict["intensity"] = intensity.rawValue
-        }
-        if let terrain = terrain {
-            dict["terrain"] = terrain.rawValue
-        }
+
+        if let description = description { dict["description"] = description }
+        if let targetDistanceKm = targetDistanceKm { dict["targetDistanceKm"] = targetDistanceKm }
+        if let targetDurationMinutes = targetDurationMinutes { dict["targetDurationMinutes"] = targetDurationMinutes }
+        if let targetPaceMinPerKm = targetPaceMinPerKm { dict["targetPaceMinPerKm"] = targetPaceMinPerKm }
+        if let intensity = intensity { dict["intensity"] = intensity.rawValue }
+        if let terrain = terrain { dict["terrain"] = terrain.rawValue }
+        if let elevationGainMeters = elevationGainMeters { dict["elevationGainMeters"] = elevationGainMeters }
+        if let estimatedCaloriesValue = estimatedCaloriesValue { dict["estimatedCalories"] = estimatedCaloriesValue }
+        if let globalActivityId = globalActivityId { dict["globalActivityId"] = globalActivityId }
+        if let clubId = clubId { dict["clubId"] = clubId }
+        if let creator = creator { dict["creator"] = creator }
+
         if let intervals = intervals {
-            dict["intervals"] = try? JSONEncoder().encode(intervals)
+            dict["intervals"] = intervals.map { interval -> [String: Any] in
+                var d: [String: Any] = [
+                    "durationMinutes": interval.durationMinutes,
+                    "paceMinPerKm": interval.paceMinPerKm
+                ]
+                if let recovery = interval.recoveryMinutes { d["recoveryMinutes"] = recovery }
+                return d
+            }
         }
-        if let elevationGainMeters = elevationGainMeters {
-            dict["elevationGainMeters"] = elevationGainMeters
-        }
-        if let estimatedCaloriesValue = estimatedCaloriesValue {
-            dict["estimatedCalories"] = estimatedCaloriesValue
-        }
-        if let globalActivityId = globalActivityId {
-            dict["globalActivityId"] = globalActivityId
-        }
-        if let clubId = clubId {
-            dict["clubId"] = clubId
-        }
-        if let creator = creator {
-            dict["creator"] = creator
-        }
-        
+
         return dict
     }
 }
 
-// MARK: - Cycling Activity
+// MARK: - CyclingActivity
 
 public struct CyclingActivity: Activity {
-    
-    // MARK: - Activity Protocol Properties
-    
+
     public let id: String
     public var name: String
     public var description: String?
@@ -177,25 +141,11 @@ public struct CyclingActivity: Activity {
     public var clubId: String?
     public var creator: String?
     public var imageURL: String?
-    
-    // MARK: - Activity Type
-    
-    public var activityType: ActivityCategory {
-        .cycling
-    }
-    
-    // MARK: - UI Properties
-    
-    public var icon: String {
-        "bicycle"
-    }
-    
-    public var colorHex: String {
-        "F59E0B" // Naranja
-    }
-    
-    // MARK: - Cycling-Specific Properties
-    
+
+    public var activityType: ActivityCategory { .cycling }
+    public var icon: String { "bicycle" }
+    public var colorHex: String { "F59E0B" }
+
     public var cyclingType: CyclingType
     public var targetDistanceKm: Double?
     public var targetDurationMinutes: Int?
@@ -206,19 +156,10 @@ public struct CyclingActivity: Activity {
     public var targetWatts: Int?
     public var cadenceRPM: Int?
     public var estimatedCaloriesValue: Int?
-    
-    // MARK: - Activity Protocol Computed Properties
-    
-    public var estimatedDuration: Int? {
-        targetDurationMinutes
-    }
-    
-    public var estimatedCalories: Int? {
-        estimatedCaloriesValue
-    }
-    
-    // MARK: - Init
-    
+
+    public var estimatedDuration: Int? { targetDurationMinutes }
+    public var estimatedCalories: Int? { estimatedCaloriesValue }
+
     public init(
         id: String = UUID().uuidString,
         name: String,
@@ -264,14 +205,13 @@ public struct CyclingActivity: Activity {
         self.clubId = clubId
         self.creator = creator
     }
-    
-    // MARK: - Firestore Serialization
-    
+
     public func toDictionary() -> [String: Any] {
         var dict: [String: Any] = [
             "id": id,
             "name": name,
             "activityType": activityType.rawValue,
+            "activityTypeKey": "cycling",
             "createdAt": Timestamp(date: createdAt),
             "updatedAt": Timestamp(date: updatedAt),
             "tags": tags,
@@ -279,57 +219,29 @@ public struct CyclingActivity: Activity {
             "source": source.rawValue,
             "shareable": shareable
         ]
-        
-        if let description = description {
-            dict["description"] = description
-        }
-        if let targetDistanceKm = targetDistanceKm {
-            dict["targetDistanceKm"] = targetDistanceKm
-        }
-        if let targetDurationMinutes = targetDurationMinutes {
-            dict["targetDurationMinutes"] = targetDurationMinutes
-        }
-        if let targetAvgSpeedKmh = targetAvgSpeedKmh {
-            dict["targetAvgSpeedKmh"] = targetAvgSpeedKmh
-        }
-        if let intensity = intensity {
-            dict["intensity"] = intensity.rawValue
-        }
-        if let terrain = terrain {
-            dict["terrain"] = terrain.rawValue
-        }
-        if let elevationGainMeters = elevationGainMeters {
-            dict["elevationGainMeters"] = elevationGainMeters
-        }
-        if let targetWatts = targetWatts {
-            dict["targetWatts"] = targetWatts
-        }
-        if let cadenceRPM = cadenceRPM {
-            dict["cadenceRPM"] = cadenceRPM
-        }
-        if let estimatedCaloriesValue = estimatedCaloriesValue {
-            dict["estimatedCalories"] = estimatedCaloriesValue
-        }
-        if let globalActivityId = globalActivityId {
-            dict["globalActivityId"] = globalActivityId
-        }
-        if let clubId = clubId {
-            dict["clubId"] = clubId
-        }
-        if let creator = creator {
-            dict["creator"] = creator
-        }
-        
+
+        if let description = description { dict["description"] = description }
+        if let targetDistanceKm = targetDistanceKm { dict["targetDistanceKm"] = targetDistanceKm }
+        if let targetDurationMinutes = targetDurationMinutes { dict["targetDurationMinutes"] = targetDurationMinutes }
+        if let targetAvgSpeedKmh = targetAvgSpeedKmh { dict["targetAvgSpeedKmh"] = targetAvgSpeedKmh }
+        if let intensity = intensity { dict["intensity"] = intensity.rawValue }
+        if let terrain = terrain { dict["terrain"] = terrain.rawValue }
+        if let elevationGainMeters = elevationGainMeters { dict["elevationGainMeters"] = elevationGainMeters }
+        if let targetWatts = targetWatts { dict["targetWatts"] = targetWatts }
+        if let cadenceRPM = cadenceRPM { dict["cadenceRPM"] = cadenceRPM }
+        if let estimatedCaloriesValue = estimatedCaloriesValue { dict["estimatedCalories"] = estimatedCaloriesValue }
+        if let globalActivityId = globalActivityId { dict["globalActivityId"] = globalActivityId }
+        if let clubId = clubId { dict["clubId"] = clubId }
+        if let creator = creator { dict["creator"] = creator }
+
         return dict
     }
 }
 
-// MARK: - Swimming Activity
+// MARK: - SwimmingActivity
 
 public struct SwimmingActivity: Activity {
-    
-    // MARK: - Activity Protocol Properties
-    
+
     public let id: String
     public var name: String
     public var description: String?
@@ -342,25 +254,11 @@ public struct SwimmingActivity: Activity {
     public var clubId: String?
     public var creator: String?
     public var imageURL: String?
-    
-    // MARK: - Activity Type
-    
-    public var activityType: ActivityCategory {
-        .swimming
-    }
-    
-    // MARK: - UI Properties
-    
-    public var icon: String {
-        "figure.pool.swim"
-    }
-    
-    public var colorHex: String {
-        "06B6D4" // Cyan
-    }
-    
-    // MARK: - Swimming-Specific Properties
-    
+
+    public var activityType: ActivityCategory { .swimming }
+    public var icon: String { "figure.pool.swim" }
+    public var colorHex: String { "06B6D4" }
+
     public var strokeType: SwimmingStroke
     public var poolLengthMeters: Int?
     public var targetLaps: Int?
@@ -369,19 +267,10 @@ public struct SwimmingActivity: Activity {
     public var intensity: CardioIntensity?
     public var intervals: [SwimmingInterval]?
     public var estimatedCaloriesValue: Int?
-    
-    // MARK: - Activity Protocol Computed Properties
-    
-    public var estimatedDuration: Int? {
-        targetDurationMinutes
-    }
-    
-    public var estimatedCalories: Int? {
-        estimatedCaloriesValue
-    }
-    
-    // MARK: - Init
-    
+
+    public var estimatedDuration: Int? { targetDurationMinutes }
+    public var estimatedCalories: Int? { estimatedCaloriesValue }
+
     public init(
         id: String = UUID().uuidString,
         name: String,
@@ -423,14 +312,13 @@ public struct SwimmingActivity: Activity {
         self.clubId = clubId
         self.creator = creator
     }
-    
-    // MARK: - Firestore Serialization
-    
+
     public func toDictionary() -> [String: Any] {
         var dict: [String: Any] = [
             "id": id,
             "name": name,
             "activityType": activityType.rawValue,
+            "activityTypeKey": "swimming",
             "createdAt": Timestamp(date: createdAt),
             "updatedAt": Timestamp(date: updatedAt),
             "tags": tags,
@@ -438,50 +326,37 @@ public struct SwimmingActivity: Activity {
             "source": source.rawValue,
             "shareable": shareable
         ]
-        
-        if let description = description {
-            dict["description"] = description
-        }
-        if let poolLengthMeters = poolLengthMeters {
-            dict["poolLengthMeters"] = poolLengthMeters
-        }
-        if let targetLaps = targetLaps {
-            dict["targetLaps"] = targetLaps
-        }
-        if let targetDistanceMeters = targetDistanceMeters {
-            dict["targetDistanceMeters"] = targetDistanceMeters
-        }
-        if let targetDurationMinutes = targetDurationMinutes {
-            dict["targetDurationMinutes"] = targetDurationMinutes
-        }
-        if let intensity = intensity {
-            dict["intensity"] = intensity.rawValue
-        }
+
+        if let description = description { dict["description"] = description }
+        if let poolLengthMeters = poolLengthMeters { dict["poolLengthMeters"] = poolLengthMeters }
+        if let targetLaps = targetLaps { dict["targetLaps"] = targetLaps }
+        if let targetDistanceMeters = targetDistanceMeters { dict["targetDistanceMeters"] = targetDistanceMeters }
+        if let targetDurationMinutes = targetDurationMinutes { dict["targetDurationMinutes"] = targetDurationMinutes }
+        if let intensity = intensity { dict["intensity"] = intensity.rawValue }
+        if let estimatedCaloriesValue = estimatedCaloriesValue { dict["estimatedCalories"] = estimatedCaloriesValue }
+        if let globalActivityId = globalActivityId { dict["globalActivityId"] = globalActivityId }
+        if let clubId = clubId { dict["clubId"] = clubId }
+        if let creator = creator { dict["creator"] = creator }
+
         if let intervals = intervals {
-            dict["intervals"] = try? JSONEncoder().encode(intervals)
+            dict["intervals"] = intervals.map { interval -> [String: Any] in
+                var d: [String: Any] = [
+                    "laps": interval.laps,
+                    "stroke": interval.stroke.rawValue
+                ]
+                if let rest = interval.restSeconds { d["restSeconds"] = rest }
+                return d
+            }
         }
-        if let estimatedCaloriesValue = estimatedCaloriesValue {
-            dict["estimatedCalories"] = estimatedCaloriesValue
-        }
-        if let globalActivityId = globalActivityId {
-            dict["globalActivityId"] = globalActivityId
-        }
-        if let clubId = clubId {
-            dict["clubId"] = clubId
-        }
-        if let creator = creator {
-            dict["creator"] = creator
-        }
-        
+
         return dict
     }
 }
 
-// MARK: - Walking Activity
+// MARK: - WalkingActivity
 
 public struct WalkingActivity: Activity {
-    // MARK: - Activity Protocol Properties
-    
+
     public let id: String
     public var name: String
     public var description: String?
@@ -494,44 +369,21 @@ public struct WalkingActivity: Activity {
     public var clubId: String?
     public var creator: String?
     public var imageURL: String?
-    
-    // MARK: - Activity Type
-    
-    public var activityType: ActivityCategory {
-        .walking
-    }
-    
-    // MARK: - UI Properties
-    
-    public var icon: String {
-        "figure.walk"
-    }
-    
-    public var colorHex: String {
-        "10B981" // Verde
-    }
-    
-    // MARK: - Walking-Specific Properties
-    
+
+    public var activityType: ActivityCategory { .walking }
+    public var icon: String { "figure.walk" }
+    public var colorHex: String { "10B981" }
+
     public var targetDistanceKm: Double?
     public var targetDurationMinutes: Int?
     public var targetSteps: Int?
     public var intensity: CardioIntensity?
     public var terrain: WalkingTerrain?
     public var estimatedCaloriesValue: Int?
-    
-    // MARK: - Activity Protocol Computed Properties
-    
-    public var estimatedDuration: Int? {
-        targetDurationMinutes
-    }
-    
-    public var estimatedCalories: Int? {
-        estimatedCaloriesValue
-    }
-    
-    // MARK: - Init
-    
+
+    public var estimatedDuration: Int? { targetDurationMinutes }
+    public var estimatedCalories: Int? { estimatedCaloriesValue }
+
     public init(
         id: String = UUID().uuidString,
         name: String,
@@ -569,88 +421,66 @@ public struct WalkingActivity: Activity {
         self.clubId = clubId
         self.creator = creator
     }
-    
-    // MARK: - Firestore Serialization
-    
+
     public func toDictionary() -> [String: Any] {
         var dict: [String: Any] = [
             "id": id,
             "name": name,
             "activityType": activityType.rawValue,
+            "activityTypeKey": "walking",
             "createdAt": Timestamp(date: createdAt),
             "updatedAt": Timestamp(date: updatedAt),
             "tags": tags,
             "source": source.rawValue,
             "shareable": shareable
         ]
-        
-        if let description = description {
-            dict["description"] = description
-        }
-        if let targetDistanceKm = targetDistanceKm {
-            dict["targetDistanceKm"] = targetDistanceKm
-        }
-        if let targetDurationMinutes = targetDurationMinutes {
-            dict["targetDurationMinutes"] = targetDurationMinutes
-        }
-        if let targetSteps = targetSteps {
-            dict["targetSteps"] = targetSteps
-        }
-        if let intensity = intensity {
-            dict["intensity"] = intensity.rawValue
-        }
-        if let terrain = terrain {
-            dict["terrain"] = terrain.rawValue
-        }
-        if let estimatedCaloriesValue = estimatedCaloriesValue {
-            dict["estimatedCalories"] = estimatedCaloriesValue
-        }
-        if let globalActivityId = globalActivityId {
-            dict["globalActivityId"] = globalActivityId
-        }
-        if let clubId = clubId {
-            dict["clubId"] = clubId
-        }
-        if let creator = creator {
-            dict["creator"] = creator
-        }
-        
+
+        if let description = description { dict["description"] = description }
+        if let targetDistanceKm = targetDistanceKm { dict["targetDistanceKm"] = targetDistanceKm }
+        if let targetDurationMinutes = targetDurationMinutes { dict["targetDurationMinutes"] = targetDurationMinutes }
+        if let targetSteps = targetSteps { dict["targetSteps"] = targetSteps }
+        if let intensity = intensity { dict["intensity"] = intensity.rawValue }
+        if let terrain = terrain { dict["terrain"] = terrain.rawValue }
+        if let estimatedCaloriesValue = estimatedCaloriesValue { dict["estimatedCalories"] = estimatedCaloriesValue }
+        if let globalActivityId = globalActivityId { dict["globalActivityId"] = globalActivityId }
+        if let clubId = clubId { dict["clubId"] = clubId }
+        if let creator = creator { dict["creator"] = creator }
+
         return dict
     }
 }
 
-// MARK: - Supporting Enums & Structs
+// MARK: - Supporting Enums
 
-public enum CardioIntensity: String, Codable {
-    case low = "Baja"
+public enum CardioIntensity: String, Codable, CaseIterable {
+    case low      = "Baja"
     case moderate = "Moderada"
-    case high = "Alta"
+    case high     = "Alta"
     case interval = "Intervalos"
 }
 
-// Running
-public enum RunningType: String, Codable {
-    case steady = "Continuo"
+public enum RunningType: String, Codable, CaseIterable {
+    case steady   = "Continuo"
     case intervals = "Intervalos"
-    case tempo = "Tempo"
-    case fartlek = "Fartlek"
-    case longRun = "Carrera larga"
+    case tempo    = "Tempo"
+    case fartlek  = "Fartlek"
+    case longRun  = "Carrera larga"
     case recovery = "Recuperación"
 }
 
-public enum RunningTerrain: String, Codable {
-    case road = "Carretera"
-    case trail = "Sendero"
-    case track = "Pista"
+public enum RunningTerrain: String, Codable, CaseIterable {
+    case road      = "Carretera"
+    case trail     = "Sendero"
+    case track     = "Pista"
     case treadmill = "Caminadora"
-    case mixed = "Mixto"
+    case mixed     = "Mixto"
 }
 
 public struct RunningInterval: Codable, Hashable {
     public var durationMinutes: Int
     public var paceMinPerKm: String
     public var recoveryMinutes: Int?
-    
+
     public init(durationMinutes: Int, paceMinPerKm: String, recoveryMinutes: Int? = nil) {
         self.durationMinutes = durationMinutes
         self.paceMinPerKm = paceMinPerKm
@@ -658,35 +488,33 @@ public struct RunningInterval: Codable, Hashable {
     }
 }
 
-// Cycling
-public enum CyclingType: String, Codable {
-    case road = "Ruta"
+public enum CyclingType: String, Codable, CaseIterable {
+    case road     = "Ruta"
     case mountain = "Montaña"
-    case indoor = "Interior"
-    case commute = "Traslado"
+    case indoor   = "Interior"
+    case commute  = "Traslado"
 }
 
-public enum CyclingTerrain: String, Codable {
-    case flat = "Plano"
+public enum CyclingTerrain: String, Codable, CaseIterable {
+    case flat    = "Plano"
     case rolling = "Ondulado"
-    case hilly = "Montañoso"
-    case mixed = "Mixto"
+    case hilly   = "Montañoso"
+    case mixed   = "Mixto"
 }
 
-// Swimming
-public enum SwimmingStroke: String, Codable {
-    case freestyle = "Crol"
-    case backstroke = "Espalda"
+public enum SwimmingStroke: String, Codable, CaseIterable {
+    case freestyle   = "Crol"
+    case backstroke  = "Espalda"
     case breaststroke = "Pecho"
-    case butterfly = "Mariposa"
-    case mixed = "Mixto"
+    case butterfly   = "Mariposa"
+    case mixed       = "Mixto"
 }
 
 public struct SwimmingInterval: Codable, Hashable {
     public var laps: Int
     public var stroke: SwimmingStroke
     public var restSeconds: Int?
-    
+
     public init(laps: Int, stroke: SwimmingStroke, restSeconds: Int? = nil) {
         self.laps = laps
         self.stroke = stroke
@@ -694,10 +522,9 @@ public struct SwimmingInterval: Codable, Hashable {
     }
 }
 
-// Walking
-public enum WalkingTerrain: String, Codable {
+public enum WalkingTerrain: String, Codable, CaseIterable {
     case urban = "Urbano"
-    case park = "Parque"
+    case park  = "Parque"
     case trail = "Sendero"
     case beach = "Playa"
     case mixed = "Mixto"
@@ -717,7 +544,8 @@ extension RunningActivity {
             targetPaceMinPerKm: "6:00",
             intensity: .high,
             terrain: .road,
-            estimatedCalories: 400
+            estimatedCalories: 400,
+            source: .global
         )
     }
 }
@@ -733,7 +561,8 @@ extension CyclingActivity {
             intensity: .high,
             terrain: .hilly,
             elevationGainMeters: 800,
-            estimatedCalories: 650
+            estimatedCalories: 650,
+            source: .global
         )
     }
 }
@@ -748,7 +577,8 @@ extension SwimmingActivity {
             targetLaps: 40,
             targetDurationMinutes: 45,
             intensity: .moderate,
-            estimatedCalories: 350
+            estimatedCalories: 350,
+            source: .global
         )
     }
 }
@@ -762,7 +592,8 @@ extension WalkingActivity {
             targetDurationMinutes: 40,
             intensity: .low,
             terrain: .park,
-            estimatedCalories: 150
+            estimatedCalories: 150,
+            source: .global
         )
     }
 }

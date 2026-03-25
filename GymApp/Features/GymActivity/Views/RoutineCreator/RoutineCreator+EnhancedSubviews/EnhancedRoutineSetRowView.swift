@@ -31,7 +31,7 @@ struct EnhancedRoutineSetRowView: View {
                     }
                     
                     VStack(alignment: .leading, spacing: 4) {
-                        Text(set.exercise.name)
+                        Text(set.exerciseName)
                             .font(.headline)
                             .fontWeight(.semibold)
                             .foregroundColor(.fitnessTextPrimary)

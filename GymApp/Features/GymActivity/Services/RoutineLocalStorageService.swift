@@ -149,7 +149,7 @@ class RoutineLocalStorageService {
     @MainActor
     func fetchRoutines(byCategory category : String) async throws -> [GymActivity]{
         let allRoutines = try await fetchRoutines()
-        return allRoutines.filter{ $0.category == category }
+        return allRoutines.filter{ $0.category?.rawValue == category }
     }
     
     ///Fetch routines by creatorID

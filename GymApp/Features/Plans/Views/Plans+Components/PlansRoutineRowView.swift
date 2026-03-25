@@ -41,7 +41,7 @@ struct InformationRoutineRowView: View {
                         
                         Spacer()
                         
-                        Text(routine.category ?? "Intermediate")
+                        Text(routine.category?.displayName ?? "Intermediate")
                             .font(.system(size: 12, weight: .medium))
                             .foregroundColor(Color.white)
                             .padding(.horizontal, 8)

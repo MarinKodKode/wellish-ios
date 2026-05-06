@@ -38,16 +38,4 @@ public final class GymActivityViewModel : ObservableObject {
         self.gymActivity = gymActivity
         self.repository = repository
     }
-
-    func fetchGymExercise() async{
-        do {
-            print("Fetching Exercises")
-            self.exerciseLibrary =  try await exerciseService
-                .fetchExercises(byCategory: .calistenia)
-            
-        }catch{
-            print("Error")
-        }
-        
-    }
 }

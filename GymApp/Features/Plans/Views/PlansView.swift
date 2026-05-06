@@ -43,14 +43,14 @@ struct PlansView: View {
                             }
                             .padding(.horizontal)
 
-                            if $plansVM.plans.isEmpty {
+                            if $plansVM.globalPlans.isEmpty {
                                 Text("Aún no tienes planes")
                                     .foregroundColor(.fitnessTextSecondary)
                                     .italic()
                                     .frame(maxWidth: .infinity)
                                     .padding()
                             } else {
-                                ForEach(self.plansVM.plans) { plan in
+                                ForEach(self.plansVM.globalPlans) { plan in
                                     Button(action: {
                                         navigationRouter.goTo(.planDetail(plan))
                                     }, label: {
@@ -76,14 +76,14 @@ struct PlansView: View {
                             }
                             .padding(.horizontal)
 
-                            if $plansVM.routines.isEmpty {
+                            if $plansVM.myRoutines.isEmpty {
                                 Text("Aún no tienes rutinas")
                                     .foregroundColor(.fitnessTextSecondary)
                                     .italic()
                                     .frame(maxWidth: .infinity)
                                     .padding()
                             } else {
-                                ForEach(self.plansVM.routines) { routine in
+                                ForEach(self.plansVM.myRoutines) { routine in
                                     Button(action: {
                                         navigationRouter.goTo(.gymActivityDetail(routine))
                                     }, label: {

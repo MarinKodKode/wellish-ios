@@ -10,7 +10,7 @@ import SwiftUI
 struct ExercisePickerView: View {
     var onSelect: (Exercise) -> Void
 
-    @ObservedObject var vm = GymActivityViewModel()
+    @StateObject private var vm = GymActivityViewModel()
     
     @Environment(\.presentationMode) private var presentationMode
 
@@ -68,7 +68,7 @@ struct ExercisePickerView: View {
                 }
             }
             .task {
-                await vm.fetchGymExercise()
+                await vm.fetchExerciseLibrary()
                 print(vm.exerciseLibrary)
             }
         }

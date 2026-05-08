@@ -7,7 +7,7 @@
 
 import Foundation
 
-public protocol PlanServiceProtocol {
+protocol PlanServiceProtocol {
     var errorMessage: String? { get set }
     var lastSyncDate: Date? { get }
 

@@ -46,17 +46,23 @@ public struct PlanDetailView: View {
         .navigationTitle(plan.name)
         .navigationBarTitleDisplayMode(.large)
         .toolbarTitleDisplayMode(.inline)
-        .toolbar{
-            ToolbarItem(placement: .topBarTrailing){
-                Menu("", systemImage: "ellipsis"){
-                    if plan.isBeingTracked {
-                        Button("Pausar", systemImage: "pause.circle"){
-                            Task {
+        .toolbar {
+            ToolbarItem(placement: .topBarTrailing) {
+                HStack {
+                    Button("", systemImage: "square.and.arrow.up") {}
+
+                    if !vm.isFollowing {
+                        Button("", systemImage: vm.isSaved ? "bookmark.fill" : "bookmark") {
+                            Task { _ = await vm.savePlan(plan) }
+                        }
+                    }
+
+                    if vm.isFollowing {
+                        Menu("", systemImage: "ellipsis") {
+                            Button("Pausar", systemImage: "pause.circle") {
                                 vm.onTap_StopTrackingPlan(plan)
                             }
                         }
-                    }
-                    Button("Compartir", systemImage: "square.and.arrow.up"){
                     }
                 }
             }

@@ -192,4 +192,14 @@ final class PlanLocalStorageService {
         try saveIndex(ids)
     }
     
+    @MainActor
+    func deleteAllPlans() async throws {
+        let planIDs = try await loadIndex()
+        for id in planIDs {
+            let fileURL = planFileURL(for: id)
+            try? fileManager.removeItem(at: fileURL)
+        }
+        try saveIndex([])
+        print("✅ All plans deleted from local storage")
+    }
 }

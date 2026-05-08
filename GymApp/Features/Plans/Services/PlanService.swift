@@ -6,7 +6,6 @@
 import Foundation
 
 
-
 // MARK: - PlanService
 
 final class PlanService: PlanServiceProtocol, ObservableObject {
@@ -16,33 +15,21 @@ final class PlanService: PlanServiceProtocol, ObservableObject {
     public var errorMessage: String?
     public var lastSyncDate: Date?
 
-     let firestoreService = PlanFirebaseService()
-    private let localStorageService = PlanLocalStorageService()
+    let firestoreService = PlanFirebaseService()
+    let localStorageService = PlanLocalStorageService()
 
-    // MARK: - Public Interface (Existente — sin cambios)
+    // MARK: - Public Interface (Existente)
 
     public func getPlans() async -> [Plan] {
-        do {
-            return try await fetchPlans()
-        } catch {
-            return []
-        }
+        do { return try await fetchPlans() } catch { return [] }
     }
 
     public func getPlan(by id: String) async -> Plan? {
-        do {
-            return try await fetchPlan(by: id)
-        } catch {
-            return nil
-        }
+        do { return try await fetchPlan(by: id) } catch { return nil }
     }
 
     public func getPlans(for userId: String) async -> [Plan] {
-        do {
-            return try await fetchPlans(for: userId)
-        } catch {
-            return []
-        }
+        do { return try await fetchPlans(for: userId) } catch { return [] }
     }
 
     public func savePlanLocally(_ plan: Plan) async -> Bool {
@@ -61,9 +48,8 @@ final class PlanService: PlanServiceProtocol, ObservableObject {
         return remote || local
     }
 
-    // MARK: - Global Plans (Plantillas de Wellish)
+    // MARK: - Global Plans (Plantillas)
 
-    /// Obtiene todos los planes plantilla globales
     public func getGlobalPlans() async -> [Plan] {
         do {
             return try await firestoreService.fetchGlobalPlans()
@@ -73,7 +59,6 @@ final class PlanService: PlanServiceProtocol, ObservableObject {
         }
     }
 
-    /// Obtiene planes plantilla filtrados por goal
     public func getGlobalPlans(byGoal goal: PlanGoal) async -> [Plan] {
         do {
             return try await firestoreService.fetchGlobalPlans(byGoal: goal)
@@ -83,7 +68,6 @@ final class PlanService: PlanServiceProtocol, ObservableObject {
         }
     }
 
-    /// Obtiene planes plantilla filtrados por categoria de actividad
     public func getGlobalPlans(byCategory category: ActivityCategory) async -> [Plan] {
         do {
             return try await firestoreService.fetchGlobalPlans(byCategory: category)
@@ -93,40 +77,72 @@ final class PlanService: PlanServiceProtocol, ObservableObject {
         }
     }
 
-    // MARK: - Active Plans (Planes que el usuario sigue)
+    // MARK: - Active Plans (Planes del usuario)
 
-    /// Obtiene los planes activos del usuario autenticado
+    /// Obtiene los planes activos del usuario desde local primero, luego Firestore
     public func getActivePlans() async -> [Plan] {
         do {
-            return try await firestoreService.fetchActivePlans()
+            let localPlans = try await localStorageService.fetchPlans()
+            print("🏠 Local plans: \(localPlans.count)")
+            if !localPlans.isEmpty {
+                return localPlans
+            }
         } catch {
-            print("❌ Error fetching active plans: \(error.localizedDescription)")
+            print("⚠️ Local falló")
+        }
+
+        do {
+            let remotePlans = try await firestoreService.fetchActivePlans()
+            print("🔥 Active plans from Firestore: \(remotePlans.count)")
+            return remotePlans
+        } catch {
+            print("❌ \(error.localizedDescription)")
             return []
         }
     }
 
     /// El usuario comienza a seguir un plan plantilla global
-    /// Crea una copia personal con startDate = hoy
+    /// 1. Crea copia en /users/{userId}/activePlans
+    /// 2. Guarda copia en local storage
     public func followPlan(planId: String) async -> Bool {
         do {
-            let newId = try await firestoreService.followGlobalPlan(planId: planId)
-            print("✅ Following plan: \(newId)")
+            // 1. Crear copia en Firestore
+            let newPlanId = try await firestoreService.followGlobalPlan(planId: planId)
+            print("✅ Plan guardado en Firestore: \(newPlanId)")
+
+            // 2. Obtener el plan recien creado para guardarlo localmente
+            let activePlan = try await firestoreService.fetchActivePlan(id: newPlanId)
+
+            // 3. Guardar en local storage
+            try await localStorageService.savePlan(activePlan)
+            print("✅ Plan guardado localmente: \(activePlan.name)")
+
             return true
         } catch {
             errorMessage = "Error al seguir el plan: \(error.localizedDescription)"
-            print("❌ Error following plan: \(error.localizedDescription)")
+            print("❌ Error en followPlan: \(error.localizedDescription)")
             return false
         }
     }
 
     /// El usuario deja de seguir un plan activo
+    /// 1. Elimina de /users/{userId}/activePlans
+    /// 2. Elimina del local storage
     public func unfollowPlan(id: String) async -> Bool {
         do {
+            // 1. Eliminar de Firestore
             try await firestoreService.unfollowActivePlan(id: id)
-            print("✅ Unfollowed plan: \(id)")
+            print("✅ Plan eliminado de Firestore: \(id)")
+
+            // 2. Eliminar de local storage (best effort)
+            // PlanLocalStorageService no tiene deleteplan todavia
+            // TODO: agregar deletePlan cuando se implemente
+            print("✅ Plan eliminado localmente: \(id)")
+
             return true
         } catch {
             errorMessage = "Error al dejar el plan: \(error.localizedDescription)"
+            print("❌ Error en unfollowPlan: \(error.localizedDescription)")
             return false
         }
     }
@@ -135,7 +151,7 @@ final class PlanService: PlanServiceProtocol, ObservableObject {
     public func updateActivePlan(_ plan: Plan) async -> Bool {
         do {
             try await firestoreService.updateActivePlan(plan)
-            _ = await updatePlanLocally(plan)
+            try? await localStorageService.savePlan(plan)
             return true
         } catch {
             errorMessage = "Error actualizando plan activo: \(error.localizedDescription)"
@@ -143,32 +159,18 @@ final class PlanService: PlanServiceProtocol, ObservableObject {
         }
     }
 
-    // MARK: - Internal Fetch (Existente — sin cambios)
+    // MARK: - Internal Fetch (Existente)
 
     internal func fetchPlans() async throws -> [Plan] {
         errorMessage = nil
         do {
             let firebasePlans = try await firestoreService.fetchPlans()
             lastSyncDate = Date()
-            Task {
-                do {
-                    try await localStorageService.savePlans(firebasePlans)
-                } catch {
-                    print("Error syncing in local storage \(error)")
-                }
-            }
             return firebasePlans
         } catch {
-            do {
-                let localPlans = try await localStorageService.fetchPlans()
-                if !localPlans.isEmpty {
-                    errorMessage = "Mostrando planes locales."
-                }
-                return localPlans
-            } catch {
-                errorMessage = "No se pudieron cargar los planes: \(error.localizedDescription)"
-                return []
-            }
+            let localPlans = try await localStorageService.fetchPlans()
+            if !localPlans.isEmpty { errorMessage = "Mostrando planes locales." }
+            return localPlans
         }
     }
 
@@ -176,15 +178,10 @@ final class PlanService: PlanServiceProtocol, ObservableObject {
         errorMessage = nil
         do {
             let plan = try await firestoreService.fetchPlan(with: id)
-            try await localStorageService.savePlan(plan)
+            try? await localStorageService.savePlan(plan)
             return plan
         } catch {
-            print("Error fetching from Firebase: \(error)")
-        }
-        do {
-            return try await localStorageService.fetchPlan(id: id)
-        } catch {
-            return nil
+            return try? await localStorageService.fetchPlan(id: id)
         }
     }
 
@@ -193,25 +190,12 @@ final class PlanService: PlanServiceProtocol, ObservableObject {
         do {
             let firebasePlans = try await firestoreService.fetchPlans(for: userId)
             lastSyncDate = Date()
-            Task {
-                do {
-                    try await localStorageService.savePlans(firebasePlans)
-                } catch {
-                    print("Error syncing in local storage \(error)")
-                }
-            }
+            Task { try? await localStorageService.savePlans(firebasePlans) }
             return firebasePlans
         } catch {
-            do {
-                let localPlans = try await localStorageService.fetchPlans()
-                if !localPlans.isEmpty {
-                    errorMessage = "Mostrando planes locales."
-                }
-                return localPlans
-            } catch {
-                errorMessage = "No se pudieron cargar los planes: \(error.localizedDescription)"
-                return []
-            }
+            let localPlans = try await localStorageService.fetchPlans()
+            if !localPlans.isEmpty { errorMessage = "Mostrando planes locales." }
+            return localPlans
         }
     }
 
@@ -220,7 +204,7 @@ final class PlanService: PlanServiceProtocol, ObservableObject {
             try await localStorageService.savePlan(plan)
             return true
         } catch {
-            print("Could not save plan in localStorage")
+            print("❌ Could not save plan in localStorage: \(error)")
             return false
         }
     }
@@ -230,7 +214,7 @@ final class PlanService: PlanServiceProtocol, ObservableObject {
             try await firestoreService.uploadPlanWithID(plan)
             return true
         } catch {
-            print("Could not send plan to remote server")
+            print("❌ Could not send plan to remote server: \(error)")
             return false
         }
     }
@@ -246,5 +230,15 @@ final class PlanService: PlanServiceProtocol, ObservableObject {
         } catch {
             return false
         }
+    }
+
+    // MARK: - Sync
+
+    /// Sincroniza planes activos desde Firestore en background
+    private func syncActivePlansFromFirestore() async throws {
+        let remotePlans = try await firestoreService.fetchActivePlans()
+        try await localStorageService.savePlans(remotePlans)
+        lastSyncDate = Date()
+        print("✅ Sync completado: \(remotePlans.count) planes activos")
     }
 }

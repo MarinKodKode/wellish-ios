@@ -14,7 +14,8 @@ class PlanDetailViewModel: ObservableObject {
     @Published var isFollowing: Bool = false
     @Published var isSaving: Bool = false
     @Published var errorMessage: String?
-
+    @Published var isSaved: Bool = false
+    
     // MARK: - Services
 
     private let planService = PlanService()
@@ -121,7 +122,28 @@ class PlanDetailViewModel: ObservableObject {
 
     /// Verifica si el usuario ya esta siguiendo este plan
     func checkIfFollowing(_ planId: String) async {
-        let activePlan = await fetchActivePlan(planId)
-        isFollowing = activePlan != nil
+        if let activePlan = await fetchActivePlan(planId) {
+            isSaved = true
+            isFollowing = activePlan.startDate != nil
+        }
+    }
+    
+    func savePlan(_ plan: Plan) async -> Bool {
+        isSaving = true
+        defer { isSaving = false }
+        do {
+            let id = try await planService.firestoreService.saveGlobalPlan(planId: plan.id)
+            let saved = try await planService.firestoreService.fetchActivePlan(id: id)
+            try await planService.localStorageService.savePlan(saved)
+            isSaved = true
+            AlertViewModel.shared.showSuccessToast(
+                message: "Plan guardado correctamente",
+                icon: "bookmark.fill"
+            )
+            return true
+        } catch {
+            errorMessage = "No se pudo guardar el plan."
+            return false
+        }
     }
 }

@@ -53,11 +53,21 @@ struct AlertManagerView: View {
                                 }))
                         }
                     }
+                    
             }
             )
+            .overlay(alignment: .top) {
+                if alertVM.showToast {
+                    ToastView(message: alertVM.toastMessage, icon: alertVM.toastIcon)
+                        .transition(.move(edge: .top).combined(with: .opacity))
+                        .animation(.spring(duration: 0.4), value: alertVM.showToast)
+                        .padding(.top, 60)
+                }
+            }
     }
 }
 
 #Preview {
     AlertManagerView()
 }
+

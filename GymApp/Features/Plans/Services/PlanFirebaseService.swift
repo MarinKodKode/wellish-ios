@@ -168,21 +168,20 @@ final class PlanFirebaseService {
     @MainActor
     func followGlobalPlan(planId: String) async throws -> String {
         let userId = try getCurrentUserId()
-
-        let planDoc = try await db.collection(globalPlansCollection)
-            .document(planId)
-            .getDocument()
-
-        guard planDoc.exists else {
-            throw PlanServiceError.planNotFound(planId)
-        }
-
-        var plan = try planDoc.data(as: Plan.self)
-        plan.start()
-
+        // Obtener la copia existente o el plan global
         let docRef = userActivePlansCollection(userId: userId).document(planId)
+        var plan: Plan
+        let existing = try await docRef.getDocument()
+        if existing.exists {
+            plan = try existing.data(as: Plan.self)
+        } else {
+            let globalDoc = try await db.collection(globalPlansCollection)
+                .document(planId).getDocument()
+            guard globalDoc.exists else { throw PlanServiceError.planNotFound(planId) }
+            plan = try globalDoc.data(as: Plan.self)
+        }
+        plan.start() // Solo aqui se inicia
         try docRef.setData(from: plan)
-
         return planId
     }
 
@@ -235,6 +234,19 @@ final class PlanFirebaseService {
             .whereField("category", isEqualTo: category.rawValue)
             .getDocuments()
         return snapshot.documents.compactMap { try? $0.data(as: Plan.self) }
+    }
+    
+    @MainActor
+    func saveGlobalPlan(planId: String) async throws -> String {
+        let userId = try getCurrentUserId()
+        let planDoc = try await db.collection(globalPlansCollection)
+            .document(planId).getDocument()
+        guard planDoc.exists else { throw PlanServiceError.planNotFound(planId) }
+        let plan = try planDoc.data(as: Plan.self)
+        // Sin plan.start() — no tiene startDate aun
+        let docRef = userActivePlansCollection(userId: userId).document(planId)
+        try docRef.setData(from: plan)
+        return planId
     }
 }
 

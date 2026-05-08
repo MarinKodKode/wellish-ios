@@ -20,6 +20,11 @@ class AlertViewModel: ObservableObject {
     @Published var alertMessage = ""
     @Published var acceptAction: (() -> Void)?
     @Published var alertAction: (() -> Void)? = nil
+    @Published var showToast = false
+    @Published var toastMessage = ""
+    @Published var toastIcon = "checkmark.circle.fill"
+    
+    
     
     func showErrorAlert(alertType : AlertType, alertMessage : String ) {
         DispatchQueue.main.asyncAfter(deadline: .now() + 0.5){
@@ -35,6 +40,18 @@ class AlertViewModel: ObservableObject {
             self.alertMessage = alertMessage
             self.alertAction = action
             self.showAlert = true
+        }
+    }
+    
+    func showSuccessToast(message: String, icon: String = "checkmark.circle.fill") {
+        DispatchQueue.main.async {
+            self.toastMessage = message
+            self.toastIcon = icon
+            self.showToast = true
+            // Auto-dismiss después de 2.5 segundos
+            DispatchQueue.main.asyncAfter(deadline: .now() + 2.5) {
+                self.showToast = false
+            }
         }
     }
     

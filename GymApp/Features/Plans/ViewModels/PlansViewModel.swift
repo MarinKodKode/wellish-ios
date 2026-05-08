@@ -24,11 +24,8 @@ public final class PlansViewViewModel: ObservableObject {
     // MARK: - Init View
 
     public func initView() {
-        print("🚀 initView called")
         Task {
-            print("🚀 Task started")
             await loadAll()
-            print("🚀 loadAll completed, globalPlans: \(globalPlans.count)")
         }
     }
 

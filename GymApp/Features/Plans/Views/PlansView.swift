@@ -48,14 +48,14 @@ struct PlansView: View {
                             }
                             .padding(.horizontal)
 
-                            if $plansVM.globalPlans.isEmpty {
+                            if plansVM.myPlans.isEmpty  {
                                 Text("Aún no tienes planes")
                                     .foregroundColor(.fitnessTextSecondary)
                                     .italic()
                                     .frame(maxWidth: .infinity)
                                     .padding()
                             } else {
-                                ForEach(self.plansVM.globalPlans) { plan in
+                                ForEach(self.plansVM.myPlans) { plan in
                                     Button(action: {
                                         navigationRouter.goTo(.planDetail(plan))
                                     }, label: {

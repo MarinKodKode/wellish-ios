@@ -26,9 +26,7 @@ public struct GymActivity: Activity {
     // MARK: - Activity Protocol
 
     public var activityType: ActivityCategory { .gym }
-
     public var icon: String { "dumbbell.fill" }
-
     public var colorHex: String { "3B82F6" }
 
     // MARK: - Gym-Specific Properties
@@ -61,13 +59,6 @@ public struct GymActivity: Activity {
         sets.reduce(0) { $0 + $1.totalReps }
     }
 
-    public var formattedVolume: String {
-        NumberFormatter.localizedString(
-            from: NSNumber(value: estimatedVolumeKg),
-            number: .decimal
-        ) + " kg"
-    }
-
     public var primaryMusclesDisplay: String {
         primaryMuscles.isEmpty ? "—" : primaryMuscles.map(\.rawValue).joined(separator: ", ")
     }
@@ -78,10 +69,6 @@ public struct GymActivity: Activity {
 
     public var isToday: Bool {
         Calendar.current.isDateInToday(createdAt)
-    }
-
-    public var daysOld: Int {
-        Calendar.current.dateComponents([.day], from: createdAt, to: Date()).day ?? 0
     }
 
     // MARK: - Init
@@ -145,6 +132,33 @@ public struct GymActivity: Activity {
         case isPremiumRoutine, imageURL
     }
 
+    // MARK: - Custom Decoder (tolerante a campos faltantes y Timestamps)
+
+    public init(from decoder: Decoder) throws {
+        let c = try decoder.container(keyedBy: CodingKeys.self)
+
+        id = try c.decode(String.self, forKey: .id)
+        name = try c.decode(String.self, forKey: .name)
+        description = try c.decodeIfPresent(String.self, forKey: .description)
+        sets = try c.decodeIfPresent([RoutineSet].self, forKey: .sets) ?? []
+        tags = try c.decodeIfPresent([String].self, forKey: .tags) ?? []
+        category = try c.decodeIfPresent(ExerciseCategory.self, forKey: .category)
+        difficulty = try c.decodeIfPresent(ExerciseDifficulty.self, forKey: .difficulty)
+        estimatedDurationMinutes = try c.decodeIfPresent(Int.self, forKey: .estimatedDurationMinutes)
+        estimatedCaloriesValue = try c.decodeIfPresent(Int.self, forKey: .estimatedCaloriesValue)
+        primaryMuscles = try c.decodeIfPresent([ExerciseMuscle].self, forKey: .primaryMuscles) ?? []
+        secondaryMuscles = try c.decodeIfPresent([ExerciseMuscle].self, forKey: .secondaryMuscles) ?? []
+        source = try c.decodeIfPresent(ActivitySource.self, forKey: .source) ?? .global
+        globalActivityId = try c.decodeIfPresent(String.self, forKey: .globalActivityId)
+        shareable = try c.decodeIfPresent(Bool.self, forKey: .shareable) ?? false
+        clubId = try c.decodeIfPresent(String.self, forKey: .clubId)
+        creator = try c.decodeIfPresent(String.self, forKey: .creator)
+        isPremiumRoutine = try c.decodeIfPresent(Bool.self, forKey: .isPremiumRoutine) ?? false
+        imageURL = try c.decodeIfPresent(String.self, forKey: .imageURL)
+        createdAt = try c.decodeIfPresent(Date.self, forKey: .createdAt) ?? Date()
+        updatedAt = try c.decodeIfPresent(Date.self, forKey: .updatedAt) ?? Date()
+    }
+
     // MARK: - Firestore Serialization
 
     public func toDictionary() -> [String: Any] {
@@ -178,40 +192,25 @@ public struct GymActivity: Activity {
     }
 }
 
-// MARK: - Preview Helpers
+// MARK: - Preview
 
 #if DEBUG
 extension GymActivity {
     public static var example: GymActivity {
         GymActivity(
             name: "Empuje de pecho",
-            description: "Rutina de empuje enfocada en pecho, hombros y triceps.",
+            description: "Rutina de empuje enfocada en pecho.",
             sets: [
                 RoutineSet(
                     exerciseId: "8B747E73-EF22-4B53-8FBA-279B217C9D9F",
                     exerciseName: "Press de banca con barra",
-                    series: [
-                        Serie(repetitions: 10, idealWeightKg: 60, restSeconds: 90),
-                        Serie(repetitions: 8, idealWeightKg: 70, restSeconds: 90),
-                        Serie(repetitions: 6, idealWeightKg: 80, restSeconds: 120)
-                    ]
-                ),
-                RoutineSet(
-                    exerciseId: "82CCB4F1-726C-434E-B7B2-D8EB70078CC4",
-                    exerciseName: "Aperturas con mancuernas",
-                    series: [
-                        Serie(repetitions: 12, idealWeightKg: 16, restSeconds: 60),
-                        Serie(repetitions: 12, idealWeightKg: 16, restSeconds: 60),
-                        Serie(repetitions: 12, idealWeightKg: 16, restSeconds: 60)
-                    ]
+                    series: [Serie(repetitions: 10, idealWeightKg: 60, restSeconds: 90)]
                 )
             ],
-            tags: ["pecho", "empuje", "hipertrofia"],
             category: .hipertrofia,
             difficulty: .intermedio,
-            estimatedDurationMinutes: 55,
             primaryMuscles: [.pectorales],
-            secondaryMuscles: [.triceps, .deltoidesAnteriores],
+            secondaryMuscles: [.triceps],
             estimatedCalories: 320,
             source: .global,
             isPremiumRoutine: false

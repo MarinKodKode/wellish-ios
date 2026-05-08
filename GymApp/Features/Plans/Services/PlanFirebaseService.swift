@@ -58,9 +58,15 @@ final class PlanFirebaseService {
     @MainActor
     func fetchGlobalPlans() async throws -> [Plan] {
         let snapshot = try await db.collection(globalPlansCollection)
-            .whereField("isGlobal", isEqualTo: true)
             .getDocuments()
-        return snapshot.documents.compactMap { try? $0.data(as: Plan.self) }
+        let plans = snapshot.documents.compactMap { doc -> Plan? in
+            do {
+                return try doc.data(as: Plan.self)
+            } catch {
+                return nil
+            }
+        }
+        return plans
     }
 
     /// Obtiene planes plantilla por goal
@@ -145,6 +151,7 @@ final class PlanFirebaseService {
     @MainActor
     func fetchActivePlan(id: String) async throws -> Plan {
         let userId = try getCurrentUserId()
+        print("🔍 fetchActivePlan - userId: \(userId), planId: \(id)")
         let document = try await userActivePlansCollection(userId: userId)
             .document(id)
             .getDocument()
@@ -162,7 +169,6 @@ final class PlanFirebaseService {
     func followGlobalPlan(planId: String) async throws -> String {
         let userId = try getCurrentUserId()
 
-        // 1. Obtener el plan plantilla
         let planDoc = try await db.collection(globalPlansCollection)
             .document(planId)
             .getDocument()
@@ -172,15 +178,12 @@ final class PlanFirebaseService {
         }
 
         var plan = try planDoc.data(as: Plan.self)
-
-        // 2. Iniciar el plan con fecha de hoy
         plan.start()
 
-        // 3. Guardar copia en activePlans del usuario
-        let newDocRef = try userActivePlansCollection(userId: userId)
-            .addDocument(from: plan)
+        let docRef = userActivePlansCollection(userId: userId).document(planId)
+        try docRef.setData(from: plan)
 
-        return newDocRef.documentID
+        return planId
     }
 
     // MARK: - UPDATE

@@ -16,7 +16,7 @@ final class PlanService: PlanServiceProtocol, ObservableObject {
     public var errorMessage: String?
     public var lastSyncDate: Date?
 
-    private let firestoreService = PlanFirebaseService()
+     let firestoreService = PlanFirebaseService()
     private let localStorageService = PlanLocalStorageService()
 
     // MARK: - Public Interface (Existente — sin cambios)

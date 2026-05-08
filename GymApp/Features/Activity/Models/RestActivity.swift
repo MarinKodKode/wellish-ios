@@ -25,14 +25,14 @@ public struct RestActivity: Activity {
 
     public var icon: String {
         switch restType {
-        case .complete:    return "bed.double.fill"
-        case .active:      return "figure.walk"
-        case .mobility:    return "figure.flexibility"
-        case .stretching:  return "figure.mind.and.body"
-        case .foam:        return "figure.rolling"
-        case .massage:     return "hand.raised.fill"
-        case .sauna:       return "flame.fill"
-        case .ice:         return "snowflake"
+        case .complete:   return "bed.double.fill"
+        case .active:     return "figure.walk"
+        case .mobility:   return "figure.flexibility"
+        case .stretching: return "figure.mind.and.body"
+        case .foam:       return "figure.rolling"
+        case .massage:    return "hand.raised.fill"
+        case .sauna:      return "flame.fill"
+        case .ice:        return "snowflake"
         }
     }
 
@@ -49,8 +49,6 @@ public struct RestActivity: Activity {
         }
     }
 
-    // MARK: - Rest-Specific Properties
-
     public var restType: RestType
     public var suggestedActivities: [String]?
     public var suggestedDurationMinutes: Int?
@@ -60,8 +58,7 @@ public struct RestActivity: Activity {
     public var estimatedDuration: Int? { suggestedDurationMinutes }
 
     public var estimatedCalories: Int? {
-        guard restType != .complete,
-              let duration = suggestedDurationMinutes else { return nil }
+        guard restType != .complete, let duration = suggestedDurationMinutes else { return nil }
         switch restType {
         case .active:                        return duration * 3
         case .mobility, .stretching, .foam:  return duration * 2
@@ -70,51 +67,55 @@ public struct RestActivity: Activity {
         }
     }
 
+    enum CodingKeys: String, CodingKey {
+        case id, name, description, createdAt, updatedAt, tags
+        case source, globalActivityId, shareable, clubId, creator
+        case restType, suggestedActivities, suggestedDurationMinutes
+        case targetAreas, recoveryNotes
+    }
+
+    // MARK: - Custom Decoder
+
+    public init(from decoder: Decoder) throws {
+        let c = try decoder.container(keyedBy: CodingKeys.self)
+        id = try c.decode(String.self, forKey: .id)
+        name = try c.decode(String.self, forKey: .name)
+        description = try c.decodeIfPresent(String.self, forKey: .description)
+        tags = try c.decodeIfPresent([String].self, forKey: .tags) ?? []
+        source = try c.decodeIfPresent(ActivitySource.self, forKey: .source) ?? .global
+        globalActivityId = try c.decodeIfPresent(String.self, forKey: .globalActivityId)
+        shareable = try c.decodeIfPresent(Bool.self, forKey: .shareable) ?? false
+        clubId = try c.decodeIfPresent(String.self, forKey: .clubId)
+        creator = try c.decodeIfPresent(String.self, forKey: .creator)
+        imageURL = nil
+        restType = try c.decodeIfPresent(RestType.self, forKey: .restType) ?? .complete
+        suggestedActivities = try c.decodeIfPresent([String].self, forKey: .suggestedActivities)
+        suggestedDurationMinutes = try c.decodeIfPresent(Int.self, forKey: .suggestedDurationMinutes)
+        targetAreas = try c.decodeIfPresent([BodyArea].self, forKey: .targetAreas)
+        recoveryNotes = try c.decodeIfPresent(String.self, forKey: .recoveryNotes)
+        createdAt = try c.decodeIfPresent(Date.self, forKey: .createdAt) ?? Date()
+        updatedAt = try c.decodeIfPresent(Date.self, forKey: .updatedAt) ?? Date()
+    }
+
     // MARK: - Init
 
     public init(
-        id: String = UUID().uuidString,
-        name: String,
-        description: String? = nil,
-        createdAt: Date = Date(),
-        updatedAt: Date = Date(),
-        tags: [String] = [],
-        restType: RestType,
-        suggestedActivities: [String]? = nil,
-        suggestedDurationMinutes: Int? = nil,
-        targetAreas: [BodyArea]? = nil,
-        recoveryNotes: String? = nil,
-        source: ActivitySource = .created,
-        globalActivityId: String? = nil,
-        shareable: Bool = false,
-        clubId: String? = nil,
-        creator: String? = nil
+        id: String = UUID().uuidString, name: String, description: String? = nil,
+        createdAt: Date = Date(), updatedAt: Date = Date(), tags: [String] = [],
+        restType: RestType, suggestedActivities: [String]? = nil,
+        suggestedDurationMinutes: Int? = nil, targetAreas: [BodyArea]? = nil,
+        recoveryNotes: String? = nil, source: ActivitySource = .created,
+        globalActivityId: String? = nil, shareable: Bool = false,
+        clubId: String? = nil, creator: String? = nil
     ) {
-        self.id = id
-        self.name = name
-        self.description = description
-        self.createdAt = createdAt
-        self.updatedAt = updatedAt
-        self.tags = tags
-        self.restType = restType
-        self.suggestedActivities = suggestedActivities
+        self.id = id; self.name = name; self.description = description
+        self.createdAt = createdAt; self.updatedAt = updatedAt; self.tags = tags
+        self.restType = restType; self.suggestedActivities = suggestedActivities
         self.suggestedDurationMinutes = suggestedDurationMinutes
-        self.targetAreas = targetAreas
-        self.recoveryNotes = recoveryNotes
-        self.source = source
-        self.globalActivityId = globalActivityId
-        self.shareable = shareable
-        self.clubId = clubId
-        self.creator = creator
-    }
-
-    enum CodingKeys: String, CodingKey {
-        case id, name, description
-        case createdAt, updatedAt, tags
-        case restType, suggestedActivities
-        case suggestedDurationMinutes, targetAreas
-        case recoveryNotes, source, globalActivityId
-        case shareable, clubId, creator
+        self.targetAreas = targetAreas; self.recoveryNotes = recoveryNotes
+        self.source = source; self.globalActivityId = globalActivityId
+        self.shareable = shareable; self.clubId = clubId; self.creator = creator
+        self.imageURL = nil
     }
 
     // MARK: - Computed Properties
@@ -128,19 +129,6 @@ public struct RestActivity: Activity {
         }
     }
 
-    public var restTypeDescription: String {
-        switch restType {
-        case .complete:   return "Descanso total. Tu cuerpo necesita recuperarse completamente."
-        case .active:     return "Actividad ligera como caminar, nadar suave o yoga restaurativo."
-        case .mobility:   return "Trabajo de movilidad articular y flexibilidad."
-        case .stretching: return "Sesión de estiramientos estáticos y dinámicos."
-        case .foam:       return "Auto-masaje con foam roller para liberar tensiones."
-        case .massage:    return "Masaje terapéutico o deportivo profesional."
-        case .sauna:      return "Terapia de calor para relajación muscular."
-        case .ice:        return "Crioterapia o baño de hielo para recuperación."
-        }
-    }
-
     public var formattedTargetAreas: String? {
         guard let areas = targetAreas, !areas.isEmpty else { return nil }
         return areas.map { $0.rawValue }.joined(separator: ", ")
@@ -150,27 +138,20 @@ public struct RestActivity: Activity {
 
     public func toDictionary() -> [String: Any] {
         var dict: [String: Any] = [
-            "id": id,
-            "name": name,
-            "activityType": activityType.rawValue,
+            "id": id, "name": name, "activityType": activityType.rawValue,
             "activityTypeKey": "rest",
-            "createdAt": Timestamp(date: createdAt),
-            "updatedAt": Timestamp(date: updatedAt),
-            "tags": tags,
-            "restType": restType.rawValue,
-            "source": source.rawValue,
-            "shareable": shareable
+            "createdAt": Timestamp(date: createdAt), "updatedAt": Timestamp(date: updatedAt),
+            "tags": tags, "restType": restType.rawValue,
+            "source": source.rawValue, "shareable": shareable
         ]
-
-        if let description = description { dict["description"] = description }
-        if let suggestedActivities = suggestedActivities { dict["suggestedActivities"] = suggestedActivities }
-        if let suggestedDurationMinutes = suggestedDurationMinutes { dict["suggestedDurationMinutes"] = suggestedDurationMinutes }
-        if let targetAreas = targetAreas { dict["targetAreas"] = targetAreas.map { $0.rawValue } }
-        if let recoveryNotes = recoveryNotes { dict["recoveryNotes"] = recoveryNotes }
-        if let globalActivityId = globalActivityId { dict["globalActivityId"] = globalActivityId }
-        if let clubId = clubId { dict["clubId"] = clubId }
-        if let creator = creator { dict["creator"] = creator }
-
+        if let v = description { dict["description"] = v }
+        if let v = suggestedActivities { dict["suggestedActivities"] = v }
+        if let v = suggestedDurationMinutes { dict["suggestedDurationMinutes"] = v }
+        if let v = targetAreas { dict["targetAreas"] = v.map { $0.rawValue } }
+        if let v = recoveryNotes { dict["recoveryNotes"] = v }
+        if let v = globalActivityId { dict["globalActivityId"] = v }
+        if let v = clubId { dict["clubId"] = v }
+        if let v = creator { dict["creator"] = v }
         return dict
     }
 }
@@ -185,7 +166,7 @@ public enum RestType: String, Codable, CaseIterable {
     case foam       = "Foam rolling"
     case massage    = "Masaje"
     case sauna      = "Sauna"
-    case ice        = "Baño de hielo"
+    case ice        = "Bano de hielo"
 
     public var shortDescription: String {
         switch self {
@@ -202,14 +183,10 @@ public enum RestType: String, Codable, CaseIterable {
 
     public var defaultDuration: Int? {
         switch self {
-        case .complete:   return nil
-        case .active:     return 30
-        case .mobility:   return 20
-        case .stretching: return 15
-        case .foam:       return 15
-        case .massage:    return 60
-        case .sauna:      return 20
-        case .ice:        return 10
+        case .complete: return nil
+        case .active: return 30; case .mobility: return 20
+        case .stretching: return 15; case .foam: return 15
+        case .massage: return 60; case .sauna: return 20; case .ice: return 10
         }
     }
 }
@@ -227,70 +204,45 @@ public enum BodyArea: String, Codable, CaseIterable {
     case hips       = "Caderas"
     case legs       = "Piernas"
     case calves     = "Pantorrillas"
-    case glutes     = "Glúteos"
+    case glutes     = "Gluteos"
     case hamstrings = "Isquiotibiales"
-    case quads      = "Cuádriceps"
+    case quads      = "Cuadriceps"
     case chest      = "Pecho"
     case neck       = "Cuello"
 
     public var icon: String {
         switch self {
-        case .fullBody:   return "figure.stand"
-        case .upperBody:  return "figure.arms.open"
-        case .lowerBody:  return "figure.walk"
-        case .back:       return "figure.strengthtraining.traditional"
-        case .shoulders:  return "figure.arms.open"
-        case .arms:       return "figure.strengthtraining.functional"
-        case .core:       return "figure.core.training"
-        case .hips:       return "figure.flexibility"
-        case .legs:       return "figure.walk"
-        case .calves:     return "figure.run"
-        case .glutes:     return "figure.strengthtraining.traditional"
+        case .fullBody: return "figure.stand"
+        case .upperBody: return "figure.arms.open"
+        case .lowerBody: return "figure.walk"
+        case .back: return "figure.strengthtraining.traditional"
+        case .shoulders: return "figure.arms.open"
+        case .arms: return "figure.strengthtraining.functional"
+        case .core: return "figure.core.training"
+        case .hips: return "figure.flexibility"
+        case .legs: return "figure.walk"
+        case .calves: return "figure.run"
+        case .glutes: return "figure.strengthtraining.traditional"
         case .hamstrings: return "figure.run"
-        case .quads:      return "figure.strengthtraining.traditional"
-        case .chest:      return "heart.fill"
-        case .neck:       return "figure.mind.and.body"
+        case .quads: return "figure.strengthtraining.traditional"
+        case .chest: return "heart.fill"
+        case .neck: return "figure.mind.and.body"
         }
     }
 }
 
-// MARK: - Preview Helpers
+// MARK: - Preview
 
 #if DEBUG
 extension RestActivity {
-    public static var completeRest: RestActivity {
-        RestActivity(
-            name: "Día de Descanso Total",
-            description: "Recuperación completa sin actividad física",
-            restType: .complete,
-            recoveryNotes: "Enfócate en dormir bien y mantener buena hidratación",
-            source: .global
-        )
-    }
-
-    public static var activeRest: RestActivity {
-        RestActivity(
-            name: "Descanso Activo",
-            description: "Caminata ligera y estiramientos",
-            restType: .active,
-            suggestedActivities: ["Caminata de 20-30 minutos", "Estiramientos suaves", "Yoga restaurativo"],
-            suggestedDurationMinutes: 30,
-            source: .global
-        )
-    }
-
-    public static var mobilitySession: RestActivity {
-        RestActivity(
-            name: "Sesión de Movilidad",
-            description: "Trabajo de movilidad articular completo",
-            restType: .mobility,
-            suggestedActivities: ["Círculos de cadera", "Rotaciones de hombros", "Movilidad de tobillo"],
-            suggestedDurationMinutes: 20,
-            targetAreas: [.hips, .shoulders, .back],
-            source: .global
-        )
-    }
-
     public static var example: RestActivity { activeRest }
+    public static var completeRest: RestActivity {
+        RestActivity(name: "Dia de Descanso Total", restType: .complete, source: .global)
+    }
+    public static var activeRest: RestActivity {
+        RestActivity(name: "Descanso Activo", restType: .active,
+                     suggestedActivities: ["Caminata suave 20-25 minutos"],
+                     suggestedDurationMinutes: 30, source: .global)
+    }
 }
 #endif

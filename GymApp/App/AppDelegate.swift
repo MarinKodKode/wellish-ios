@@ -9,6 +9,7 @@ import Foundation
 import SwiftUI
 import FirebaseCore
 import GoogleSignIn
+import FirebaseAppCheck
 
 
 class AppDelegate: NSObject, UIApplicationDelegate {

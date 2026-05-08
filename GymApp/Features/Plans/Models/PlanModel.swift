@@ -1,14 +1,19 @@
+//
+//  Plan.swift
+//  Wellish
+//
+
 import Foundation
 
 public struct Plan: Identifiable, Codable, Hashable {
-    
+
     // MARK: - Required Properties
     public let id: String
     public var name: String
     public var createdAt: Date
     public var updatedAt: Date
     public var elements: [PlanElement]
-    
+
     // MARK: - Optional Properties
     public var description: String?
     public var category: String?
@@ -16,19 +21,20 @@ public struct Plan: Identifiable, Codable, Hashable {
     public var tags: [String]
     public var thumbnailURL: String?
     public var notes: String?
-    
+
     // MARK: - Plan Configuration
     public var goal: PlanGoal
     public var durationWeeks: Int
     public var startDate: Date?
     public var activitiesPerWeek: Int
-    
+
     // MARK: - Premium & Sharing
     public var shareable: Bool
     public var isPremiumPlan: Bool
-    public var isBeingTracked : Bool
-    
+    public var isBeingTracked: Bool
+
     // MARK: - Init
+
     public init(
         id: String = UUID().uuidString,
         name: String,
@@ -45,7 +51,7 @@ public struct Plan: Identifiable, Codable, Hashable {
         activitiesPerWeek: Int = 3,
         shareable: Bool = false,
         isPremiumPlan: Bool = false,
-        isBeingTracked : Bool = false
+        isBeingTracked: Bool = false
     ) {
         self.id = id
         self.name = name
@@ -66,16 +72,42 @@ public struct Plan: Identifiable, Codable, Hashable {
         self.isPremiumPlan = isPremiumPlan
         self.isBeingTracked = isBeingTracked
     }
-    
+
     // MARK: - CodingKeys
+
     enum CodingKeys: String, CodingKey {
         case id, name, createdAt, updatedAt, elements
         case description, category, creator, tags, thumbnailURL, notes
         case goal, durationWeeks, startDate, activitiesPerWeek
         case shareable, isPremiumPlan, isBeingTracked
     }
-    
+
+    // MARK: - Custom Decoder (tolerante a campos faltantes)
+
+    public init(from decoder: Decoder) throws {
+        let c = try decoder.container(keyedBy: CodingKeys.self)
+        id = try c.decode(String.self, forKey: .id)
+        name = try c.decode(String.self, forKey: .name)
+        createdAt = try c.decodeIfPresent(Date.self, forKey: .createdAt) ?? Date()
+        updatedAt = try c.decodeIfPresent(Date.self, forKey: .updatedAt) ?? Date()
+        elements = try c.decodeIfPresent([PlanElement].self, forKey: .elements) ?? []
+        description = try c.decodeIfPresent(String.self, forKey: .description)
+        category = try c.decodeIfPresent(String.self, forKey: .category)
+        creator = try c.decodeIfPresent(String.self, forKey: .creator)
+        tags = try c.decodeIfPresent([String].self, forKey: .tags) ?? []
+        thumbnailURL = try c.decodeIfPresent(String.self, forKey: .thumbnailURL)
+        notes = try c.decodeIfPresent(String.self, forKey: .notes)
+        goal = try c.decodeIfPresent(PlanGoal.self, forKey: .goal) ?? .general
+        durationWeeks = try c.decodeIfPresent(Int.self, forKey: .durationWeeks) ?? 4
+        startDate = try c.decodeIfPresent(Date.self, forKey: .startDate)
+        activitiesPerWeek = try c.decodeIfPresent(Int.self, forKey: .activitiesPerWeek) ?? 3
+        shareable = try c.decodeIfPresent(Bool.self, forKey: .shareable) ?? false
+        isPremiumPlan = try c.decodeIfPresent(Bool.self, forKey: .isPremiumPlan) ?? false
+        isBeingTracked = try c.decodeIfPresent(Bool.self, forKey: .isBeingTracked) ?? false
+    }
+
     // MARK: - Firestore Helper
+
     public func toDictionary() -> [String: Any] {
         var dict: [String: Any] = [
             "id": id,
@@ -88,168 +120,103 @@ public struct Plan: Identifiable, Codable, Hashable {
             "durationWeeks": durationWeeks,
             "activitiesPerWeek": activitiesPerWeek,
             "shareable": shareable,
-            "isPremiumPlan": isPremiumPlan
+            "isPremiumPlan": isPremiumPlan,
+            "isBeingTracked": isBeingTracked
         ]
-        
-        if let description = description {
-            dict["description"] = description
-        }
-        
-        if let category = category {
-            dict["category"] = category
-        }
-        
-        if let creator = creator {
-            dict["creator"] = creator
-        }
-        
-        if let thumbnailURL = thumbnailURL {
-            dict["thumbnailURL"] = thumbnailURL
-        }
-        
-        if let notes = notes {
-            dict["notes"] = notes
-        }
-        
-        if let startDate = startDate {
-            dict["startDate"] = startDate
-        }
-        
+        if let description = description { dict["description"] = description }
+        if let category = category { dict["category"] = category }
+        if let creator = creator { dict["creator"] = creator }
+        if let thumbnailURL = thumbnailURL { dict["thumbnailURL"] = thumbnailURL }
+        if let notes = notes { dict["notes"] = notes }
+        if let startDate = startDate { dict["startDate"] = startDate }
         return dict
     }
-    
+
     // MARK: - Computed Properties
-    
-    /// Fecha de finalización estimada del plan
+
     public var endDate: Date? {
         guard let startDate = startDate else { return nil }
-        let calendar = Calendar.current
-        return calendar.date(byAdding: .weekOfYear, value: durationWeeks, to: startDate)
+        return Calendar.current.date(byAdding: .weekOfYear, value: durationWeeks, to: startDate)
     }
-    
-    /// Total de actividades en el plan
-    public var totalActivities: Int {
-        elements.count
-    }
-    
-    /// Actividades completadas
-    public var completedActivities: Int {
-        elements.filter { $0.completed }.count
-    }
-    
-    /// Porcentaje de completación (0-100)
+
+    public var totalActivities: Int { elements.count }
+
+    public var completedActivities: Int { elements.filter { $0.completed }.count }
+
     public var completionPercentage: Double {
         guard totalActivities > 0 else { return 0 }
         return (Double(completedActivities) / Double(totalActivities)) * 100
     }
-    
-    /// Plan completado
+
     public var isCompleted: Bool {
         !elements.isEmpty && elements.allSatisfy { $0.completed }
     }
-    
-    /// Plan activo (tiene fecha de inicio y no ha terminado)
+
     public var isActive: Bool {
-        guard let startDate = startDate,
-              let endDate = endDate else { return false }
+        guard let startDate = startDate, let endDate = endDate else { return false }
         let now = Date()
         return now >= startDate && now <= endDate
     }
-    
-    /// Días restantes del plan
+
     public var daysRemaining: Int? {
         guard let endDate = endDate else { return nil }
-        let calendar = Calendar.current
         let now = Date()
         guard now < endDate else { return 0 }
-        return calendar.dateComponents([.day], from: now, to: endDate).day
+        return Calendar.current.dateComponents([.day], from: now, to: endDate).day
     }
-    
-    /// Semana actual del plan (basado en startDate)
+
     public var currentWeek: Int? {
         guard let startDate = startDate else { return nil }
-        let calendar = Calendar.current
         let now = Date()
         guard now >= startDate else { return nil }
-        let weeks = calendar.dateComponents([.weekOfYear], from: startDate, to: now).weekOfYear ?? 0
+        let weeks = Calendar.current.dateComponents([.weekOfYear], from: startDate, to: now).weekOfYear ?? 0
         return min(weeks + 1, durationWeeks)
     }
-    
-    /// Formato legible de duración
+
     public var formattedDuration: String {
-        if durationWeeks == 1 {
-            return "1 semana"
-        } else {
-            return "\(durationWeeks) semanas"
-        }
+        durationWeeks == 1 ? "1 semana" : "\(durationWeeks) semanas"
     }
-    
-    /// Formato de progreso
-    public var progressText: String {
-        "\(completedActivities)/\(totalActivities) completadas"
-    }
-    
-    /// Tiene imagen
-    public var hasImage: Bool {
-        thumbnailURL != nil
-    }
-    
-    /// Nombre de categoría o valor por defecto
-    public var categoryName: String {
-        category ?? "Sin categoría"
-    }
-    
-    /// Días totales del plan
-    public var totalDays: Int {
-        durationWeeks * 7
-    }
-    
+
+    public var progressText: String { "\(completedActivities)/\(totalActivities) completadas" }
+    public var hasImage: Bool { thumbnailURL != nil }
+    public var categoryName: String { category ?? "Sin categoria" }
+    public var totalDays: Int { durationWeeks * 7 }
+
     // MARK: - Methods
-    
-    /// Agregar elemento al plan
+
     public mutating func addElement(_ element: PlanElement) {
         elements.append(element)
         updatedAt = Date()
     }
-    
-    /// Eliminar elemento en índice
+
     public mutating func removeElement(at index: Int) {
         guard index >= 0 && index < elements.count else { return }
         elements.remove(at: index)
         updatedAt = Date()
     }
-    
-    /// Eliminar elemento por ID
+
     public mutating func removeElement(id: String) {
         elements.removeAll { $0.id == id }
         updatedAt = Date()
     }
-    
-    /// Marcar elemento como completado
+
     public mutating func markElementCompleted(at index: Int, completed: Bool = true) {
         guard index >= 0 && index < elements.count else { return }
         elements[index].completed = completed
-        if completed {
-            elements[index].completedAt = Date()
-        } else {
-            elements[index].completedAt = nil
-        }
+        elements[index].completedAt = completed ? Date() : nil
         updatedAt = Date()
     }
-    
-    /// Marcar elemento como completado por ID
+
     public mutating func markElementCompleted(id: String, completed: Bool = true) {
         guard let index = elements.firstIndex(where: { $0.id == id }) else { return }
         markElementCompleted(at: index, completed: completed)
     }
-    
-    /// Iniciar el plan (establece startDate)
+
     public mutating func start() {
         startDate = Date()
         updatedAt = Date()
     }
-    
-    /// Reiniciar progreso del plan
+
     public mutating func resetProgress() {
         for i in 0..<elements.count {
             elements[i].completed = false
@@ -257,22 +224,19 @@ public struct Plan: Identifiable, Codable, Hashable {
         }
         updatedAt = Date()
     }
-    
-    /// Obtener elementos de un día específico
+
     public func elements(forDay day: Int) -> [PlanElement] {
         elements.filter { $0.day == day }
     }
-    
-    /// Obtener actividad de hoy (basado en startDate)
+
     public func todaysActivities() -> [PlanElement] {
         guard let startDate = startDate else { return [] }
-        let calendar = Calendar.current
-        let daysPassed = calendar.dateComponents([.day], from: startDate, to: Date()).day ?? 0
+        let daysPassed = Calendar.current.dateComponents([.day], from: startDate, to: Date()).day ?? 0
         let currentDay = (daysPassed % totalDays) + 1
         return elements(forDay: currentDay)
     }
-    
+
     public func upcomingActivity() -> PlanElement? {
-        return elements.first{ $0.completed == false}
+        elements.first { !$0.completed }
     }
 }

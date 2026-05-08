@@ -21,7 +21,7 @@ public struct PlanDetailView: View {
                         .padding(.horizontal, 16)
                     
                     Group {
-                        if plan.isBeingTracked {
+                        if vm.isFollowing {
                             progressSection
                                 .transition(.asymmetric(
                                     insertion: .scale(scale: 0.95).combined(with: .opacity),
@@ -60,6 +60,9 @@ public struct PlanDetailView: View {
                     }
                 }
             }
+        }
+        .task {
+            await vm.checkIfFollowing(plan.id)
         }
     }
 }

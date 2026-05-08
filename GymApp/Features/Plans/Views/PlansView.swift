@@ -26,7 +26,12 @@ struct PlansView: View {
                         
                         headerSection
                         
-                        PopularPlansSection()
+                        PopularPlansSection(plans: plansVM.globalPlans)
+                            .onAppear{
+                                Task {
+                                    print("Planes : \(plansVM.globalPlans)")
+                                }
+                            }
 
                         
                         VStack(alignment: .leading, spacing: 12) {

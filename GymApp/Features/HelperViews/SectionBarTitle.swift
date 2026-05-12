@@ -25,7 +25,7 @@ public struct SectionBarTitle : View {
     public var body : some View{
         HStack{
             Text(title)
-                .font(.title2.bold())
+                .font(.system(size: 18, weight: .bold))
                 .foregroundColor(.fitnessTextPrimary)
                 .padding(.horizontal)
             Spacer()

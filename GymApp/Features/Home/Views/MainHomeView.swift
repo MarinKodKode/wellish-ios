@@ -20,9 +20,10 @@ struct MainHomeView: View {
                     
                     Spacer()
                     
-                    CategoriesSectionView()                    
+//                    CategoriesSectionView()                    
                     
-//                    PopularWorkoutSectionView()
+                    PopularWorkoutSectionView()
+                        .padding(.top, 24)
                     
 //                    TrySomethingNewSectionView()
                         

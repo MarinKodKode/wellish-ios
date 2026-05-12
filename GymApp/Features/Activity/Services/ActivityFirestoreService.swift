@@ -129,10 +129,20 @@ class ActivityFirestoreService {
     /// Requiere índice compuesto en Firestore: source + activityType
     @MainActor
     func fetchGlobalActivities(byActivityType activityType: String) async throws -> [ActivityType] {
+        print("🔥 Fetching global activities by type: \(activityType)")
         let snapshot = try await db.collection(globalCollection)
             .whereField("source", isEqualTo: ActivitySource.global.rawValue)
             .whereField("activityTypeKey", isEqualTo: activityType)
             .getDocuments()
+        print("🔥 Snapshot count: \(snapshot.documents.count)")
+        let activities = snapshot.documents.compactMap { doc -> ActivityType? in
+            do {
+                return try doc.data(as: ActivityType.self)
+            } catch {
+                print("🔥 Decode error: \(error)")
+                return nil
+            }
+        }
         return snapshot.documents.compactMap { try? $0.data(as: ActivityType.self) }
     }
 

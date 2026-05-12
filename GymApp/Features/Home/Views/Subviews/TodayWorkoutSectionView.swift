@@ -5,6 +5,13 @@ struct TodayWorkoutView: View {
     @EnvironmentObject var navigationRouter: NavigationRouter
     @StateObject var vm = PlanTrackerCurrentDayViewModel()
  
+    private var dateToday: String {
+        let formatter = DateFormatter()
+        formatter.locale = Locale(identifier: "es_MX")
+        formatter.dateFormat = "EEEE d 'de' MMMM"
+        return formatter.string(from: Date()).localizedCapitalized
+    }
+    
     var body: some View {
         Group {
             if vm.isLoading {
@@ -16,8 +23,8 @@ struct TodayWorkoutView: View {
  
             } else if vm.hasTodayActivities {
                 VStack {
-                    SectionBarTitle("La rutina de hoy 🔥")
-                        .padding(.top, 16)
+                    SectionBarTitle(dateToday )
+                        .padding(.top, 24)
  
                     ScrollView(.horizontal, showsIndicators: false) {
                         HStack(alignment: .center) {

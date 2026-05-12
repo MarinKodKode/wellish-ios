@@ -2,64 +2,68 @@
 //  PlanTrackerCurrentDayViewModel.swift
 //  Wellish
 //
-//  Created by Manuel Alejandro Hernandez Marín on 03/11/25.
-//
 
 import Foundation
 
-public class PlanTrackerCurrentDayViewModel : ObservableObject{
+public class PlanTrackerCurrentDayViewModel: ObservableObject {
+
+    private let planService = PlanService()
+
+    @Published var activePlans: [Plan] = []
+    @Published var todayActivities: [TodayActivityModel] = []
+    @Published var isLoading: Bool = false
+
+    var hasTodayActivities: Bool { !todayActivities.isEmpty }
     
-    private let planService  : PlanService = PlanService()
-    
-    @Published var activePlans : [Plan] = PlanDataset().getPlans().filter{
-        $0.isBeingTracked == true
+    var streakDays: Int {
+        let completed = activePlans.flatMap { $0.elements }.filter { $0.completed }
+        return max(completed.count, 1)
     }
     
-    @Published var todayActivities : [TodayActivityModel] = []
-    
-    func fecthActivePlans() async -> [Plan] {
-        let plans = await planService.getPlans()
-        return plans.filter{$0.isBeingTracked == true}
+    var completedCount: Int {
+        activePlans.flatMap { $0.elements }.filter { $0.completed }.count
     }
-    
-    
-    
+
     public func initView() async {
-        todayActivities = await buildTodayActivites()
-        activePlans = await fecthActivePlans()
-    }
-    
-    func buildTodayActivites() async -> [TodayActivityModel] {
-        let planes : [Plan] = await fecthActivePlans()
-      
-        var active : [TodayActivityModel] = []
-        
-        for activePlan in planes {
-            guard let element = activePlan.upcomingActivity() else {
-                continue
-            }
-            let title = element.activity.displayName
-            active.append(
-                    TodayActivityModel(
-                        title: title,
-                        calories: element.activity.estimatedCalories?.asString ?? "",
-                        time: element.activity.estimatedDuration?.asString ?? "",
-                        element: activePlan.upcomingActivity()!,
-                        image: element.activity.imageURL ?? "",
-                        parentPlan: activePlan
-                    )
-                )
+        await MainActor.run { isLoading = true }
+        activePlans = await fetchActivePlans()
+        let activities = buildTodayActivities(from: activePlans)
+        await MainActor.run {
+            todayActivities = activities
+            isLoading = false
         }
-        return active
+    }
+
+    func fetchActivePlans() async -> [Plan] {
+        let plans = await planService.getActivePlans()
+        return plans.filter { $0.startDate != nil }
+    }
+
+    func buildTodayActivities(from plans: [Plan]) -> [TodayActivityModel] {
+        var activities: [TodayActivityModel] = []
+        for plan in plans {
+            guard let element = plan.upcomingActivity() else { continue }
+            activities.append(
+                TodayActivityModel(
+                    title: element.activity.displayName,
+                    calories: element.activity.estimatedCalories?.asString ?? "0",
+                    time: element.activity.estimatedDuration?.asString ?? "0",
+                    element: element,
+                    image: element.activity.imageURL ?? "",
+                    parentPlan: plan
+                )
+            )
+        }
+        return activities
     }
 }
 
-struct TodayActivityModel : Identifiable, Codable {
+struct TodayActivityModel: Identifiable, Codable {
     var id = UUID()
-    var title : String
-    var calories : String
-    var time : String
-    var element : PlanElement
-    var image : String
-    var parentPlan : Plan
+    var title: String
+    var calories: String
+    var time: String
+    var element: PlanElement
+    var image: String
+    var parentPlan: Plan
 }

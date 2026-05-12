@@ -16,9 +16,7 @@ struct MainHomeView: View {
                     
                     ChallengesSection()
                     
-//                    TodayWorkoutView()
-                    
-                    EmptyRoutineView()
+                    TodayWorkoutView()
                     
                     Spacer()
                     
